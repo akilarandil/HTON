@@ -1,27 +1,32 @@
 function getHTML() {
     clearData();
-    getResponse("HTML")
+    let startTime = new Date();
+    getResponse("HTML", startTime)
 }
 
 function getJSON() {
     clearData();
-    getResponse("JSON")
+    let startTime = new Date();
+    getResponse("JSON", startTime);
 }
 
 function getHTMLEncoder() {
     clearData();
-    getResponse("HTMLEncoder")
+    let startTime = new Date();
+    getResponse("HTMLEncoder", startTime)
 }
 
 function clearData() {
     $("#Result").empty();
+    $("#Time").empty();
 }
-function getResponse(type) {
+
+function getResponse(type, startTime) {
 
     $.ajax({
         url: "../PHP/HTMLEncoder.php?type=" + type,
         success: function (result) {
-            let process = new ProcessResult(type,result);
+            let process = new ProcessResult(type, result, startTime);
             process.processData();
 
         }
@@ -30,12 +35,15 @@ function getResponse(type) {
 
 class ProcessResult {
 
-    constructor(type,result){
+    constructor(type, result, startTime) {
         this.type = type;
         this.result = result;
+        this.startTime = startTime;
     }
     appendData(data) {
         $("#Result").html(data);
+        let totalTime = new Date().getTime() - this.startTime.getTime();
+        $("#Time").html("Total Time = " + totalTime + " ms");
     }
 
     processData(){
