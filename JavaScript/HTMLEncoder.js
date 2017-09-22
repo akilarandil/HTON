@@ -1,26 +1,32 @@
+//get HTML data
 function getHTML() {
     clearData();
     positiveIntegerCheck("HTML");
 }
 
+//get JSON Data
 function getJSON() {
     clearData();
     positiveIntegerCheck("JSON");
 }
 
+// get HTML Encoded data
 function getHTMLEncoder() {
     clearData();
     positiveIntegerCheck("HTMLEncoder");
 }
 
+//Clear data on the browser
 function clearData() {
     $("#Result").empty();
     $("#Time").empty();
 }
 
+//validate for positive integer
 function positiveIntegerCheck(type) {
-    let iterations = parseInt(document.getElementById("Iterations").value);
-    if (iterations <= 0 || document.getElementById("Iterations").value === "") {
+    let iterartionStr = document.getElementById("Iterations").value;
+    let iterations = parseInt(iterartionStr);
+    if (iterations <= 0 || iterartionStr === "") {
         alert("Please Enter a Positive Integer");
     }
     else {
@@ -28,6 +34,7 @@ function positiveIntegerCheck(type) {
     }
 }
 
+//perform iteration requests as specified by the user's given number
 function performIterations(type) {
     let iterations = parseInt(document.getElementById("Iterations").value);
     let totalTimeOfAllIterations = 0;
@@ -41,6 +48,7 @@ function performIterations(type) {
     $("#Time").html("Average Time per request= " + (totalTimeOfAllIterations / iterations) * 1000 + " micro seconds");
 }
 
+// send the request and get the response
 function getResponse(type) {
 
     $.ajax({
@@ -52,17 +60,21 @@ function getResponse(type) {
     });
 }
 
+// class for processing the result
 class ProcessResult {
 
+    // constructor for Process Result
     constructor(type, result) {
         this.type = type;
         this.result = result;
     }
 
+    //append data to GUI
     appendData(data) {
         $("#Result").html(data);
     }
 
+    //Process Data from the response
     processData() {
         if (this.type === "HTML") {
             this.appendData(this.result);
