@@ -82,18 +82,23 @@ class ProcessResult {
         else if (this.type === "JSON") {
 
             let jsonData = JSON.parse(this.result);
+            console.log(jsonData);
             let htmlData =
                 "<table>" +
                 "<tr>" +
                 "<th>Name</th>" +
                 "<th>Age</th>" +
                 "<th>City</th>" +
-                "</tr><tr>" +
-                "<td>" + jsonData["name"] + "</td>" +
-                "<td>" + jsonData["age"] + "</td>" +
-                "<td>" + jsonData["city"] + "</td>" +
-                "</tr>" +
-                "</table>";
+                "</tr>";
+            for (var a=0; a<jsonData.length;a++){
+                htmlData+=
+                "<tr>"+
+                "<td>" +jsonData[a]['name'] +"</td>"+
+                "<td>" +jsonData[a]['age'] +"</td> "+
+                "<td>" +jsonData[a]['city']+ "</td>"+
+                "</tr>";
+            }
+            htmlData+="</table>";
             this.appendData(htmlData)
         }
 
