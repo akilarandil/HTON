@@ -5,6 +5,8 @@
  * Date: 9/20/17
  * Time: 11:52 AM
  */
+require_once ("HTMLEncoder/HTMLEncoder.php");
+require_once ("HTMLEncoder/HTMLElement.php");
 
 $type = $_GET["type"];
 
@@ -52,7 +54,7 @@ if (mysqli_num_rows($result) > 0) {
 
         echo $htmlSerialize;
 
-    } elseif ($type = "JSON") {
+    } elseif ($type == "JSON") {
         $dataSet = array();
         foreach ($resultDataSet as $value) {
             $jsonData = array('name' => $value['Name'], 'age' => $value['Age'], 'city' => $value['City']);
@@ -61,9 +63,15 @@ if (mysqli_num_rows($result) > 0) {
         }
         $jsonDataSet = json_encode($dataSet);
         echo $jsonDataSet;
-    } elseif
-    ($type = "HTMLEncoder") {
-        echo "";
+    } elseif ($type == "HTMLEncoder") {
+
+        $htmlEncoder = new HTMLEncoder();
+        $htmlElement = new HTMLElement("table");
+        $htmlElement->addAttribute(new HTMLAttribute("class","tableClass"));
+        $htmlElement-> addValue("jiberish");
+
+        $htmlEncoder->createElement($htmlElement);
+        $htmlEncoder->encodeToJSON();
     }
 } else {
     echo "0 results";
