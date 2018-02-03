@@ -101,7 +101,8 @@ class ProcessResult {
             htmlData+="</table>";
             this.appendData(htmlData);
         }else if(this.type === "HTMLEncoder"){
-            this.appendData(this.result);
+            console.log(this.result);
+            this.appendData(GetHTMLSnippet(this.result));
         }
 
     }

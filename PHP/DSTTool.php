@@ -65,17 +65,110 @@ if (mysqli_num_rows($result) > 0) {
         echo $jsonDataSet;
     } elseif ($type == "HTMLEncoder") {
 
-        $htmlEncoder = new HTMLEncoder();
-        $htmlElement = new HTMLElement("table");
-        $htmlElement->addAttribute(new HTMLAttribute("class","tableClass"));
-        $htmlElement-> addValue("jiberish");
+//        $htmlEncoder = new HTMLEncoder();
+//        $htmlElement = new HTMLElement("table");
+//        $htmlElement->addAttribute(new HTMLAttribute("class","tableClass"));
+//        $htmlElement-> addValue("jiberish");
+//
+//        $htmlEncoder->createElement($htmlElement);
+//        $htmlEncoder->encodeToJSON();
+//        $jsonData = array(
+//            "html"=>array(
+//                "table"=>array(
+//                    "tr"=>array(
+//                        array_merge(array("th"=> "Name")), array_merge(array("th"=> "Age")), array_merge(array("th"=> "City"))
+//                    )
+//                )
+//            )
+//        );
+//        var_dump($jsonData);
+        $value = $resultDataSet[0];
+//        echo "{
+//	\"html\": [
+//	{
+//	    \"div\":
+//	    {
+//	         \"h1\":\"Hello World!\"
+//	    }
+//	},
+//	{
+//		\"table\": [
+//			{
+//				\"tr\": [
+//					{
+//					\"th\": \"Name\"
+//				},
+//				{
+//					\"th\": \"Age\"
+//				},
+//				{
+//					\"th\": \"City\"
+//				}
+//			]
+//			},
+//				{
+//					\"tr\":
+//					[
+//						{
+//							\"th\":\"".$value['Name']."\"
+//						},
+//						{
+//							\"th\":\"".$value['Age']."\"
+//						},
+//						{
+//							\"th\":\"".$value['City']."\"
+//						}
+//					]
+//				}
+//
+//		]
+//	}
+//	]
+//
+//}" ;
+        echo "
+        {
+	\"html\": [{
+		\"table\": [
+			{
+				\"tr\": [
+					{
+					\"th\": \"Name\"
+				},
+				{
+					\"th\": \"Age\"
+				},
+				{
+					\"th\": \"City\"
+				}
+			]},
+				{
+					\"tr\":
+					[
+						{
+							\"th\":\"Akila\"
+						},
+						{
+							\"th\":21
+						},
+						{
+							\"th\":\"Mount Lavinia\"
+						}
+					]
+				}
 
-        $htmlEncoder->createElement($htmlElement);
-        $htmlEncoder->encodeToJSON();
+		]
+	}]
+
+}";
+//        echo json_encode($jsonData);
+
     }
 } else {
     echo "0 results";
 }
 
 
-
+//"attr":{
+//    "Class":"hello"
+//			},
