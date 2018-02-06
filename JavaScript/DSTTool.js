@@ -24,24 +24,27 @@ function clearData() {
 
 //validate for positive integer
 function positiveIntegerCheck(type) {
-    let iterartionStr = document.getElementById("Iterations").value;
-    let iterations = parseInt(iterartionStr);
-    if (iterations <= 0 || iterartionStr === "") {
+    // debugger;
+    let iterationStr = document.getElementById("Iterations").value;
+    let iterations = parseInt(iterationStr);
+    let dataSetStr = document.getElementById("DataSets").value;
+    let dataSets = parseInt(dataSetStr);
+    if (iterations <= 0 || iterationStr === "" || dataSets <= 0 || dataSetStr === "") {
         alert("Please Enter a Positive Integer");
     }
     else {
-        performIterations(type)
+        performIterations(type,dataSets)
     }
 }
 
 //perform iteration requests as specified by the user's given number
-function performIterations(type) {
+function performIterations(type,dataSets) {
     let iterations = parseInt(document.getElementById("Iterations").value);
     let totalTimeOfAllIterations = 0;
 
     for (i = 0; i < iterations; i++) {
         let startTime = new moment();
-        getResponse(type);
+        getResponse(type,dataSets);
         // totalTimeOfAllIterations = totalTimeOfAllIterations + (new Date().getTime() - startTime.getTime());
         totalTimeOfAllIterations = totalTimeOfAllIterations + new moment().diff(startTime,'milliseconds');
     }
@@ -50,10 +53,10 @@ function performIterations(type) {
 }
 
 // send the request and get the response
-function getResponse(type) {
+function getResponse(type,dataSets) {
 
     $.ajax({
-        url: "../PHP/DSTTool.php?type=" + type,
+        url: "../PHP/DSTTool.php?type=" + type + "&dataSets=" + dataSets,
         success: function (result) {
             let process = new ProcessResult(type, result);
             process.processData();

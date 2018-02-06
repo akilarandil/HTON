@@ -9,6 +9,7 @@ require_once ("HTMLEncoder/HTMLEncoder.php");
 require_once ("HTMLEncoder/HTMLElement.php");
 
 $type = $_GET["type"];
+$dataSets = $_GET["dataSets"];
 
 $serverName = "localhost:3306";
 $username = "root";
@@ -28,8 +29,12 @@ $resultDataSet = array();
 if (mysqli_num_rows($result) > 0) {
 
     while ($row = mysqli_fetch_array($result)) {
-        array_push($resultDataSet, $row);
+        for ($i = 0; $i <$dataSets; $i++){
+            array_push($resultDataSet, $row);
+        }
+
     }
+
     if ($type == "HTML") {
         $htmlSerialize = '
         <table>
@@ -82,7 +87,7 @@ if (mysqli_num_rows($result) > 0) {
 //            )
 //        );
 //        var_dump($jsonData);
-        $value = $resultDataSet[0];
+//        $value = $resultDataSet[0];
 //        echo "{
 //	\"html\": [
 //	{
@@ -126,9 +131,10 @@ if (mysqli_num_rows($result) > 0) {
 //	]
 //
 //}" ;
-        echo "
+
+         $json = "
         {
-	\"html\": [{
+
 		\"table\": [
 			{
 				\"tr\": [
@@ -143,24 +149,92 @@ if (mysqli_num_rows($result) > 0) {
 				}
 			]},
 				{
+					\"tr\":[";
+
+         $count =0;
+        foreach ($resultDataSet as $value):
+
+            if ($count != 0){
+
+                $json .= "
+                        ,{
 					\"tr\":
 					[
 						{
-							\"th\":\"Akila\"
+							\"th\":\"".$value['Name']."\"
 						},
 						{
-							\"th\":21
+							\"th\":\"".$value['Age']."\"
 						},
 						{
-							\"th\":\"Mount Lavinia\"
+							\"th\":\"".$value['City']."\"
 						}
 					]
-				}
+				}";
+            } else{
+                $json .= "
+                        {
+					\"tr\":
+					[
+						{
+							\"th\":\"".$value['Name']."\"
+						},
+						{
+							\"th\":\"".$value['Age']."\"
+						},
+						{
+							\"th\":\"".$value['City']."\"
+						}
+					]
+				}";
+            }
 
-		]
-	}]
+    $count++;
+        endforeach;
 
-}";
+
+//        $json .="]}]}]}";
+        $json .="]}]}";
+		echo $json;
+
+//}";
+
+
+//        echo "
+//        {
+//	\"html\": [{
+//		\"table\": [
+//			{
+//				\"tr\": [
+//					{
+//					\"th\": \"Name\"
+//				},
+//				{
+//					\"th\": \"Age\"
+//				},
+//				{
+//					\"th\": \"City\"
+//				}
+//			]},
+//				{
+//					\"tr\":
+//					[
+//						{
+//							\"th\":\"Akila\"
+//						},
+//						{
+//							\"th\":21
+//						},
+//						{
+//							\"th\":\"Mount Lavinia\"
+//						}
+//					]
+//				}
+//
+//		]
+//	}]
+//
+//}";
 //        echo json_encode($jsonData);
 
     }
