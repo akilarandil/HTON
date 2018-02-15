@@ -1,30 +1,41 @@
 //get HTML data
 function getHTML() {
-    clearData();
-    positiveIntegerCheck("HTML");
+    $("#HTML").empty();
+    $("#HTMLTime").empty();
+    positiveIntegerCheck(false,"HTML");
 }
 
 //get JSON Data
 function getJSON() {
-    clearData();
-    positiveIntegerCheck("JSON");
+    $("#JSON").empty();
+    $("#JSONTime").empty();
+    positiveIntegerCheck(false,"JSON");
 }
 
 // get HTML Encoded data
 function getHTMLEncoder() {
+    $("#HTMLEncoder").empty();
+    $("#HTMLEncTime").empty();
+    positiveIntegerCheck(false,"HTMLEncoder");
+}
+
+function runAll() {
     clearData();
-    positiveIntegerCheck("HTMLEncoder");
+    positiveIntegerCheck(true,"")
 }
 
 //Clear data on the browser
 function clearData() {
-    $("#Result").empty();
-    $("#Time").empty();
+    $("#HTML").empty();
+    $("#HTMLTime").empty();
+    $("#JSON").empty();
+    $("#JSONTime").empty();
+    $("#HTMLEncoder").empty();
+    $("#HTMLEncTime").empty();
 }
 
 //validate for positive integer
-function positiveIntegerCheck(type) {
-    // debugger;
+function positiveIntegerCheck(iterateAll,type) {
     let iterationStr = document.getElementById("Iterations").value;
     let iterations = parseInt(iterationStr);
     let dataSetStr = document.getElementById("DataSets").value;
@@ -33,81 +44,128 @@ function positiveIntegerCheck(type) {
         alert("Please Enter a Positive Integer");
     }
     else {
-        performIterations(type,dataSets)
+            performIterations(iterateAll,type, dataSets)
+
     }
 }
 
+let requestCompleted = true;
+let executedIterations;
+
 //perform iteration requests as specified by the user's given number
-function performIterations(type,dataSets) {
+function performIterations(iterateAll,type, dataSets) {
     let iterations = parseInt(document.getElementById("Iterations").value);
+
     let totalTimeOfAllIterations = 0;
-
-    for (i = 0; i < iterations; i++) {
-        let startTime = new moment();
-        getResponse(type,dataSets);
-        // totalTimeOfAllIterations = totalTimeOfAllIterations + (new Date().getTime() - startTime.getTime());
-        totalTimeOfAllIterations = totalTimeOfAllIterations + new moment().diff(startTime,'milliseconds');
+    executedIterations = 0;
+    let x = 0;
+    let types = ["HTMLEncoder", "JSON", "HTML"];
+    if(iterateAll){
+        type = types.pop();
     }
+    getResponse(type, dataSets, totalTimeOfAllIterations, iterations, x,types,iterateAll);
 
-    $("#Time").html("Average Time per request= " + (totalTimeOfAllIterations / iterations)* 1000  + " micro seconds");
+
+
 }
 
 // send the request and get the response
-function getResponse(type,dataSets) {
+function getResponse(type, dataSets, totalTimeOfAllIterations, iterations, count,types,iterateAll) {
+    if (count !== iterations) {
+        requestCompleted = false;
+        let startTime;
+        let contentSize;
+        $.ajax({
 
-    $.ajax({
-        url: "../PHP/DSTTool.php?type=" + type + "&dataSets=" + dataSets,
-        success: function (result) {
-            let process = new ProcessResult(type, result);
-            process.processData();
-        }
-    });
+            url: "PHP/DSTTool.php?type=" + type + "&dataSets=" + dataSets,
+            beforeSend: function (x, y) {
+                startTime = new moment();
+            },
+            success: function (result, status, request) {
+                processData(type, result);
+                contentSize = request.getResponseHeader("Content-Length");
+            },
+            complete: function (x, y) {
+                let endTime = new moment();
+                let timeOfRequest = endTime.diff(startTime, 'milliseconds');
+                totalTimeOfAllIterations += timeOfRequest;
+                addTimeAndSizeDetails(type, contentSize, ++count, timeOfRequest, totalTimeOfAllIterations);
+
+                if(iterateAll){
+                    if(count=== iterations){
+                        if(types.length === 0) return;
+                        count = 0;
+                        totalTimeOfAllIterations = 0;
+
+                        getResponse(types.pop(), dataSets, totalTimeOfAllIterations, iterations, count,types,iterateAll);
+                    }else {
+                        getResponse(type, dataSets, totalTimeOfAllIterations, iterations, count,types,iterateAll);
+                    }
+                }else {
+                    getResponse(type, dataSets, totalTimeOfAllIterations, iterations, count,types,iterateAll);
+                }
+            },
+            error:function (jqXHR,textStatus,errorThrown){
+                console.log(jqXHR);
+                console.log(textStatus);
+                console.log(errorThrown);
+            }
+        });
+    }
 }
 
-// class for processing the result
-class ProcessResult {
 
-    // constructor for Process Result
-    constructor(type, result) {
-        this.type = type;
-        this.result = result;
+function addTimeAndSizeDetails(type, contentSize, count, timeOfRequest, totalTimeOfAllIterations) {
+
+    if (type === "HTML") {
+        $("#HTMLTime").html(
+            "Content Size = " + contentSize + "<br>" +
+            "Request #" + count + "  - Time of Request = " + timeOfRequest + " Milli seconds <br>" +
+            "Average Time per request= " + (totalTimeOfAllIterations / count) + " Milli seconds");
+    }
+    else if (type === "JSON") {
+        $("#JSONTime").html(
+            "Content Size = " + contentSize + "<br>" +
+            "Request #" + count + "  - Time of Request = " + timeOfRequest + " Milli seconds <br>" +
+            "Average Time per request= " + (totalTimeOfAllIterations / count) + " Milli seconds");
+
+    } else if (type === "HTMLEncoder") {
+        $("#HTMLEncTime").html(
+            "Content Size = " + contentSize + "<br>" +
+            "Request #" + count + "  - Time of Request = " + timeOfRequest + " Milli seconds <br>" +
+            "Average Time per request= " + (totalTimeOfAllIterations / count) + " Milli seconds");
     }
 
-    //append data to GUI
-    appendData(data) {
-        $("#Result").html(data);
+}
+
+//Process Data from the response
+function processData(type, result) {
+    // console.log(result);
+    if (type === "HTML") {
+
+        $("#HTML").html(result);
     }
+    else if (type === "JSON") {
 
-    //Process Data from the response
-    processData() {
-        if (this.type === "HTML") {
-            this.appendData(this.result);
-        }
-        else if (this.type === "JSON") {
-
-            let jsonData = JSON.parse(this.result);
-            let htmlData =
-                "<table>" +
+        let jsonData = JSON.parse(result);
+        let htmlData =
+            "<table>" +
+            "<tr>" +
+            "<th>Name</th>" +
+            "<th>Age</th>" +
+            "<th>City</th>" +
+            "</tr>";
+        for (let a = 0; a < jsonData.length; a++) {
+            htmlData +=
                 "<tr>" +
-                "<th>Name</th>" +
-                "<th>Age</th>" +
-                "<th>City</th>" +
+                "<td>" + jsonData[a]['name'] + "</td>" +
+                "<td>" + jsonData[a]['age'] + "</td> " +
+                "<td>" + jsonData[a]['city'] + "</td>" +
                 "</tr>";
-            for (var a=0; a<jsonData.length;a++){
-                htmlData+=
-                "<tr>"+
-                "<td>" +jsonData[a]['name'] +"</td>"+
-                "<td>" +jsonData[a]['age'] +"</td> "+
-                "<td>" +jsonData[a]['city']+ "</td>"+
-                "</tr>";
-            }
-            htmlData+="</table>";
-            this.appendData(htmlData);
-        }else if(this.type === "HTMLEncoder"){
-            console.log(this.result);
-            this.appendData(GetHTMLSnippet(this.result));
         }
-
+        htmlData += "</table>";
+        $("#JSON").html(htmlData);
+    } else if (type === "HTMLEncoder") {
+        $("#HTMLEncoder").html(GetHTMLSnippet(result));
     }
-
 }

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>HTML Encoder</title>
+    <script src="JavaScript/ElementGenerator.js"></script>
+    <script src="JavaScript/HTMLElements.js"></script>
+    <script src="JavaScript/HTMLStringGenerator.js"></script>
+    <script src="JavaScript/DSTTool.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="JavaScript/moment.js"></script>
+
+</head>
+<body>
+<label>Number of Iterations </label><input type="number" id="Iterations">
+<label>Number of Data Sets </label><input type="number" id="DataSets">
+<button onclick="getHTML()">HTML</button>
+<button onclick="getJSON()">JSON</button>
+<button onclick="getHTMLEncoder()">HTML Encoder</button>
+<button onclick="runAll()">Run All</button>
+<button onclick="clearData()">Clear</button>
+</body>
+<br>
+<br>
+<table>
+    <tr>
+        <td>
+            <label>HTML</label>
+        </td>
+        <td>
+            <label>JSON</label>
+        </td>
+        <td>
+            <label>HTMLEncoder</label>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <br>
+            <div id="HTMLTime"></div>
+            <br>
+        </td>
+        <td>
+            <br>
+            <div id="JSONTime"></div>
+            <br>
+        </td>
+        <td>
+            <br>
+            <div id="HTMLEncTime"></div>
+            <br>
+        </td>
+
+    </tr>
+    <tr>
+        <td>
+            <br>
+            <div id="HTML"></div>
+            <br>
+        </td>
+        <td>
+            <br>
+            <div id="JSON"></div>
+            <br>
+        </td>
+        <td>
+            <br>
+            <div id="HTMLEncoder"></div>
+            <br>
+        </td>
+    </tr>
+</table>
+</html>

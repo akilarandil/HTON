@@ -7,8 +7,7 @@ let htmlSnippetStr="";
 function GetHTMLSnippet(jsonArray) {
     stack=[];
     htmlSnippetStr="";
-    IterateArray(JSON.parse(jsonArray));
-    console.log(htmlSnippetStr);
+    IterateArray(ConvertToJson(jsonArray));
     return htmlSnippetStr;
 }
 
@@ -54,4 +53,27 @@ function IterateArray(jsonArray) {
 
     }
 
+}
+
+
+function ConvertToJson(string) {
+    // console.log(string);
+   let s=  string
+        .replace(/\$/g,"\"")
+        .replace(/:/g,"\":")
+        .replace(/\[/g,"[{")
+        .replace(/,/g,"},")
+        .replace(/]/g,"}]")
+        .replace(/\[$/g,"\"")
+        .replace(/,$/g,",\"")
+        .replace(/:$/g,":\"")
+        .replace(/,"/g,",{\"")
+   ;
+   let str = s.match(/[A-Za-z0-9]+}/g);
+   for(let i =0; i<str.length;i++){
+       let r = str[i].replace("}","");
+       s =s.replace(str[i],r+"\""+"}");
+   }
+   // console.log("{"+s+"}");
+   return JSON.parse("{"+s+"}");
 }

@@ -5,8 +5,8 @@
  * Date: 9/20/17
  * Time: 11:52 AM
  */
-require_once ("HTMLEncoder/HTMLEncoder.php");
-require_once ("HTMLEncoder/HTMLElement.php");
+require_once("HTMLEncoder.php");
+//require_once ("HTMLElement.php");
 
 $type = $_GET["type"];
 $dataSets = $_GET["dataSets"];
@@ -36,28 +36,18 @@ if (mysqli_num_rows($result) > 0) {
     }
 
     if ($type == "HTML") {
-        $htmlSerialize = '
-        <table>
-            <tr>
-                <th>Name</th>
-                <th>Age</th>
-                <th>City</th>
-            </tr>';
+        $htmlSerialize = '<table><tr><th>Name</th><th>Age</th><th>City</th></tr>';
 
         foreach ($resultDataSet as $value):
 
-            $htmlSerialize .= '
-                 <tr>
-                    <td>' . $value['Name'] . '</td>
-                    <td>' . $value['Age'] . '</td>
-                    <td>' . $value['City'] . '</td>
-                </tr>';
+            $htmlSerialize .= '<tr><td>' . $value['Name'] . '</td><td>' . $value['Age'] . '</td><td>' . $value['City'] . '</td></tr>';
 
         endforeach;
 
         $htmlSerialize .= '</table>';
 
         echo $htmlSerialize;
+//        echo preg_replace('/\s+/', '', $htmlSerialize);
 
     } elseif ($type == "JSON") {
         $dataSet = array();
@@ -68,9 +58,10 @@ if (mysqli_num_rows($result) > 0) {
         }
         $jsonDataSet = json_encode($dataSet);
         echo $jsonDataSet;
+//        echo preg_replace('/\s+/', '', $jsonDataSet);
     } elseif ($type == "HTMLEncoder") {
 
-//        $htmlEncoder = new HTMLEncoder();
+        $htmlEncoder = new HTMLEncoder();
 //        $htmlElement = new HTMLElement("table");
 //        $htmlElement->addAttribute(new HTMLAttribute("class","tableClass"));
 //        $htmlElement-> addValue("jiberish");
@@ -87,162 +78,36 @@ if (mysqli_num_rows($result) > 0) {
 //            )
 //        );
 //        var_dump($jsonData);
-//        $value = $resultDataSet[0];
-//        echo "{
-//	\"html\": [
-//	{
-//	    \"div\":
-//	    {
-//	         \"h1\":\"Hello World!\"
-//	    }
-//	},
-//	{
-//		\"table\": [
-//			{
-//				\"tr\": [
-//					{
-//					\"th\": \"Name\"
-//				},
-//				{
-//					\"th\": \"Age\"
-//				},
-//				{
-//					\"th\": \"City\"
-//				}
-//			]
-//			},
-//				{
-//					\"tr\":
-//					[
-//						{
-//							\"th\":\"".$value['Name']."\"
-//						},
-//						{
-//							\"th\":\"".$value['Age']."\"
-//						},
-//						{
-//							\"th\":\"".$value['City']."\"
-//						}
-//					]
-//				}
-//
-//		]
-//	}
-//	]
-//
-//}" ;
 
-         $json = "
-        {
+        $jsonData = array(
+                "table"=>array(
+                    array_merge(array("tr" =>array(
+                            array_merge(array("th"=> "Name")),
+                            array_merge( array("th"=> "Age")),
+                            array_merge(array("th"=> "City"))
+                        )
+                        )
 
-		\"table\": [
-			{
-				\"tr\": [
-					{
-					\"th\": \"Name\"
-				},
-				{
-					\"th\": \"Age\"
-				},
-				{
-					\"th\": \"City\"
-				}
-			]},
-				{
-					\"tr\":[";
+                )
+            )
+        );
 
-         $count =0;
+        $count =1;
         foreach ($resultDataSet as $value):
 
-            if ($count != 0){
-
-                $json .= "
-                        ,{
-					\"tr\":
-					[
-						{
-							\"th\":\"".$value['Name']."\"
-						},
-						{
-							\"th\":\"".$value['Age']."\"
-						},
-						{
-							\"th\":\"".$value['City']."\"
-						}
-					]
-				}";
-            } else{
-                $json .= "
-                        {
-					\"tr\":
-					[
-						{
-							\"th\":\"".$value['Name']."\"
-						},
-						{
-							\"th\":\"".$value['Age']."\"
-						},
-						{
-							\"th\":\"".$value['City']."\"
-						}
-					]
-				}";
-            }
-
-    $count++;
+            $jsonData["table"][$count] = array_merge(array("tr" =>array(
+                array_merge(array("td"=> $value["Name"])),
+                array_merge( array("td"=>  $value["Age"])),
+                array_merge(array("td"=>  $value["City"]))
+            )));
+            $count++;
         endforeach;
 
 
-//        $json .="]}]}]}";
-        $json .="]}]}";
-		echo $json;
 
-//}";
-
-
-//        echo "
-//        {
-//	\"html\": [{
-//		\"table\": [
-//			{
-//				\"tr\": [
-//					{
-//					\"th\": \"Name\"
-//				},
-//				{
-//					\"th\": \"Age\"
-//				},
-//				{
-//					\"th\": \"City\"
-//				}
-//			]},
-//				{
-//					\"tr\":
-//					[
-//						{
-//							\"th\":\"Akila\"
-//						},
-//						{
-//							\"th\":21
-//						},
-//						{
-//							\"th\":\"Mount Lavinia\"
-//						}
-//					]
-//				}
-//
-//		]
-//	}]
-//
-//}";
-//        echo json_encode($jsonData);
-
+//        echo '$table:[$tr:[$th:$Name,$th:$Age,$th:$City],$tr:[$td:$Akila,$td:$22,$td:$Mount Lavinia],$tr:[$td:$Randil,$td:$23,$td:$Colombo]]';
+        $htmlEncoder->sendToClient( json_encode($jsonData));
     }
 } else {
     echo "0 results";
 }
-
-
-//"attr":{
-//    "Class":"hello"
-//			},
