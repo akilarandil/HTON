@@ -74,6 +74,7 @@ function getResponse(type, dataSets, totalTimeOfAllIterations, iterations, count
     if (count !== iterations) {
         requestCompleted = false;
         let startTime;
+        // let st;
         let contentSize;
         $.ajax({
 
@@ -86,8 +87,8 @@ function getResponse(type, dataSets, totalTimeOfAllIterations, iterations, count
                 contentSize = request.getResponseHeader("Content-Length");
             },
             complete: function (x, y) {
-                let endTime = new moment();
-                let timeOfRequest = endTime.diff(startTime, 'milliseconds');
+
+                let timeOfRequest =  new moment().diff(startTime, 'milliseconds');
                 totalTimeOfAllIterations += timeOfRequest;
                 addTimeAndSizeDetails(type, contentSize, ++count, timeOfRequest, totalTimeOfAllIterations);
 
@@ -140,7 +141,7 @@ function addTimeAndSizeDetails(type, contentSize, count, timeOfRequest, totalTim
 
 //Process Data from the response
 function processData(type, result) {
-    // console.log(result);
+    // console.log(result)
     if (type === "HTML") {
 
         $("#HTML").html(result);

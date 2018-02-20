@@ -11,10 +11,11 @@ require_once("HTMLEncoder.php");
 $type = $_GET["type"];
 $dataSets = $_GET["dataSets"];
 
-$serverName = "localhost:3306";
+$serverName = "localhost:8889";
 $username = "root";
-$password = "";
+$password = "akila";
 $dbName = "People";
+$str="";
 
 // Create connection
 $conn = mysqli_connect($serverName, $username, $password, $dbName);
@@ -103,11 +104,58 @@ if (mysqli_num_rows($result) > 0) {
             $count++;
         endforeach;
 
+//var_dump($jsonData);
 
 
-//        echo '$table:[$tr:[$th:$Name,$th:$Age,$th:$City],$tr:[$td:$Akila,$td:$22,$td:$Mount Lavinia],$tr:[$td:$Randil,$td:$23,$td:$Colombo]]';
-        $htmlEncoder->sendToClient( json_encode($jsonData));
+//        $js= '$table:[$tr:[$th:$Name,$th:$Age,$th:$City],';
+//        foreach ($resultDataSet as $value):
+//
+//            if(next($resultDataSet)==null){
+//                $js.='$tr:[$td:$'.$value["Name"].',$td:$'.$value["Age"].',$td:$'.$value["City"].']';
+//            }else{
+//                $js.='$tr:[$td:$'.$value["Name"].',$td:$'.$value["Age"].',$td:$'.$value["City"].'],';
+//            }
+//        endforeach;
+//        echo $js.']';
+//        echo json_encode($jsonData);
+//        $find = array('"');
+//        $replace = array("");
+//        echo str_replace($find,$replace,json_encode($jsonData));
+       sendToClient( json_encode($jsonData));
+//       $htmlEncoder->sendToClient(json_encode($jsonData));
     }
 } else {
     echo "0 results";
 }
+
+
+
+function sendToClient($jsonArray){
+
+        recursiveCheck(json_decode($jsonArray));
+        echo $GLOBALS['str'];
+
+}
+
+
+function recursiveCheck($data){
+    if(is_string($data)){
+        $GLOBALS['str'] .= $data;
+    }else if(is_array($data)) {
+        $GLOBALS['str'] .= '[';
+        foreach ($data as $key => $value) {
+            recursiveCheck($value);
+            if(next($data) !=null) {
+                $GLOBALS['str'] .= ",";
+            }
+        }
+        $GLOBALS['str'] .= ']';
+    }else if (is_object($data)){
+        foreach ($data as $key => $value) {
+            $GLOBALS['str'].='{'.$key.':';
+            recursiveCheck($value);
+            $GLOBALS['str'].='}';
+        }
+    }
+}
+

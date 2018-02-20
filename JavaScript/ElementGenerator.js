@@ -3,12 +3,12 @@
  */
 function ReturnHTMLOpenString(htmlElement,value){
 
-    if (AttributeCheck(htmlElement,value)){
+    // if (AttributeCheck(htmlElement,value)){
 
-       return  ReturnHTMLOpenStringWithAttr(htmlElement,value);
-    }else{
+       // return  ReturnHTMLOpenStringWithAttr(htmlElement,value);
+    // }else{
        return ReturnHTMLOpenStringWithoutAttr(htmlElement);
-    }
+    // }
 }
 
 /**
