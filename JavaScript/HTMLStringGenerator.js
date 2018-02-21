@@ -7,58 +7,10 @@ let htmlSnippetStr = "";
 function GetHTMLSnippet(jsonArray) {
     stack = [];
     htmlSnippetStr = "";
-    // let json = ConvertToJson(jsonArray);
-
-    // IterateArray(json);
-    // IterateArray(JSON.parse(jsonArray));
     IterateArray(HTMLEncoder_Parser(jsonArray));
     return htmlSnippetStr;
 }
 
-function IterateArrayOld(jsonArray) {
-    let key;
-    let jsonArrayLength = jsonArray.length;
-    if (typeof jsonArray.length === 'undefined') {
-        key = Object.keys(jsonArray)[0];
-        let value = jsonArray[key];
-        let openingTag = ReturnHTMLOpenString(key, value);
-
-        htmlSnippetStr = htmlSnippetStr.concat(openingTag);
-        stack.push("</" + openingTag);
-        if (typeof jsonArray[key] !== "object") {
-            htmlSnippetStr = htmlSnippetStr.concat(value);
-            htmlSnippetStr = htmlSnippetStr.concat(stack.pop());
-        } else {
-            IterateArray(value);
-        }
-        if (stack.length > 0) {
-            htmlSnippetStr = htmlSnippetStr.concat(stack.pop());
-        }
-    } else {
-
-        for (let i = 0; i < jsonArrayLength; i++) {
-            if (Object.keys(jsonArray)[i] >= 0) {
-                key = Object.keys(jsonArray[i])[0];
-            }
-            let value = jsonArray[i][key];
-            let openingTag = ReturnHTMLOpenString(key, value);
-
-            htmlSnippetStr = htmlSnippetStr.concat(openingTag);
-            stack.push("</" + openingTag);
-            if (typeof jsonArray[i][key] !== "object") {
-                htmlSnippetStr = htmlSnippetStr.concat(value);
-                htmlSnippetStr = htmlSnippetStr.concat(stack.pop());
-            } else {
-                IterateArray(value);
-            }
-        }
-        if (stack.length > 0) {
-            htmlSnippetStr = htmlSnippetStr.concat(stack.pop());
-        }
-
-    }
-
-}
 
 function IterateArray(jsonArray) {
     let key;
@@ -66,7 +18,7 @@ function IterateArray(jsonArray) {
     if (typeof jsonArrLength === 'undefined') {
         key = Object.keys(jsonArray)[0];
         let value = jsonArray[key];
-        let openingTag = ReturnHTMLOpenString(key, value);
+        let openingTag = ReturnHTMLOpenString(key);
 
         htmlSnippetStr = htmlSnippetStr.concat(openingTag);
         stack.push("</" + openingTag);
@@ -102,7 +54,7 @@ function elsee(jsonArray, length) {
         nextArray();
         let ke = Object.keys(jsonArr)[0];
         let value = jsonArr[ke];
-        let openingTag = ReturnHTMLOpenString(ke, value);
+        let openingTag = ReturnHTMLOpenString(ke);
 
         htmlSnippetStr = htmlSnippetStr.concat(openingTag);
         stack.push("</" + openingTag);
@@ -121,28 +73,6 @@ function elsee(jsonArray, length) {
     return key();
 }
 
-
-function ConvertToJson(string) {
-    let s = string
-        .replace(/\$/g, "\"")
-        .replace(/\:/g, "\":")
-        .replace(/\[/g, "[{")
-        .replace(/\,/g, "},")
-        .replace(/\]/g, "}]")
-        .replace(/\[$/g, "\"")
-        .replace(/\,$/g, ",\"")
-        .replace(/\:$/g, ":\"")
-        .replace(/\,"/g, ",{\"")
-    ;
-    // console.log(s);
-    let str = s.match(/[A-Za-z0-9]+}/g);
-    for (let i = 0; i < str.length; i++) {
-        let r = str[i].replace("}", "");
-        s = s.replace(str[i], r + "\"" + "}");
-    }
-    // console.log("{"+s+"}");
-    return JSON.parse("{" + s + "}");
-}
 let HTMLEncoder_Parser = function (data) {
     let length = data.length;
     let next = function () {
@@ -240,93 +170,265 @@ let HTMLEncoder_Parser = function (data) {
     return value();
 };
 
-let HTMLEncoder_Parser1 = function (data) {
+function ReturnElementString(element) {
 
-    let length = data.length;
+    let elementDictionary={
+        "!DOCTYPE":"!DOCTYPE>",
 
-    let next = function () {
-        at += 1;
-        if (length === at) {
-            return;
-        }
-        ch = data.charAt(at);
-        return ch;
+        "a":"a>",
+
+        "abbr":"abbr>",
+
+        "acronym":"acronym>",
+
+        "address":"address>",
+
+        "applet":"applet>",
+
+        "area":"area>",
+
+        "article":"article>",
+
+        "aside":"aside>",
+
+        "audio":"audio>",
+
+        "b":"b>",
+
+        "base":"base>",
+
+        "basefont":"basefont>",
+
+        "bdi":"bdi>",
+
+        "bdo":"bdo>",
+
+        "big":"big>",
+
+        "blockquote":"blockquote>",
+
+        "body":"body>",
+
+        "br":"br>",
+
+        "button":"button>",
+
+        "canvas":"canvas>",
+
+        "caption":"caption>",
+
+        "center":"center>",
+
+        "cite":"cite>",
+
+        "code":"code>",
+
+        "col":"col>",
+
+        "colgroup":"colgroup>",
+
+        "datalist":"datalist>",
+
+        "dd":"dd>",
+
+        "del":"del>",
+
+        "details":"details>",
+
+        "dfn":"dfn>",
+
+        "dialog":"dialog>",
+
+        "dir":"dir>",
+
+        "div":"div>",
+
+        "dl":"dl>",
+
+        "dt":"dt>",
+
+        "em":"em>",
+
+        "embed":"embed>",
+
+        "fieldset":"fieldset>",
+
+        "figcaption":"figcaption>",
+
+        "figure":"figure>",
+
+        "font":"font>",
+
+        "footer":"footer>",
+
+        "form":"form>",
+
+        "frame":"frame>",
+
+        "frameset":"frameset>",
+
+        "h1":"h1>",
+
+        "h2":"h2>",
+
+        "h3":"h3>",
+
+        "h4":"h4>",
+
+        "h5":"h5>",
+
+        "h6":"h6>",
+
+        "head":"head>",
+
+        "header":"header>",
+
+        "hr":"hr>",
+
+        "html":"html>",
+
+        "i":"i>",
+
+        "iframe":"iframe>",
+
+        "img":"img>",
+
+        "input":"input>",
+
+        "ins":"ins>",
+
+        "kbd":"kbd>",
+
+        "label":"label>",
+
+        "legend":"legend>",
+
+        "li":"li>",
+
+        "link":"link>",
+
+        "main":"main>",
+
+        "map":"map>",
+
+        "mark":"mark>",
+
+        "menu":"menu>",
+
+        "menuitem":"menuitem>",
+
+        "meta":"meta>",
+
+        "meter":"meter>",
+
+        "nav":"nav>",
+
+        "noframes":"noframes>",
+
+        "noscript":"noscript>",
+
+        "object":"object>",
+
+        "ol":"ol>",
+
+        "optgroup":"optgroup>",
+
+        "option":"option>",
+
+        "output":"output>",
+
+        "p":"p>",
+
+        "param":"param>",
+
+        "picture":"picture>",
+
+        "pre":"pre>",
+
+        "progress":"progress>",
+
+        "q":"q>",
+
+        "rp":"rp>",
+
+        "rt":"rt>",
+
+        "ruby":"ruby>",
+
+        "s":"s>",
+
+        "samp":"samp>",
+
+        "script":"script>",
+
+        "section":"section>",
+
+        "select":"select>",
+
+        "small":"small>",
+
+        "source":"source>",
+
+        "span":"span>",
+
+        "strike":"strike>",
+
+        "strong":"strong>",
+
+        "style":"style>",
+
+        "sub":"sub>",
+
+        "summary":"summary>",
+
+        "sup":"sup>",
+
+        "table":"table>",
+
+        "tbody":"tbody>",
+
+        "td":"td>",
+
+        "template":"template>",
+
+        "textarea":"textarea>",
+
+        "tfoot":"tfoot>",
+
+        "th":"th>",
+
+        "thead":"thead>",
+
+        "time":"time>",
+
+        "title":"title>",
+
+        "tr":"tr>",
+
+        "track":"track>",
+
+        "tt":"tt>",
+
+        "u":"u>",
+
+        "ul":"ul>",
+
+        "var":"var>",
+
+        "video":"video>",
+
+        "wbr":"wbr>"
+
     };
 
-    let error = function (message) {
+    return elementDictionary[element];
+}
+/**
+ * @return {string}
+ */
+function ReturnHTMLOpenString(htmlElement){
 
-        console.log(message);
-        throw undefined;
-    };
-    let value = function () {
+    return "<"+ReturnElementString(htmlElement);
 
 
-        switch (ch) {
-            case '{':
-                return object();
-            case '[':
-                return array();
-            default:
-                return string();
-        }
-    };
-    let object = function () {
-
-        let obj = {};
-
-        do {
-
-            if (next() === '}') {
-                return obj;
-            }
-            if (ch !== 'undefined' && ch !== ',') {
-                var key = string();
-                next();
-                obj[key] = value();
-                if (ch === '}') {  // object end reached
-                    next();
-                    return obj;
-                }
-            }
-        } while (ch);
-
-    };
-    let array = function () {
-
-        let arr = [];
-        if (ch !== '[') error('array should start with [');
-        do {
-
-            if (next() === ']') return array; // empty array
-            if (ch !== 'undefined') {
-                arr.push(value());
-                if (ch === ']') { // array end reached
-                    next();
-                    return arr;
-                }
-            }
-
-        } while (ch);
-
-    };
-
-    let string = function () {
-
-        let str = '';
-        while (ch) {
-
-            if (ch !== 'undefined') {
-                if (ch === ',' || ch === ':' || ch === '}') {
-                    return str;
-                }
-                str += ch;
-                next();
-            }
-        }
-
-    };
-    let at = 0;
-    let ch = data.charAt(at);
-
-    return value();
-};
+}

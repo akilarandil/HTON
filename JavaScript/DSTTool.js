@@ -58,7 +58,7 @@ function performIterations(iterateAll,type, dataSets) {
 
     let totalTimeOfAllIterations = 0;
     executedIterations = 0;
-    let x = 0;
+    let x = -1;
     let types = ["HTMLEncoder", "JSON", "HTML"];
     if(iterateAll){
         type = types.pop();
@@ -88,9 +88,12 @@ function getResponse(type, dataSets, totalTimeOfAllIterations, iterations, count
             },
             complete: function (x, y) {
 
+
                 let timeOfRequest =  new moment().diff(startTime, 'milliseconds');
-                totalTimeOfAllIterations += timeOfRequest;
-                addTimeAndSizeDetails(type, contentSize, ++count, timeOfRequest, totalTimeOfAllIterations);
+                if(count!==-1) {
+                    totalTimeOfAllIterations += timeOfRequest;
+                }
+                    addTimeAndSizeDetails(type, contentSize, ++count, timeOfRequest, totalTimeOfAllIterations);
 
                 if(iterateAll){
                     if(count=== iterations){
