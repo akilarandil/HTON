@@ -144,7 +144,6 @@ function addTimeAndSizeDetails(type, contentSize, count, timeOfRequest, totalTim
 
 //Process Data from the response
 function processData(type, result) {
-    // console.log(result)
     if (type === "HTML") {
 
         $("#HTML").html(result);
@@ -170,6 +169,8 @@ function processData(type, result) {
         htmlData += "</table>";
         $("#JSON").html(htmlData);
     } else if (type === "HTMLEncoder") {
-        $("#HTMLEncoder").html(GetHTMLSnippet(result));
+        HTMLEncoder.AppendToDOM(
+            "HTMLEncoder",
+            HTMLEncoder.GetHTMLSnippet(result));
     }
 }
