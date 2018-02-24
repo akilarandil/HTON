@@ -1,4 +1,4 @@
-"use strict";
+
 let stack = [];
 let htmlSnippetStr = "";
 let HTMLEncoder={};
@@ -24,6 +24,7 @@ HTMLEncoder.GetAndAppend = function (elementID,data) {
 };
 
 function IterateArray(data) {
+
     let key;
     let arrLength = data.length;
     if (arrLength === undefined) {
@@ -56,11 +57,19 @@ function elsee(data, arrLength) {
     let at;
     let arr;
     let nextArray = function () {
+        if(at === arrLength){return}
+
         arr = data[at];
         at++;
     };
     let key = function () {
         nextArray();
+        if( arr instanceof Array){
+            IterateArray(arr);
+            nextArray();
+
+            return elsee(arr,arrLength);
+        }
         let ke = Object.keys(arr)[0];
         let value = arr[ke];
         htmlSnippetStr+='<'+ke+'>';
@@ -81,6 +90,7 @@ function elsee(data, arrLength) {
 }
 
 HTMLEncoder.DeSerialize = function (data) {
+    // debugger;
     let length = data.length;
     let next = function () {
         at += 1;
@@ -97,7 +107,7 @@ HTMLEncoder.DeSerialize = function (data) {
         throw undefined;
     };
     let value = function () {
-
+        // debugger;
         switch (ch) {
             case '<':
                 return object();
@@ -110,7 +120,7 @@ HTMLEncoder.DeSerialize = function (data) {
         }
     };
     let object = function () {
-
+        // debugger;
         let obj = {};
         if(ch!== '<') error('Object should start with <');
         let iterate = function (){
@@ -134,7 +144,7 @@ HTMLEncoder.DeSerialize = function (data) {
 
     };
     let array = function () {
-
+        // debugger;
         let arr = [];
         if (ch !== '[') error('array should start with [');
         let iterate = function () {
@@ -155,7 +165,7 @@ HTMLEncoder.DeSerialize = function (data) {
     };
 
     let stringWithoutQuotes = function () {
-
+        // debugger;
         let str = '';
         let iterate = function () {
 
@@ -211,7 +221,7 @@ HTMLEncoder.DeSerialize = function (data) {
         return iterate();
 
     };
-
+    // debugger;
     let at = 0;
     let ch = data.charAt(at);
 

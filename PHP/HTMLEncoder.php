@@ -15,9 +15,15 @@ class HTMLEncoder
         ']',
         '>'
     );
-    public function sendToClient($array)
+    public function sendToClient($data)
     {
-        $this->recursiveCheck((object) $array);
+        if (is_object($data)) {
+            $this->recursiveCheck($data);
+        }else{
+            $this->str .= '[';
+            $this->recursiveCheckArray((object)$data);
+            $this->str .= ']';
+        }
         echo $this->str;
     }
 
@@ -39,14 +45,63 @@ class HTMLEncoder
             }
             $this->str .= ']';
         } else if (is_object($data)) {
-            foreach ($data as $key => $value) {
-                $this->str .= '<' . $key . ':';
-                $this->recursiveCheck($value);
+            if(!is_iterable($data)){
+                $this->str .= '<' . $data->getName() . ':';
+                $this->recursiveCheck($data->getValue());
                 $this->str .= '>';
+            }
+            else {
+                foreach ($data as $key => $value) {
+                    $this->str .= '<' . $key . ':';
+                    $this->recursiveCheck($value);
+                    $this->str .= '>';
+                }
             }
         }
     }
 
+    function recursiveCheckArray($data)
+    {
+
+            if (is_string($data)) {
+                if ($this->match($this->escapes, $data)) {
+                    $this->str .= '"' . $data . '"';
+                } else {
+                    $this->str .= $data;
+                }
+            } else if (is_array($data)) {
+                $this->str .= '[';
+                foreach ($data as $key => $value) {
+                    if(is_numeric($key)){
+                        $this->recursiveCheckArray((object)$value);
+                    }else {
+                        $this->recursiveCheckArray($value);
+                    }
+                    if (next($data) != null) {
+                        $this->str .= ",";
+                    }
+                }
+                $this->str .= ']';
+            } else if (is_object($data)) {
+
+                foreach ($data as $key => $value) {
+
+                    if(is_numeric($key)) {
+                        $this->recursiveCheckArray((object)$value);
+                    }else{
+                        $this->str .= '<' ;
+                        $this->str .=$key . ':';
+                        $this->recursiveCheckArray($value);
+                        $this->str .= '>';
+                    }
+
+                    if (next($data) != null) {
+                        $this->str .= ",";
+                    }
+                }
+
+            }
+    }
 
     function match($chArray, $string)
     {
