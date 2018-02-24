@@ -32,8 +32,31 @@ class HTMLElement
         $this->value = $value;
     }
 
+    public function toArray() {
+
+        // Handle scalar values
+        $val = $this->value ;
+
+        // Handle HTMLElement values
+        if (is_object($this->value)) {
+            $val = $this->value->toArray();
+        }
+
+        // Handle array values :
+        elseif (is_array($val)) {
+            foreach ($val as &$item) {
+                if (is_object($item)) {
+                    $item = $item->toArray();
+                }
+            }
+        }
+
+        // Return Key/Value pair
+        return [$this->name => $val] ;
+    }
+
     public static function ConvertToHTMLElement(HTMLElement $obj){
         return new HTMLElement($obj->name,$obj->value);
-}
+    }
 
 }
