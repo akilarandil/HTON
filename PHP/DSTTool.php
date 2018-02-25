@@ -7,6 +7,8 @@
  */
 
 require_once("HTMLEncoder.php");
+require_once("HTMLTree.php");
+require_once("HTMLElement.php");
 
 $type = $_GET["type"];
 $dataSets = $_GET["dataSets"];
@@ -23,7 +25,8 @@ $str = "";
 $conn = mysqli_connect($serverName, $username, $password, $dbName);
 // Check connection
 if (!$conn) {
-    die("Connection failed: " . mysqli_connect_error());
+    echo "$serverName - $username - $password - $dbName - $tableName";
+    die("\nConnection failed: " . mysqli_connect_error());
 }
 
 $sql = "SELECT * FROM $tableName";
@@ -36,52 +39,62 @@ if (mysqli_num_rows($result) > 0) {
         }
 
     }
-
     if ($type == "HTML") {
         $htmlSerialize = '<table><tr><th>Name</th><th>Age</th><th>City</th></tr>';
+        $count=1;
         foreach ($resultDataSet as $value):
-            $htmlSerialize .= '<tr><td>' . $value['Name'] . '</td><td>' . $value['Age'] . '</td><td>' . $value['City'] . '</td></tr>';
+
+            $htmlSerialize .= '<tr><td>' .
+                $value['Name'] . '</td><td>' .
+                $value['Age'] . '</td><td>'.
+                $value['City'] . '</td></tr>';
+            $count++;
         endforeach;
+
         $htmlSerialize .= '</table>';
+
         echo $htmlSerialize;
 
     } elseif ($type == "JSON") {
         $dataSet = array();
+        $count=1;
         foreach ($resultDataSet as $value) {
-            $jsonData = array('name' => $value['Name'], 'age' => $value['Age'], 'city' => $value['City']);
+            $jsonData = array(
+                "name"=>  $value['Name'] ,
+                "age"=> $value['Age'],
+                "city"=> $value['City']
+            );
 
             array_push($dataSet, $jsonData);
+            $count++;
         }
         $jsonDataSet = json_encode($dataSet);
         echo $jsonDataSet;
     } elseif ($type == "HTMLEncoder") {
 
-        $array = array(
-            "table" => array(
-                array_merge(array("tr" => array(
-                        array_merge(array("th" => "Name")),
-                        array_merge(array("th" => "Age")),
-                        array_merge(array("th" => "City"))
-                    )
-                    )
+        $elm = new HTMLElement(
+            "table", array(
+            new HTMLElement("tr", array(
+                new HTMLElement("th", "Name"),
+                new HTMLElement("th" ,"Age"),
+                new HTMLElement("th" , "City")
+            ))));
 
-                )
-            )
-        );
-
-        $count = 1;
+        $newArr = $elm->toArray() ;
+        $count1 = 1;
         foreach ($resultDataSet as $value):
 
-            $array["table"][$count] = array_merge(array("tr" => array(
-                array_merge(array("td" => $value["Name"])),
-                array_merge(array("td" => $value["Age"])),
-                array_merge(array("td" => $value["City"]))
-            )));
-            $count++;
+            $e = new HTMLElement("tr", array(
+                    new HTMLElement("td" , $value["Name"]),
+                    new HTMLElement("td" , $value["Age"]),
+                    new HTMLElement("td" , $value["City"])
+                )
+            );
+            $newArr["table"][$count1] =$e->toArray();
+            $count1++;
         endforeach;
-
         $encoder = new HTMLEncoder();
-        $encoder->sendToClient($array);
+        $encoder->sendToClient($newArr);
     }
 } else {
     echo "0 results";
