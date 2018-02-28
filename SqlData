@@ -18,20 +18,20 @@ SET time_zone = "+00:00";
 
 
 --
--- Table structure for table `person`
+-- Table structure for table `person1`
 --
 
-CREATE TABLE IF NOT EXISTS `person` (
+CREATE TABLE IF NOT EXISTS `person1` (
   `Name` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
   `Age` int(20) NOT NULL,
   `City` varchar(50) COLLATE utf8_unicode_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
--- Dumping data for table `person`
+-- Dumping data for table `person1`
 --
 
-INSERT INTO `person` (`Name`, `Age`, `City`) VALUES
+INSERT INTO `person1` (`Name`, `Age`, `City`) VALUES
 ('Akila', 22, 'Mount Lavinia'),
 ('Randil', 23, 'Colombo');
 

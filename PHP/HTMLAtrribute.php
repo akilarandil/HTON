@@ -1,21 +1,21 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: akilarhettiarachchi
- * Date: 2/23/18
- * Time: 10:39 PM
+ * User: Akila Hettiarachchi
+ * Date: 2/28/2018
+ * Time: 10:09 AM
  */
 
-class HTMLElement
+class HTMLAtrribute
 {
+
     private $name;
     private $value;
-    private $attributes;
 
-    function __construct($name,$value,$attributes=null) {
+    function __construct($name,$value)
+    {
         $this->name = $name;
         $this->value = $value;
-        $this->attributes = $attributes;
     }
 
     public function getName(){
@@ -34,18 +34,10 @@ class HTMLElement
         $this->value = $value;
     }
 
-    public function getAttributes(){
-        return $this->attributes;
-    }
-
-    public function setAttributes($attributes){
-        $this->attributes = $attributes;
-    }
     public function toArray() {
 
         // Handle scalar values
         $val = $this->value ;
-
         // Handle HTMLElement values
         if (is_object($this->value)) {
             $val = $this->value->toArray();
@@ -59,17 +51,12 @@ class HTMLElement
             }
         }
 
-        $attr = $this->attributes;
-        if(!$this->attributes){
-//            $attr = $thid
-        }
         // Return Key/Value pair
-        return array($this->name => array_merge(array("val"=>$val, "attr"=>$attr))) ;
+        return array($this->name => $val) ;
     }
 
-    public static function ConvertToHTMLElement(HTMLElement $obj){
+    public static function ConvertToHTMLAttribute(HTMLAtrribute $obj){
         return new HTMLElement($obj->name,$obj->value);
     }
-
 
 }
