@@ -9,6 +9,7 @@
 require_once("HTMLEncoder.php");
 require_once("HTMLTree.php");
 require_once("HTMLElement.php");
+require_once("HTMLAtrribute.php");
 
 $type = $_GET["type"];
 $dataSets = $_GET["dataSets"];
@@ -40,7 +41,12 @@ if (mysqli_num_rows($result) > 0) {
 
     }
     if ($type == "HTML") {
-        $htmlSerialize = '<table><tr><th>Name</th><th>Age</th><th>City</th></tr>';
+        $htmlSerialize = '<table id=personTable class=table-class>'.
+                            '<tr>'.
+                                '<th>Name</th>'.
+                                '<th>Age</th>'.
+                                '<th>City</th>'.
+                            '</tr>';
         $count=1;
         foreach ($resultDataSet as $value):
 
@@ -78,7 +84,14 @@ if (mysqli_num_rows($result) > 0) {
                 new HTMLElement("th", "Name"),
                 new HTMLElement("th" ,"Age"),
                 new HTMLElement("th" , "City")
-            ))));
+            )))
+            ,
+            array(
+                new HTMLAtrribute("id","personTable")
+            ,
+                new HTMLAtrribute("class","table-class")
+                )
+    );
 
         $newArr = $elm->toArray() ;
         $count1 = 1;
@@ -90,7 +103,7 @@ if (mysqli_num_rows($result) > 0) {
                     new HTMLElement("td" , $value["City"])
                 )
             );
-            $newArr["table"][$count1] =$e->toArray();
+            $newArr["table"]["val"][$count1] =$e->toArray();
             $count1++;
         endforeach;
         $encoder = new HTMLEncoder();

@@ -153,7 +153,7 @@ function processData(type, result) {
 
         let jsonData = JSON.parse(result);
         let htmlData =
-            "<table>" +
+            "<table id=personTable class=table-class>" +
             "<tr>" +
             "<th>Name</th>" +
             "<th>Age</th>" +

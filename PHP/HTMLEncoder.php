@@ -91,7 +91,7 @@ class HTMLEncoder
                     }else{
                         $this->str .= '<' ;
                         $this->str .=$key . ':';
-                        $this->recursiveCheckArray($value);
+                        $this->ValueAttributation($value);
                         $this->str .= '>';
                     }
 
@@ -112,7 +112,52 @@ class HTMLEncoder
         }
         return false;
     }
+    function ValueAttributation($data){
 
+        foreach ($data as $key => $value){
+            if($key == "val"){
+                $this->str.="<$key:";
+                $this->recursiveCheckArray($value);
+
+            }
+            if($key == "attr"){
+                $this->str .= ",";
+                $this->str .= "$key:";
+                $this->str .= "[";
+                $this->recursiveAttribute($value);
+                $this->str .= "]";
+
+
+            }
+
+        }
+        $this->str .= ">";
+
+    }
+
+    function recursiveAttribute($data){
+        if(is_array($data)){
+        foreach ($data as $key=>$value){
+            if(is_numeric($key)){
+                $this->recursiveAttribute($value);
+            }else {
+                $this->str .= '<';
+                $this->str .= $key . ':'.$value;
+                $this->str .= '>';
+
+            }
+            if (next($data) != null) {
+                $this->str .= ",";
+            }
+        }}
+        else if(is_object($data)){
+                $this->str .= '<';
+                $this->str .= $data->getName() . ':' . $data->getValue();
+                $this->str .= '>';
+
+        }
+
+    }
     function ValidateElement($key){
         $elements = array(
             "!DOCTYPE",

@@ -45,6 +45,7 @@ class HTMLElement
 
         // Handle scalar values
         $val = $this->value ;
+        $attr = $this->attributes;
 
         // Handle HTMLElement values
         if (is_object($this->value)) {
@@ -59,12 +60,22 @@ class HTMLElement
             }
         }
 
-        $attr = $this->attributes;
-        if(!$this->attributes){
-//            $attr = $thid
+        if(is_array($attr)) {
+            foreach ($attr as &$item) {
+                if (is_object($item)) {
+                    $item = $item->toArray();
+                }
+            }
         }
-        // Return Key/Value pair
-        return array($this->name => array_merge(array("val"=>$val, "attr"=>$attr))) ;
+
+
+
+        if($attr==null){
+            return array($this->name => array_merge(array("val"=>$val))) ;
+
+        }else{
+            return array($this->name => array_merge(array("val"=>$val, "attr"=>$attr))) ;
+        }
     }
 
     public static function ConvertToHTMLElement(HTMLElement $obj){
