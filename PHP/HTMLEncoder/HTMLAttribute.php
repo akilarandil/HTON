@@ -6,7 +6,7 @@
  * Time: 10:09 AM
  */
 
-class HTMLAtrribute
+class HTMLAttribute
 {
 
     private $name;
@@ -55,7 +55,8 @@ class HTMLAtrribute
         return array($this->name => $val) ;
     }
 
-    public static function ConvertToHTMLAttribute(HTMLAtrribute $obj){
+    public static function ConvertToHTMLAttribute(HTMLAttribute $obj)
+    {
         return new HTMLElement($obj->name,$obj->value);
     }
 

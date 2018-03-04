@@ -6,10 +6,11 @@
  * Time: 11:52 AM
  */
 
-require_once("HTMLEncoder.php");
-require_once("HTMLTree.php");
-require_once("HTMLElement.php");
-require_once("HTMLAtrribute.php");
+$libPath = "HTMLEncoder";
+require_once("$libPath/HTMLEncoder.php");
+require_once("$libPath/HTMLTree.php");
+require_once("$libPath/HTMLElement.php");
+require_once("$libPath/HTMLAttribute.php");
 
 $type = $_GET["type"];
 $dataSets = $_GET["dataSets"];
@@ -84,14 +85,10 @@ if (mysqli_num_rows($result) > 0) {
                 new HTMLElement("th", "Name"),
                 new HTMLElement("th" ,"Age"),
                 new HTMLElement("th" , "City")
-            )))
-            ,
+            ))),
             array(
-                new HTMLAtrribute("id","personTable")
-            ,
-                new HTMLAtrribute("class","table-class")
-                )
-    );
+                new HTMLAttribute("id", "personTable"),
+                new HTMLAttribute("class", "table-class")));
 
         $newArr = $elm->toArray() ;
         $count1 = 1;
