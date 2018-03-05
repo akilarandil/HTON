@@ -104,7 +104,7 @@ if (mysqli_num_rows($result) > 0) {
             $count1++;
         endforeach;
         $encoder = new HTMLEncoder();
-        $encoder->sendToClient($newArr);
+        echo $encoder->convertToHTMLEncoder($newArr);
     }
 } else {
     echo "0 results";
