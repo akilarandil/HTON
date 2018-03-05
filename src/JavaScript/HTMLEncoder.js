@@ -44,6 +44,7 @@ HTMLEncoder.GetAndAppend = function (elementID,data) {
  * data (javascript Object/Array) to an HTML string
  * @param data de-serialized HTMLEncoder data (javascript Object/Array)
  * @constructor
+ * @return {string} the HTML string
  */
 HTMLEncoder.Decode = function (data) {
 
@@ -110,7 +111,8 @@ HTMLEncoder.Decode = function (data) {
         return keyFunc();
     };
 
-    return iterateData(data);
+    iterateData(data);
+    return htmlSnippetStr;
 };
 
 /**
