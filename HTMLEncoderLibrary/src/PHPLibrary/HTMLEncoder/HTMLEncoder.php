@@ -53,45 +53,72 @@ class HTMLEncoder
     private function convertArrayToHTMLEncoderString($data)
     {
         if (is_string($data)) { //checks if string
-            if ($this->match($this->escapes, $data)) { // checks if string contains special characters
-                $this->str .= '"' . $data . '"';
-            } else {
-                $this->str .= $data;
-            }
+            $this->stringExecution($data);
         } else if (is_array($data)) { // checks if array
-            $this->str .= '[';
-            foreach ($data as $key => $value) {
-                if (is_numeric($key)) { // if the key contains the index number
-                    $this->convertArrayToHTMLEncoderString((object)$value);
-                } else {
-                    $this->convertArrayToHTMLEncoderString($value);
-                }
-                if (next($data) != null) { // if another element is available, add a comma
-                    $this->str .= ",";
-                }
-            }
-            $this->str .= ']';
+            $this->arrayExecution($data);
         } else if (is_object($data)) { // checks if object
-
-            foreach ($data as $key => $value) {
-
-                if (is_numeric($key)) { //if the key contains the index number
-                    $this->convertArrayToHTMLEncoderString((object)$value);
-                } else { //contains the val and attr keys
-                    $this->str .= '<';
-                    $this->str .= $key . ':';
-                    $this->ValueAttributation($value);
-                    $this->str .= '>';
-                }
-
-                if (next($data) != null) {
-                    // if another element is available, add a comma
-                    $this->str .= ",";
-                }
-            }
+            $this->objectExecution($data);
 
         }
     }
+
+    /**
+     * Executes the code for type string for the method @see convertArrayToHTMLEncoderString
+     * @param $data string value
+     */
+    private function stringExecution($data)
+    {
+        if ($this->match($this->escapes, $data)) { // checks if string contains special characters
+            $this->str .= '"' . $data . '"';
+        } else {
+            $this->str .= $data;
+        }
+    }
+
+    /**
+     * Executes the code for type array for the method @see convertArrayToHTMLEncoderString
+     * @param $data array
+     */
+    private function arrayExecution($data)
+    {
+        $this->str .= '[';
+        foreach ($data as $key => $value) {
+            if (is_numeric($key)) { // if the key contains the index number
+                $this->convertArrayToHTMLEncoderString((object)$value);
+            } else {
+                $this->convertArrayToHTMLEncoderString($value);
+            }
+            if (next($data) != null) { // if another element is available, add a comma
+                $this->str .= ",";
+            }
+        }
+        $this->str .= ']';
+    }
+
+    /**
+     * Executes the code for type object for the method @see convertArrayToHTMLEncoderString
+     * @param $data mixed traversable @see HTMLElement object
+     */
+    private function objectExecution($data)
+    {
+
+        foreach ($data as $key => $value) {
+
+            if (is_numeric($key)) { //if the key contains the index number
+                $this->convertArrayToHTMLEncoderString((object)$value);
+            } else { //contains the val and attr keys
+                $this->str .= '<';
+                $this->str .= $key . ':';
+                $this->ValueAttributation($value);
+                $this->str .= '>';
+            }
+            if (next($data) != null) {
+                // if another element is available, add a comma
+                $this->str .= ",";
+            }
+        }
+    }
+
 
     /**
      * Check of a string contains a character that is specified in the array
