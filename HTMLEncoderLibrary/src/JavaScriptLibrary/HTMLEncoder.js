@@ -92,12 +92,12 @@ HTMLEncoder.Decode = function (data) {
     let htmlSnippetStr = "";
 
     /**
-     * Algorithm for converting a JavaScript Object/Array to an HTML String
-     * @param data JavaScript Object
+     * Algorithm for converting a JavaScriptLibrary Object/Array to an HTML String
+     * @param data JavaScriptLibrary Object
      */
     let convertDataToHTMLString = function (data) {
         let arrLength = data.length;
-        if (arrLength === undefined) { // a JavaScript Object
+        if (arrLength === undefined) { // a JavaScriptLibrary Object
             let key = Object.keys(data)[0];
             let valueOfKey = data[key]; // contains val and attr
             let value = valueOfKey["val"];
@@ -124,8 +124,8 @@ HTMLEncoder.Decode = function (data) {
     };
 
     /**
-     * Algorithm for converting a JavaScript Array to an HTML string
-     * @param data JavaScript Array
+     * Algorithm for converting a JavaScriptLibrary Array to an HTML string
+     * @param data JavaScriptLibrary Array
      * @param arrLength length of data
      * @returns {*}
      */
@@ -250,7 +250,7 @@ HTMLEncoder.DeSerialize = function (data) {
                 return stringWithoutQuotes();
         }
     };
-    //Function for creating a JavaScript Object
+    //Function for creating a JavaScriptLibrary Object
     let object = function () {
         let obj = {};
         if (ch !== '<') error('Object should start with <');
@@ -274,7 +274,7 @@ HTMLEncoder.DeSerialize = function (data) {
         };
         return iterate();
     };
-    //Function for creating a JavaScript Array
+    //Function for creating a JavaScriptLibrary Array
     let array = function () {
         let arr = [];
         if (ch !== '[') error('array should start with [');
@@ -360,10 +360,10 @@ HTMLEncoder.DeSerialize = function (data) {
 };
 
 /**
- * Converts the HTMLEncoder data to a JavaScript Object Notation (JSON) string.
+ * Converts the HTMLEncoder data to a JavaScriptLibrary Object Notation (JSON) string.
  * @param HTMLEncoderData HTMLEncoder data
  * @constructor
- * @return {string} a JavaScript Object Notation (JSON) string
+ * @return {string} a JavaScriptLibrary Object Notation (JSON) string
  * @since 1.0
  */
 HTMLEncoder.ConvertToJSONString = function (HTMLEncoderData) {

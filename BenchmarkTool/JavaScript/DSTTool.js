@@ -74,7 +74,6 @@ function getResponse(type, dataSets, totalTimeOfAllIterations, iterations, count
     if (count !== iterations) {
         requestCompleted = false;
         let startTime;
-        // let st;
         let contentSize;
         $.ajax({
 

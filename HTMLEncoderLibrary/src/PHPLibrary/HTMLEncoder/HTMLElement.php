@@ -75,8 +75,8 @@ class HTMLElement
     }
 
     /**
-     * Converts this object including all its child objects to a PHP associative array
-     * @return array a PHP associative array
+     * Converts this object including all its child objects to a PHPLibrary Library associative array
+     * @return array a PHPLibrary Library associative array
      */
     public function toArray() {
 

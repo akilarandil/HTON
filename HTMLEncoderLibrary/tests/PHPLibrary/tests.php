@@ -6,7 +6,7 @@
  * Time: 3:51 PM
  */
 
-$libPath = "../../src/PHP/HTMLEncoder";
+$libPath = "../../src/PHPLibrary/HTMLEncoder";
 require_once("$libPath/HTMLEncoder.php");
 require_once("$libPath/HTMLTree.php");
 require_once("$libPath/HTMLElement.php");
