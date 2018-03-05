@@ -48,6 +48,28 @@ QUnit.module("De-Serializing Algorithm", () => {
         let actualResult = HTMLEncoder.DeSerialize(htmlEncoderStr);
         t.equal(QUnit.dump.parse(actualResult), QUnit.dump.parse(expectedResult), "Passed");
     });
+    test("De-serialize with values in double quotations", t => {
+        let htmlEncoderStr = '[<table:<val:[<tr:<val:[<th:<val:"[Name">>,<th:<val:Age>>,<th:<val:City>>]>>]>>]';
+        let expectedResult = [
+            {
+                "table": {
+                    "val": [
+                        {
+                            "tr": {
+                                "val": [
+                                    {"th": {"val": "[Name"}},
+                                    {"th": {"val": "Age"}},
+                                    {"th": {"val": "City"}}
+                                ]
+                            }
+                        }
+                    ]
+                }
+            }
+        ];
+        let actualResult = HTMLEncoder.DeSerialize(htmlEncoderStr);
+        t.equal(QUnit.dump.parse(actualResult), QUnit.dump.parse(expectedResult), "Passed");
+    });
     test("De-serialize with errors in the structure ", t => {
         let htmlEncoderStr = '[table:<val:[<tr:<val:[<th:<val:Name>>,<th:<val:Age>>,<th:<val:City>>>>]>>]';
         t.throws(
