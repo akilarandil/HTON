@@ -1,63 +1,65 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Akila Hettiarachchi
- * Date: 2/28/2018
- * Time: 10:09 AM
- */
 
+/**
+ * An object type to facilitate with an HTML attribute which consists
+ * of attribute name and value
+ *
+ * @author Akila R. Hettiarachchi
+ * @version 1.0
+ * @since 1.0
+ */
 class HTMLAttribute
 {
 
     private $name;
     private $value;
 
+    /**
+     * HTMLAttribute constructor.
+     * @param $name string attribute name
+     * @param $value string value of attribute
+     */
     function __construct($name,$value)
     {
         $this->name = $name;
         $this->value = $value;
     }
 
+    /**
+     * Returns the attribute name
+     * @return string attribute name
+     */
     public function getName(){
         return $this->name;
     }
 
+    /**
+     * Sets the attribute name
+     * @param $name string attribute name
+     */
     public function setName($name){
         $this->value = $name;
     }
 
+    /**
+     * Returns the value of the attribute
+     * @return string attribute value
+     */
     public function getValue(){
         return $this->value;
     }
 
+    /**
+     * Sets the value of the attribute
+     * @param $value string attribute value
+     */
     public function setValue($value){
         $this->value = $value;
     }
 
-    public function toArray() {
-
-        // Handle scalar values
-        $val = $this->value ;
-        // Handle HTMLElement values
-        if (is_object($this->value)) {
-            $val = $this->value->toArray();
-        }
-        // Handle array values :
-        elseif (is_array($val)) {
-            foreach ($val as &$item) {
-                if (is_object($item)) {
-                    $item = $item->toArray();
-                }
-            }
-        }
-
-        // Return Key/Value pair
-        return array($this->name => $val) ;
-    }
-
     public static function ConvertToHTMLAttribute(HTMLAttribute $obj)
     {
-        return new HTMLElement($obj->name,$obj->value);
+        return new HTMLAttribute($obj->name, $obj->value);
     }
 
 }
