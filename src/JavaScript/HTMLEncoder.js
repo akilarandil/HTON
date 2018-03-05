@@ -1,102 +1,130 @@
-
-let stack = [];
+let elementStack = [];
 let htmlSnippetStr = "";
 let HTMLEncoder={};
+
 /**
- * @return {string}
+ * Returns the decoded data as an HTML string based on the parsed data
+ * @param data HTMLEncoder data
+ * @returns {string} HTML String
+ * @constructor
  */
 HTMLEncoder.GetHTMLSnippet = function(data) {
-    stack = [];
+    elementStack = [];
     htmlSnippetStr = "";
-    
-    let k = HTMLEncoder.DeSerialize(data);
-    IterateArray(k);
+    let deserializeData = HTMLEncoder.DeSerialize(data);
+    HTMLEncoder.Decode(deserializeData);
     return htmlSnippetStr;
 };
 
-HTMLEncoder.AppendToDOM = function(elementId,str){
+/**
+ * Appends the HTML data to the specified element ID.
+ * It is a wrapper to the native method document.getElementById()
+ * @param elementId element ID
+ * @param str the HTML string
+ * @constructor
+ */
+HTMLEncoder.AppendToDOM = function (elementId, str) {
     document.getElementById(elementId).innerHTML= str;
 };
 
-
+/**
+ * Decodes the HTMLEncoder data and directly appends it to the DOM
+ * @param elementID element ID
+ * @param data HTMLEncoder data
+ * @constructor
+ */
 HTMLEncoder.GetAndAppend = function (elementID,data) {
     HTMLEncoder.AppendToDOM(
         elementID,
         HTMLEncoder.GetHTMLSnippet(data))
 };
 
-function IterateArray(data) {
+/**
+ * The decoding algorithm which converts the de-serialized HTMLEncoder
+ * data (javascript Object/Array) to an HTML string
+ * @param data de-serialized HTMLEncoder data (javascript Object/Array)
+ * @constructor
+ */
+HTMLEncoder.Decode = function (data) {
 
-    
-    let key;
-    let arrLength = data.length;
-    if (arrLength === undefined) {
-        key = Object.keys(data)[0];
-        let v = data[key];
-        let value = v["val"];
-        htmlSnippetStr += ReturnHTMLOpenString(key,v);
-        stack.push('</' + key+'>');
-        if (typeof value !== "object") {
-            htmlSnippetStr += value;
-            htmlSnippetStr +=stack.pop();
+    let iterateData = function (data) {
+        let key;
+        let arrLength = data.length;
+        if (arrLength === undefined) {
+            key = Object.keys(data)[0];
+            let valueOfKey = data[key];
+            let value = valueOfKey["val"];
+            htmlSnippetStr += ReturnHTMLOpenString(key, valueOfKey);
+            elementStack.push('</' + key + '>');
+            if (typeof value !== "object") {
+                htmlSnippetStr += value;
+                htmlSnippetStr += elementStack.pop();
+            } else {
+                iterateData(value);
+            }
+            if (elementStack.length > 0) {
+                htmlSnippetStr += elementStack.pop();
+            }
         } else {
-            IterateArray(value);
+            iterateDataForArrays(data, arrLength);
+            if (elementStack.length > 0) {
+                htmlSnippetStr += elementStack.pop();
+            }
         }
-        if (stack.length > 0) {
-            htmlSnippetStr +=stack.pop();
-        }
-    } else {
-
-
-        elsee(data, arrLength);
-        if (stack.length > 0) {
-            htmlSnippetStr +=stack.pop();
-        }
-
-    }
-
-}
-
-function elsee(data, arrLength) {
-    let at;
-    let arr;
-    let nextArray = function () {
-        if(at === arrLength){return}
-
-        arr = data[at];
-        at++;
     };
-    let key = function () {
-        nextArray();
-        if( arr instanceof Array){
-            IterateArray(arr);
+    let iterateDataForArrays = function (data, arrLength) {
+        let at;
+        let arr;
+        let nextArray = function () {
+            if (at === arrLength) {
+                return
+            }
+            arr = data[at];
+            at++;
+        };
+        let keyFunc = function () {
             nextArray();
+            if (arr instanceof Array) {
+                iterateData(arr);
+                nextArray();
+                return iterateDataForArrays(arr, arrLength);
+            }
+            let key = Object.keys(arr)[0];
 
-            return elsee(arr,arrLength);
-        }
-        let ke = Object.keys(arr)[0];
-        
-        let v = data[at-1][ke];
-        let value = v["val"];
-        htmlSnippetStr += ReturnHTMLOpenString(ke,v);
-        stack.push('</' + ke+'>');
-        if (typeof value !== "object") {
-            htmlSnippetStr +=value;
-            htmlSnippetStr +=stack.pop();
-        } else {
-            IterateArray(value);
-        }
-        if (arrLength === at) {
-            return;
-        }
-        return key();
+            let valueOfKey = data[at - 1][key];
+            let value = valueOfKey["val"];
+            htmlSnippetStr += ReturnHTMLOpenString(key, valueOfKey);
+            elementStack.push('</' + key + '>');
+            if (typeof value !== "object") {
+                htmlSnippetStr += value;
+                htmlSnippetStr += elementStack.pop();
+            } else {
+                iterateData(value);
+            }
+            if (arrLength === at) {
+                return;
+            }
+            return keyFunc();
+        };
+        at = 0;
+        return keyFunc();
     };
-    at = 0;
-    return key();
-}
 
+    return iterateData(data);
+};
+
+/**
+ * The de-serializing algorithm which converts the raw HTMLEncoder data
+ * to a javascript Object/Array. This algorithm is based on the
+ * JSON.Parse algorithm by the creator of JSON, Douglas Crockford. The original
+ * algorithm has been modified to support the use of the HTMLEncoder data structure.
+ *
+ * @link https://github.com/douglascrockford/JSON-js The original JSON.Parse algorithm
+ * @param data raw HTMLEncoder data
+ * @returns {*} javascript Object/Array
+ * @constructor
+ */
 HTMLEncoder.DeSerialize = function (data) {
-    // 
     let length = data.length;
     let next = function () {
         at += 1;
@@ -106,14 +134,11 @@ HTMLEncoder.DeSerialize = function (data) {
         ch = data.charAt(at);
         return ch;
     };
-
     let error = function (message) {
-
         console.log(message);
         throw undefined;
     };
     let value = function () {
-        // 
         switch (ch) {
             case '<':
                 return object();
@@ -126,7 +151,6 @@ HTMLEncoder.DeSerialize = function (data) {
         }
     };
     let object = function () {
-        // 
         let obj = {};
         if(ch!== '<') error('Object should start with <');
         let iterate = function (){
@@ -147,14 +171,11 @@ HTMLEncoder.DeSerialize = function (data) {
             return  iterate();
         };
         return iterate();
-
     };
     let array = function () {
-        // 
         let arr = [];
         if (ch !== '[') error('array should start with [');
         let iterate = function () {
-
             if(!ch){return;}
             if (next() === ']') return array; // empty array
             if (ch !== undefined) {
@@ -169,14 +190,10 @@ HTMLEncoder.DeSerialize = function (data) {
         return iterate();
 
     };
-
     let stringWithoutQuotes = function () {
-        // 
         let str = '';
         let iterate = function () {
-
             if (ch !== undefined) {
-
                 if (ch === ',' || ch === ':' || ch === '>') {
                     return str;
                 }
@@ -188,7 +205,6 @@ HTMLEncoder.DeSerialize = function (data) {
         return iterate();
 
     };
-
     let escapes = { // helper variable
         'b': '\b',
         'n': '\n',
@@ -198,12 +214,10 @@ HTMLEncoder.DeSerialize = function (data) {
         '\"': '\"',
         '\\': '\\'
     };
-
     let stringQuotes = function () {
         next();
         let str = '';
         let iterate = function () {
-
             if (ch !== undefined) {
                 if(ch === '\"'){
                     next();
@@ -219,40 +233,35 @@ HTMLEncoder.DeSerialize = function (data) {
                 }else{
                     str += ch;
                 }
-
                 next();
             }
             return iterate();
         };
         return iterate();
-
     };
-    // 
     let at = 0;
     let ch = data.charAt(at);
-
     return value();
 };
 
 /**
+ * Returns the HTML element as an opening tag with or without the
+ * specified attributes
  *
- * @param element
- * @param value
- * @returns {string}
+ * @param element HTML element
+ * @param value the value that is specified to be within the scope of the HTML element
+ * @returns {string} opening HTML element
  * @constructor
  */
 function ReturnHTMLOpenString(element,value) {
-    
     let attr = value["attr"];
     let openTag = "<"+element;
     if(attr===undefined){
         return openTag+">";
     }
     let length = attr.length;
-
     let at=0;
     let iterateAttributes = function () {
-        
         if (at===length){return;}
         let key = Object.keys(attr[at])[0];
         let val = attr[at][key];
