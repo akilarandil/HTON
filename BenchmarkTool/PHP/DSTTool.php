@@ -15,7 +15,7 @@ require_once("$libPath/HTMLAttribute.php");
 $type = $_GET["type"];
 $dataSets = $_GET["dataSets"];
 
-$ini_array = parse_ini_file("config.ini");
+$ini_array = parse_ini_file("../../config.ini");
 $serverName = $ini_array["serverName"];
 $username = $ini_array["userName"];
 $password = $ini_array["password"];
