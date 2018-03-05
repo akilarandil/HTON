@@ -1,4 +1,4 @@
-let HTMLEncoder={};
+let HTMLEncoder = {};
 
 /**
  * Returns the decoded data as an HTML string based on the parsed data
@@ -6,7 +6,7 @@ let HTMLEncoder={};
  * @returns {string} HTML String
  * @constructor
  */
-HTMLEncoder.GetHTMLSnippet = function(data) {
+HTMLEncoder.GetHTMLSnippet = function (data) {
     let deserializeData = HTMLEncoder.DeSerialize(data);
     return HTMLEncoder.Decode(deserializeData);
 };
@@ -19,7 +19,7 @@ HTMLEncoder.GetHTMLSnippet = function(data) {
  * @constructor
  */
 HTMLEncoder.AppendToDOM = function (elementId, str) {
-    document.getElementById(elementId).innerHTML= str;
+    document.getElementById(elementId).innerHTML = str;
 };
 
 /**
@@ -28,7 +28,7 @@ HTMLEncoder.AppendToDOM = function (elementId, str) {
  * @param data HTMLEncoder data
  * @constructor
  */
-HTMLEncoder.GetAndAppend = function (elementID,data) {
+HTMLEncoder.GetAndAppend = function (elementID, data) {
     HTMLEncoder.AppendToDOM(
         elementID,
         HTMLEncoder.GetHTMLSnippet(data))
@@ -51,6 +51,9 @@ HTMLEncoder.Decode = function (data) {
             key = Object.keys(data)[0];
             let valueOfKey = data[key];
             let value = valueOfKey["val"];
+            if (value === undefined) {
+                throw "Cannot find val"
+            }
             htmlSnippetStr += ReturnHTMLOpenString(key, valueOfKey);
             elementStack.push('</' + key + '>');
             if (typeof value !== "object") {
@@ -90,6 +93,9 @@ HTMLEncoder.Decode = function (data) {
 
             let valueOfKey = data[at - 1][key];
             let value = valueOfKey["val"];
+            if (value === undefined) {
+                throw "Cannot find val"
+            }
             htmlSnippetStr += ReturnHTMLOpenString(key, valueOfKey);
             elementStack.push('</' + key + '>');
             if (typeof value !== "object") {
@@ -134,7 +140,7 @@ HTMLEncoder.DeSerialize = function (data) {
     };
     let error = function (message) {
         console.log(message);
-        throw undefined;
+        throw message;
     };
     let value = function () {
         switch (ch) {
@@ -150,10 +156,12 @@ HTMLEncoder.DeSerialize = function (data) {
     };
     let object = function () {
         let obj = {};
-        if(ch!== '<') error('Object should start with <');
-        let iterate = function (){
+        if (ch !== '<') error('Object should start with <');
+        let iterate = function () {
 
-            if(!ch){return;}
+            if (!ch) {
+                return;
+            }
             if (next() === '>') {
                 return obj;
             }
@@ -166,7 +174,7 @@ HTMLEncoder.DeSerialize = function (data) {
                     return obj;
                 }
             }
-            return  iterate();
+            return iterate();
         };
         return iterate();
     };
@@ -174,7 +182,9 @@ HTMLEncoder.DeSerialize = function (data) {
         let arr = [];
         if (ch !== '[') error('array should start with [');
         let iterate = function () {
-            if(!ch){return;}
+            if (!ch) {
+                return;
+            }
             if (next() === ']') return array; // empty array
             if (ch !== undefined) {
                 arr.push(value());
@@ -217,18 +227,18 @@ HTMLEncoder.DeSerialize = function (data) {
         let str = '';
         let iterate = function () {
             if (ch !== undefined) {
-                if(ch === '\"'){
+                if (ch === '\"') {
                     next();
                     return str;
                 }
-                if(ch==='\\'){
+                if (ch === '\\') {
                     next();
-                    if(escapes.hasOwnProperty(ch)) {
+                    if (escapes.hasOwnProperty(ch)) {
                         str += escapes[ch];
                     } else {
                         str += ch;
                     }
-                }else{
+                } else {
                     str += ch;
                 }
                 next();
@@ -239,7 +249,15 @@ HTMLEncoder.DeSerialize = function (data) {
     };
     let at = 0;
     let ch = data.charAt(at);
-    return value();
+    try {
+        return value();
+    } catch (ex) {
+        if ("Maximum call stack size exceeded" === ex.message) {
+            throw "Incorrect Data Structure";
+        } else {
+            throw ex;
+        }
+    }
 };
 
 /**
@@ -251,22 +269,24 @@ HTMLEncoder.DeSerialize = function (data) {
  * @returns {string} opening HTML element
  * @constructor
  */
-function ReturnHTMLOpenString(element,value) {
+function ReturnHTMLOpenString(element, value) {
     let attr = value["attr"];
-    let openTag = "<"+element;
-    if(attr===undefined){
-        return openTag+">";
+    let openTag = "<" + element;
+    if (attr === undefined) {
+        return openTag + ">";
     }
     let length = attr.length;
-    let at=0;
+    let at = 0;
     let iterateAttributes = function () {
-        if (at===length){return;}
+        if (at === length) {
+            return;
+        }
         let key = Object.keys(attr[at])[0];
         let val = attr[at][key];
-        openTag+=" "+key+"="+val;
+        openTag += " " + key + "=" + val;
         at++;
         iterateAttributes();
     };
     iterateAttributes();
-    return openTag+">";
+    return openTag + ">";
 }
