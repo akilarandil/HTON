@@ -1,5 +1,3 @@
-let elementStack = [];
-let htmlSnippetStr = "";
 let HTMLEncoder={};
 
 /**
@@ -9,11 +7,8 @@ let HTMLEncoder={};
  * @constructor
  */
 HTMLEncoder.GetHTMLSnippet = function(data) {
-    elementStack = [];
-    htmlSnippetStr = "";
     let deserializeData = HTMLEncoder.DeSerialize(data);
-    HTMLEncoder.Decode(deserializeData);
-    return htmlSnippetStr;
+    return HTMLEncoder.Decode(deserializeData);
 };
 
 /**
@@ -47,7 +42,8 @@ HTMLEncoder.GetAndAppend = function (elementID,data) {
  * @return {string} the HTML string
  */
 HTMLEncoder.Decode = function (data) {
-
+    let elementStack = [];
+    let htmlSnippetStr = "";
     let iterateData = function (data) {
         let key;
         let arrLength = data.length;
