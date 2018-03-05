@@ -84,7 +84,7 @@ function getResponse(type, dataSets, totalTimeOfAllIterations, iterations, count
             },
             success: function (result, status, request) {
                 processData(type, result);
-                contentSize = request.getResponseHeader("Content-Length");
+                contentSize = result.length;
             },
             complete: function (x, y) {
 
