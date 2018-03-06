@@ -20,7 +20,8 @@ class HTMLElement
      * @param $value mixed object or array of HTMLElement Object or array of values of a string value
      * @param null $attributes HTMLAttribute object or an array of HTMLAttribute objects. By default it's null.
      */
-    function __construct($name,$value,$attributes=null) {
+    function __construct($name, $value, $attributes = null)
+    {
         $this->name = $name;
         $this->value = $value;
         $this->attributes = $attributes;
@@ -30,7 +31,8 @@ class HTMLElement
      * Returns the HTML element name
      * @return string HTML element
      */
-    public function getName(){
+    public function getName()
+    {
         return $this->name;
     }
 
@@ -38,7 +40,8 @@ class HTMLElement
      * Sets the HTML element name
      * @param $name string HTML element
      */
-    public function setName($name){
+    public function setName($name)
+    {
         $this->value = $name;
     }
 
@@ -46,7 +49,8 @@ class HTMLElement
      * Returns the value of the element scope
      * @return mixed HTMLElement object or array of HTMLElement Object or array of values of a string value
      */
-    public function getValue(){
+    public function getValue()
+    {
         return $this->value;
     }
 
@@ -54,7 +58,8 @@ class HTMLElement
      * Sets te value of the element scope
      * @param $value mixed HTMLElement object or array of HTMLElement Object or array of values of a string value
      */
-    public function setValue($value){
+    public function setValue($value)
+    {
         $this->value = $value;
     }
 
@@ -62,7 +67,8 @@ class HTMLElement
      * Returns the attribute/s of the element
      * @return null mixed HTMLAttribute object or an array of HTMLAttribute objects. By default it's null.
      */
-    public function getAttributes(){
+    public function getAttributes()
+    {
         return $this->attributes;
     }
 
@@ -70,24 +76,36 @@ class HTMLElement
      * Sets the attribute/s of the element
      * @param $attributes mixed HTMLAttribute object or an array of HTMLAttribute objects. By default it's null.
      */
-    public function setAttributes($attributes){
+    public function setAttributes($attributes)
+    {
         $this->attributes = $attributes;
+    }
+
+    /**
+     * Attaches the given element to the this object as a peer value
+     * @param HTMLElement $element peer-to-be value
+     * @return array manipulated array
+     */
+    public function AttachElementAsPeer(HTMLElement $element)
+    {
+        return array_merge(array($this->toArray(), $element->toArray()));
+
     }
 
     /**
      * Converts this object including all its child objects to a PHPLibrary Library associative array
      * @return array a PHPLibrary Library associative array
      */
-    public function toArray() {
+    public function toArray()
+    {
 
-        $val = $this->value ;
+        $val = $this->value;
         $attr = $this->attributes;
 
         // Handle HTMLElement values
         if (is_object($this->value)) {
             $val = $this->value->toArray();
-        }
-        // Handle array values :
+        } // Handle array values :
         elseif (is_array($val)) {
             foreach ($val as &$item) {
                 if (is_object($item)) {
@@ -96,16 +114,9 @@ class HTMLElement
             }
         }
         if ($attr == null) { // if attributes aren't available
-            return array($this->name => array_merge(array("val"=>$val))) ;
+            return array($this->name => array_merge(array("val" => $val)));
         } else {
-            return array($this->name => array_merge(array("val"=>$val, "attr"=>$attr))) ;
+            return array($this->name => array_merge(array("val" => $val, "attr" => $attr)));
         }
     }
-
-
-    public static function ConvertToHTMLElement(HTMLElement $obj){
-        return new HTMLElement($obj->name,$obj->value);
-    }
-
-
 }

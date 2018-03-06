@@ -19,7 +19,7 @@ class HTMLAttribute
      * @param $name string attribute name
      * @param $value string value of attribute
      */
-    function __construct($name,$value)
+    function __construct($name, $value)
     {
         $this->name = $name;
         $this->value = $value;
@@ -29,7 +29,8 @@ class HTMLAttribute
      * Returns the attribute name
      * @return string attribute name
      */
-    public function getName(){
+    public function getName()
+    {
         return $this->name;
     }
 
@@ -37,7 +38,8 @@ class HTMLAttribute
      * Sets the attribute name
      * @param $name string attribute name
      */
-    public function setName($name){
+    public function setName($name)
+    {
         $this->value = $name;
     }
 
@@ -45,7 +47,8 @@ class HTMLAttribute
      * Returns the value of the attribute
      * @return string attribute value
      */
-    public function getValue(){
+    public function getValue()
+    {
         return $this->value;
     }
 
@@ -53,13 +56,9 @@ class HTMLAttribute
      * Sets the value of the attribute
      * @param $value string attribute value
      */
-    public function setValue($value){
-        $this->value = $value;
-    }
-
-    public static function ConvertToHTMLAttribute(HTMLAttribute $obj)
+    public function setValue($value)
     {
-        return new HTMLAttribute($obj->name, $obj->value);
+        $this->value = $value;
     }
 
 }
