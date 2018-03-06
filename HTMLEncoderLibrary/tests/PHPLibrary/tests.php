@@ -193,7 +193,6 @@ function Test_HTMLElementAsObjectInsideObject()
     }
 }
 
-
 function Test_HTMLElementAsObjectInsideObjectInsideArray()
 {
     $htmlElement = new HTMLElement(
@@ -211,6 +210,41 @@ function Test_HTMLElementAsObjectInsideObjectInsideArray()
     }
 }
 
+function Test_HTMLElementWithAttributeAsObject()
+{
+
+    $htmlElement = new HTMLElement(
+        "h1", "Akila", new HTMLAttribute("class", "h1 class"));
+    $htmlEncoder = new HTMLEncoder();
+    $expected = '<h1:<val:Akila,attr:<class:h1 class>>>';
+    $actual = $htmlEncoder->convertToHTMLEncoder($htmlElement);
+    if ($expected == $actual) {
+        echo "Test_HTMLElementWithAttributeAsObject - Pass";
+    } else {
+        echo "Test_HTMLElementWithAttributeAsObject - Fail";
+    }
+}
+
+function Test_HTMLElementWithAttributeAsObjectArray()
+{
+    $h1Elem = new HTMLElement("h1", "Server Side Code");
+
+    $code1 = new HTMLElement(
+        "pre",
+        new HTMLElement(
+            "code", 'var=akila;', new HTMLAttribute("class", "javascript")));
+    $newArr = $h1Elem->AttachElementAsPeer($code1);
+
+    $htmlEncoder = new HTMLEncoder();
+    $expected = '[<h1:<val:Server Side Code>>,<pre:<val:<code:<val:var=akila;,attr:<class:javascript>>>>>]';
+    $actual = $htmlEncoder->convertToHTMLEncoder($newArr);
+    echo "<script>console.log(\"" . $actual . "\")</script>";
+    if ($expected == $actual) {
+        echo "Test_HTMLElementWithAttributeAsObjectArray - Pass";
+    } else {
+        echo "Test_HTMLElementWithAttributeAsObjectArray - Fail";
+    }
+}
 
 Test_HTMLElementAsObject();
 echo "<br>";
@@ -229,3 +263,7 @@ echo "<br>";
 Test_HTMLElementAsObjectInsideObject();
 echo "<br>";
 Test_HTMLElementAsObjectInsideObjectInsideArray();
+echo "<br>";
+Test_HTMLElementWithAttributeAsObject();
+echo "<br>";
+Test_HTMLElementWithAttributeAsObjectArray();
