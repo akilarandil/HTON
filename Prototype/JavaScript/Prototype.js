@@ -3,6 +3,10 @@ function generateHTML() {
     HTMLEncoder.GetAndAppend("actualOutput", fromInput);
 }
 
+$(function () {
+    new Clipboard('.btn')
+});
+
 $(document).ready(function () {
     let idArray = [
         "expectedResult",
@@ -16,8 +20,17 @@ $(document).ready(function () {
         $.ajax({
             url: "PHP/Prototype.php?id=" + id,
             success: function (result) {
-                // console.log(result);
+                if (id === "expectedResult") {
+                    console.log(result)
+                }
                 HTMLEncoder.GetAndAppend(id, result);
+            },
+            complete: function (x, y) {
+                $(document).ready(function () {
+                    $('code').each(function (i, block) {
+                        hljs.highlightBlock(block);
+                    });
+                });
             }
         });
     }
