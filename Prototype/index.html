@@ -2,25 +2,74 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
     <title>Prototype</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="JavaScript/Prototype.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/clipboard@1/dist/clipboard.min.js"></script>
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/gruvbox-dark.min.css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
     <script src="../HTMLEncoderLibrary/src/JavaScriptLibrary/HTMLEncoder.js"></script>
+    <link rel="stylesheet" href="CSS/Prototype.css">
 </head>
 <body>
+<div class="container rounded" id="container">
+    <div class="bodyContainer">
+        &nbsp;
+        <h1 align="center">&lt;HTMLEncoder&gt;</h1>
+        <!--ExpectedResult-->
+        <div class="card text-white bg-info mb-3" id="expectedResult"></div>
+        <span class="to-next"></span>
 
-<div id="expectedResult"></div>
-<div id="serverSideCode"></div>
-<div id="frontEndCode"></div>
-<div id="HTMLEncoderString"></div>
-<div>
-    <h3>Copy Paste the HTMLEncoder Code and Click Generate</h3>
-    <textarea id="inputHTMLEncoderString"></textarea>
-    <button id="generateHTML" onclick="generateHTML()">Generate</button>
-</div>
-<div>
-    <h3>Generated Output</h3>
-    <div id="actualOutput"></div>
+        <!--Server side Code-->
+        <div class="card text-white bg-info mb-3" id="serverSideCode"></div>
+        <span class="to-next"></span>
+
+        <!--Front End Code-->
+        <div class="card text-white bg-info mb-3" id="frontEndCode"></div>
+        <span class="to-next"></span>
+
+        <!--HTMLEncoder Code-->
+        <div class="card text-white bg-info mb-3">
+            <div id="HTMLEncoderString"></div>
+            <div align="right">
+                <button type="button" class="btn btn-secondary" data-clipboard-target="#code">Copy</button>
+            </div>
+        </div>
+        <span class="to-next"></span>
+
+        <!--Paste HTMLEncoder Code-->
+        <div class="card text-white bg-info mb-3">
+            <h3 class="card-header text-center">Paste HTMLEncoder Code and Click Generate</h3>
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">Paste Code Here</span>
+                </div>
+                <textarea id="inputHTMLEncoderString" class="form-control text-area"
+                          aria-label="With textarea"></textarea>
+            </div>
+            <div align="right">
+                <button type="button" class="btn btn-secondary" onclick="generateHTML()">Generate</button>
+            </div>
+        </div>
+        <span class="to-next"></span>
+
+        <!--Generated Code-->
+        <div class="card text-white bg-info mb-3">
+            <h3 class="card-header text-center">Generated Output</h3>
+            <div id="actualOutput" class="card-img-bottom"></div>
+        </div>
+        &nbsp;
+    </div>
 </div>
 </body>
 </html>
