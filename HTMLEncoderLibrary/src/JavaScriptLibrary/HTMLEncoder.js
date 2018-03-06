@@ -237,6 +237,13 @@ HTMLEncoder.DeSerialize = function (data) {
         throw message;
     };
 
+    // Skip whitespace.
+    var white = function () {
+        while (ch && ch <= " ") {
+            next();
+        }
+    };
+
     //Returns the function relevant to the type of the character
     let value = function () {
         switch (ch) {
@@ -259,14 +266,19 @@ HTMLEncoder.DeSerialize = function (data) {
                 return;
             }
             if (next() === '>') {// empty object
+                white();
                 return obj;
             }
+            white();
             if (ch !== undefined && ch !== ',') { //has more characters to go
+
                 let k = stringWithoutQuotes();
                 next();
+                white();
                 obj[k] = value();
                 if (ch === '>') {  // object end reached
                     next();
+                    white();
                     return obj;
                 }
             }
@@ -282,11 +294,16 @@ HTMLEncoder.DeSerialize = function (data) {
             if (!ch) {  // No more characters to go
                 return;
             }
-            if (next() === ']') return array; // empty array
+            if (next() === ']') {
+                white();
+                return array;
+            }// empty array
+            white();
             if (ch !== undefined) {
                 arr.push(value());
                 if (ch === ']') { // array end reached
                     next();
+                    white();
                     return arr;
                 }
             }
@@ -318,7 +335,8 @@ HTMLEncoder.DeSerialize = function (data) {
         'r': '\r',
         'f': '\f',
         '\"': '\"',
-        '\\': '\\'
+        '\\': '\\',
+        '"': "\""
     };
     // Function for creating a string with double quotations
     let stringQuotes = function () {
@@ -326,8 +344,8 @@ HTMLEncoder.DeSerialize = function (data) {
         let str = '';
         let iterate = function () {
             if (ch !== undefined) {
-                if (ch === '\"') { //string end reached (double quotations)
-                    next();
+                if (ch === '"' && next() === ">") { //string end reached (double quotations)
+                    // next();
                     return str;
                 }
                 if (ch === '\\') {

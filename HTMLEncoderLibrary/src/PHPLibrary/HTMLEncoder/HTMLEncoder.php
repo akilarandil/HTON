@@ -17,7 +17,9 @@ class HTMLEncoder
         '<',
         ':',
         ']',
-        '>'
+        '>',
+        '(',
+        ')'
     );
 
     /**
@@ -55,7 +57,14 @@ class HTMLEncoder
         if (is_string($data)) { //checks if string
             $this->stringExecution($data);
         } else if (is_array($data)) { // checks if array
-            $this->arrayExecution($data);
+            $objectChildren = false;
+            foreach ($data as $key => $value) {
+                if (!is_numeric($key)) { // checks if any child value is an object type and not an array
+                    $objectChildren = true;
+                    break;
+                }
+            }
+            $this->arrayExecution($data, $objectChildren);
         } else if (is_object($data)) { // checks if object
             $this->objectExecution($data);
 
@@ -69,7 +78,10 @@ class HTMLEncoder
     private function stringExecution($data)
     {
         if ($this->match($this->escapes, $data)) { // checks if string contains special characters
-            $this->str .= '"' . $data . '"';
+            if (preg_match("/\"/", $data)) {
+                $data = str_replace('"', "\\\"", $data);
+            }
+            $this->str .= "\"$data\"";
         } else {
             $this->str .= $data;
         }
@@ -78,21 +90,32 @@ class HTMLEncoder
     /**
      * Executes the code for type array for the method @see convertArrayToHTMLEncoderString
      * @param $data array
+     * @param $objectChildren bool value to determine whether any child value is an object and not an array
      */
-    private function arrayExecution($data)
+    private function arrayExecution($data, $objectChildren)
     {
-        $this->str .= '[';
-        foreach ($data as $key => $value) {
-            if (is_numeric($key)) { // if the key contains the index number
-                $this->convertArrayToHTMLEncoderString((object)$value);
-            } else {
-                $this->convertArrayToHTMLEncoderString($value);
+        if (!$objectChildren) {
+            $this->str .= '[';
+            foreach ($data as $key => $value) {
+                if (is_numeric($key)) { // if the key contains the index number
+                    $this->convertArrayToHTMLEncoderString((object)$value);
+                }
+                if (next($data) != null) { // if another element is available, add a comma
+                    $this->str .= ",";
+                }
             }
-            if (next($data) != null) { // if another element is available, add a comma
-                $this->str .= ",";
+            $this->str .= ']';
+        } else {
+            foreach ($data as $key => $value) {
+                $this->str .= "<$key:";
+                $this->convertArrayToHTMLEncoderString($value);
+                $this->str .= ">";
+                if (next($data) != null) { // if another element is available, add a comma
+                    $this->str .= ",";
+                }
             }
         }
-        $this->str .= ']';
+
     }
 
     /**
@@ -101,7 +124,6 @@ class HTMLEncoder
      */
     private function objectExecution($data)
     {
-
         foreach ($data as $key => $value) {
 
             if (is_numeric($key)) { //if the key contains the index number
