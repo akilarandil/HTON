@@ -189,18 +189,26 @@ HTMLEncoder.Decode = function (data) {
             return openTag + ">";
         }
         let length = attr.length;
-        let at = 0;
-        let iterateAttributes = function () {
-            if (at === length) { // array reached end
-                return;
-            }
-            let key = Object.keys(attr[at])[0];
-            let val = attr[at][key];
-            openTag += " " + key + "=" + val;
-            at++;
+        if (length === undefined) {
+            let key = Object.keys(attr)[0];
+            let val = attr[key];
+            openTag += " " + key + "=" + "\"" + val + "\"";
+        }
+        else {
+            let at = 0;
+            let iterateAttributes = function () {
+                if (at === length) { // array reached end
+                    return;
+                }
+                let key = Object.keys(attr[at])[0];
+                let val = attr[at][key];
+                openTag += " " + key + "=" + "\"" + val + "\"";
+                at++;
+                iterateAttributes();
+            };
+
             iterateAttributes();
-        };
-        iterateAttributes();
+        }
         return openTag + ">";
     };
     convertDataToHTMLString(data);
@@ -335,8 +343,7 @@ HTMLEncoder.DeSerialize = function (data) {
         'r': '\r',
         'f': '\f',
         '\"': '\"',
-        '\\': '\\',
-        '"': "\""
+        '\\': '\\'
     };
     // Function for creating a string with double quotations
     let stringQuotes = function () {
@@ -344,8 +351,8 @@ HTMLEncoder.DeSerialize = function (data) {
         let str = '';
         let iterate = function () {
             if (ch !== undefined) {
-                if (ch === '"' && next() === ">") { //string end reached (double quotations)
-                    // next();
+                if (ch === '"') { //string end reached (double quotations)
+                    next();
                     return str;
                 }
                 if (ch === '\\') {

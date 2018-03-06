@@ -13,8 +13,9 @@ class HTMLTree
      * @param HTMLElement $element peer-to-be value
      * @return array manipulated array
      */
-    public  static function AttachElementAsPeer($arr,HTMLElement $element){
-        return array_merge(array($arr,$element->toArray()));
+    public static function AttachElementAsPeer($arr, HTMLElement $element)
+    {
+        return array_merge(array($arr, $element->toArray()));
 
     }
 }

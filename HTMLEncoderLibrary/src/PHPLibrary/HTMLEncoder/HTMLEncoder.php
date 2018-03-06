@@ -67,7 +67,6 @@ class HTMLEncoder
             $this->arrayExecution($data, $objectChildren);
         } else if (is_object($data)) { // checks if object
             $this->objectExecution($data);
-
         }
     }
 
@@ -85,6 +84,22 @@ class HTMLEncoder
         } else {
             $this->str .= $data;
         }
+    }
+
+    /**
+     * Check of a string contains a character that is specified in the array
+     * @param $chArray array of characters
+     * @param $string string that needs to be checked
+     * @return bool
+     */
+    private function match($chArray, $string)
+    {
+        foreach ($chArray as $ch) {
+            if (strpos($string, $ch) !== false) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -108,7 +123,7 @@ class HTMLEncoder
         } else {
             foreach ($data as $key => $value) {
                 $this->str .= "<$key:";
-                $this->convertArrayToHTMLEncoderString($value);
+                $this->ValueAttributation($value);
                 $this->str .= ">";
                 if (next($data) != null) { // if another element is available, add a comma
                     $this->str .= ",";
@@ -116,46 +131,6 @@ class HTMLEncoder
             }
         }
 
-    }
-
-    /**
-     * Executes the code for type object for the method @see convertArrayToHTMLEncoderString
-     * @param $data mixed traversable @see HTMLElement object
-     */
-    private function objectExecution($data)
-    {
-        foreach ($data as $key => $value) {
-
-            if (is_numeric($key)) { //if the key contains the index number
-                $this->convertArrayToHTMLEncoderString((object)$value);
-            } else { //contains the val and attr keys
-                $this->str .= '<';
-                $this->str .= $key . ':';
-                $this->ValueAttributation($value);
-                $this->str .= '>';
-            }
-            if (next($data) != null) {
-                // if another element is available, add a comma
-                $this->str .= ",";
-            }
-        }
-    }
-
-
-    /**
-     * Check of a string contains a character that is specified in the array
-     * @param $chArray array of characters
-     * @param $string string that needs to be checked
-     * @return bool
-     */
-    private function match($chArray, $string)
-    {
-        foreach ($chArray as $ch) {
-            if (strpos($string, $ch) !== false) {
-                return true;
-            }
-        }
-        return false;
     }
 
     /**
@@ -172,9 +147,13 @@ class HTMLEncoder
             if ($key == "attr") {
                 $this->str .= ",";
                 $this->str .= "$key:";
-                $this->str .= "[";
-                $this->recursiveAttribute($value);
-                $this->str .= "]";
+                if (is_object($value)) {
+                    $this->recursiveAttribute($value);
+                } else {
+                    $this->str .= "[";
+                    $this->recursiveAttribute($value);
+                    $this->str .= "]";
+                }
             }
         }
         $this->str .= ">";
@@ -194,7 +173,6 @@ class HTMLEncoder
                     $this->str .= '<';
                     $this->str .= $key . ':' . $value;
                     $this->str .= '>';
-
                 }
                 if (next($data) != null) {
                     $this->str .= ",";
@@ -204,6 +182,28 @@ class HTMLEncoder
             $this->str .= '<';
             $this->str .= $data->getName() . ':' . $data->getValue();
             $this->str .= '>';
+        }
+    }
+
+    /**
+     * Executes the code for type object for the method @see convertArrayToHTMLEncoderString
+     * @param $data mixed traversable @see HTMLElement object
+     */
+    private function objectExecution($data)
+    {
+        foreach ($data as $key => $value) {
+            if (is_numeric($key)) { //if the key contains the index number
+                $this->convertArrayToHTMLEncoderString((object)$value);
+            } else { //contains the val and attr keys
+                $this->str .= '<';
+                $this->str .= $key . ':';
+                $this->ValueAttributation($value);
+                $this->str .= '>';
+            }
+            if (next($data) != null) {
+                // if another element is available, add a comma
+                $this->str .= ",";
+            }
         }
     }
 }
