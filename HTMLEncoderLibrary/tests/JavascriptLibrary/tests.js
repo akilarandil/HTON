@@ -115,6 +115,38 @@ QUnit.module("Decoding Algorithm", () => {
         let actualResult = HTMLEncoder.Decode(deserializeDataWithAttr);
         t.equal(actualResult, expectedResultWithAttr, "Passed");
     });
+    test("Decode with attributes with whitespace", t => {
+        let deserializeDataWithAttr = [
+            {
+                "table": {
+                    "val": [
+                        {
+                            "tr": {
+                                "val": [
+                                    {"th": {"val": "Name"}},
+                                    {"th": {"val": "Age"}},
+                                    {"th": {"val": "City"}}
+                                ]
+                            }
+                        }
+                    ],
+                    "attr": [
+                        {"id": "personTable"},
+                        {"class": "table class"}
+                    ]
+                }
+            }
+        ];
+        let expectedResultWithAttr = '<table id=personTable class="table class">' +
+            '<tr>' +
+            '<th>Name</th>' +
+            '<th>Age</th>' +
+            '<th>City</th>' +
+            '</tr>' +
+            '</table>';
+        let actualResult = HTMLEncoder.Decode(deserializeDataWithAttr);
+        t.equal(actualResult, expectedResultWithAttr, "Passed");
+    });
 
     test("Decode without attributes", t => {
         let deserializeData = [

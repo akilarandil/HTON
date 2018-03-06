@@ -188,11 +188,20 @@ HTMLEncoder.Decode = function (data) {
         if (attr === undefined) { // //if attr doesn't exist, return the naked HTML opening tag
             return openTag + ">";
         }
+        let valueQuotationCheck = function (key, val) {
+            if (val.includes(" ")) {
+                openTag += " " + key + "=" + "\"" + val + "\"";
+            } else {
+                openTag += " " + key + "=" + val;
+            }
+        };
+
         let length = attr.length;
         if (length === undefined) {
             let key = Object.keys(attr)[0];
             let val = attr[key];
-            openTag += " " + key + "=" + "\"" + val + "\"";
+            valueQuotationCheck(key, val);
+
         }
         else {
             let at = 0;
@@ -202,13 +211,14 @@ HTMLEncoder.Decode = function (data) {
                 }
                 let key = Object.keys(attr[at])[0];
                 let val = attr[at][key];
-                openTag += " " + key + "=" + "\"" + val + "\"";
+                valueQuotationCheck(key, val);
                 at++;
                 iterateAttributes();
             };
 
             iterateAttributes();
         }
+
         return openTag + ">";
     };
     convertDataToHTMLString(data);
