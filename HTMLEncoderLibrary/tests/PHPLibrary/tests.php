@@ -178,6 +178,40 @@ function Test_HTMLElementWithoutValue()
     }
 }
 
+function Test_HTMLElementAsObjectInsideObject()
+{
+    $htmlElement = new HTMLElement(
+        "table", new HTMLElement("tr", "Akila"));
+    $htmlEncoder = new HTMLEncoder();
+    $expected = '<table:<val:<tr:<val:Akila>>>>';
+
+    $actual = $htmlEncoder->convertToHTMLEncoder($htmlElement);
+    if ($expected == $actual) {
+        echo "Test_HTMLElementAsObjectInsideObject - Pass";
+    } else {
+        echo "Test_HTMLElementAsObjectInsideObject - Fail";
+    }
+}
+
+
+function Test_HTMLElementAsObjectInsideObjectInsideArray()
+{
+    $htmlElement = new HTMLElement(
+        "table", new HTMLElement("tr", array(
+        new HTMLElement("th", "Akila")
+    )));
+    $htmlEncoder = new HTMLEncoder();
+    $expected = '<table:<val:<tr:<val:[<th:<val:Akila>>]>>>>';
+
+    $actual = $htmlEncoder->convertToHTMLEncoder($htmlElement);
+    if ($expected == $actual) {
+        echo "Test_HTMLElementAsObjectInsideObjectInsideArray - Pass";
+    } else {
+        echo "Test_HTMLElementAsObjectInsideObjectInsideArray - Fail";
+    }
+}
+
+
 Test_HTMLElementAsObject();
 echo "<br>";
 Test_HTMLElementAsArray();
@@ -191,3 +225,7 @@ echo "<br>";
 Test_HTMLElementAsNativeArrayWithAttributes();
 echo "<br>";
 Test_HTMLElementWithoutValue();
+echo "<br>";
+Test_HTMLElementAsObjectInsideObject();
+echo "<br>";
+Test_HTMLElementAsObjectInsideObjectInsideArray();
