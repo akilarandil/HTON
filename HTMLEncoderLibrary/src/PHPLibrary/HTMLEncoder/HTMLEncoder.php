@@ -17,7 +17,9 @@ class HTMLEncoder
         '<',
         ':',
         ']',
-        '>'
+        '>',
+        '(',
+        ')'
     );
 
     /**
@@ -69,7 +71,10 @@ class HTMLEncoder
     private function stringExecution($data)
     {
         if ($this->match($this->escapes, $data)) { // checks if string contains special characters
-            $this->str .= '"' . $data . '"';
+            if (preg_match("/\"/", $data)) {
+                $data = str_replace('"', "\\\"", $data);
+            }
+            $this->str .= "\"$data\"";
         } else {
             $this->str .= $data;
         }
@@ -101,7 +106,6 @@ class HTMLEncoder
      */
     private function objectExecution($data)
     {
-
         foreach ($data as $key => $value) {
 
             if (is_numeric($key)) { //if the key contains the index number
