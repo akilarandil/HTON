@@ -1,0 +1,59 @@
+h3, h1 {
+    alignment: center;
+}
+
+button {
+    margin-top: 25px;
+}
+
+.input-group {
+    width: 100%;
+    height: 250px;
+}
+
+#container {
+    background-color: darkgrey;
+}
+
+.bodyContainer {
+    margin: 50px;
+}
+
+body {
+    background-image: url("../Resources/Background 2.jpg");
+    background-size: contain;
+}
+
+h1 h2 h3 {
+    /*margin: 10px;*/
+}
+
+.card {
+    margin: 25px;
+    background-color: coral;
+}
+
+.text-area {
+    color: white;
+    background-color: rgb(40, 40, 40);
+}
+
+.text-area:focus {
+    color: white;
+    background-color: rgb(40, 40, 40);
+}
+
+.card-body {
+    margin-bottom: 25px;
+}
+
+.to-next {
+    display: table;
+    alignment: center;
+    margin: 0 auto;
+    position: center;
+    width: 5%;
+    align-content: center;
+    content: url("../Resources/Arrow-down-2-icon.png");
+}
+

@@ -23,103 +23,67 @@ $tableName = $ini_array["tableName"];
 
 if ($id == "expectedResult") {
     $h1Elem = new HTMLElement(
-        "h1", "Expected Result");
+        "h3", "Expected Result", new HTMLAttribute("class", "card-header text-center"));
     $imgSrc = new HTMLElement(
         "img",
         "",
-        new HTMLAttribute(
-            "src",
-            "Resources/ExpectedResult.PNG"
-        ));
+        array(
+            new HTMLAttribute(
+                "src",
+                "Resources/ExpectedResult.PNG"
+            ),
+            new HTMLAttribute(
+                "class",
+                "card-img-bottom rounded mx-auto d-block"
+            )
+        )
+    );
 
-    $element = HTMLTree::AttachElementAsPeer($h1Elem->toArray(), $imgSrc);
+    $element = $h1Elem->AttachElementAsPeer($imgSrc);
 
     $encoder = new HTMLEncoder();
     echo $encoder->convertToHTMLEncoder($element);
 } elseif ($id == "serverSideCode") {
-    $h1Elem = new HTMLElement("h1", "Server Side Code");
+    $h1Elem = new HTMLElement("h3", "PHP Code", new HTMLAttribute("class", "card-header text-center"));
 
     $code1 = new HTMLElement(
         "pre",
-        array(//problem here
-            new HTMLElement(
-                "code",
-                '$elm = new HTMLElement(
-            "table", array(
-            new HTMLElement("tr", array(
-                new HTMLElement("th", "Name"),
-                new HTMLElement("th", "Age"),
-                new HTMLElement("th", "City")
-            ))),
-            array(
-                new HTMLAttribute("id", "personTable"),
-                new HTMLAttribute("class", "table-class")));
-
-        $newArr = $elm->toArray();
-        $count1 = 1;
-        foreach ($resultDataSet as $value):
-            $e = new HTMLElement("tr", array(
-                    new HTMLElement("td", $value["Name"]),
-                    new HTMLElement("td", $value["Age"]),
-                    new HTMLElement("td", $value["City"])
-                )
-            );
-            $newArr["table"]["val"][$count1] = $e->toArray();
-            $count1++;
-        endforeach;
-        $encoder = new HTMLEncoder();
-        echo $encoder->convertToHTMLEncoder($newArr);'
-            )));
-    $newArr = HTMLTree::AttachElementAsPeer($h1Elem->toArray(), $code1);
+        new HTMLElement(
+            "code",
+            '    $element = new HTMLElement(
+        "table",
+        array(
+            new HTMLElement("tr",
+                array(
+                    new HTMLElement("th", "Name"),
+                    new HTMLElement("th", "Age"),
+                    new HTMLElement("th", "City")
+                )),
+            new HTMLElement("tr",
+                array(
+                    new HTMLElement("td", "Akila"),
+                    new HTMLElement("td", "22"),
+                    new HTMLElement("td", "Mount Lavinia")
+                )),
+            new HTMLElement("tr",
+                array(
+                    new HTMLElement("td", "Randil"),
+                    new HTMLElement("td", "23"),
+                    new HTMLElement("td", "Colombo")
+                ))
+        ),
+        array(
+            new HTMLAttribute("id", "personTable"),
+            new HTMLAttribute("class", "table-class")));
+    $encoder = new HTMLEncoder();
+    $code = $encoder->convertToHTMLEncoder($element);'
+            , new HTMLAttribute("class", "php card-body")));
+    $newArr = $h1Elem->AttachElementAsPeer($code1);
 
     $encoder = new HTMLEncoder();
     echo $encoder->convertToHTMLEncoder($newArr);
 
 } elseif ($id == "HTMLEncoderString") {
-
-// Create connection
-    $conn = mysqli_connect($serverName, $username, $password, $dbName);
-// Check connection
-    if (!$conn) {
-        echo "$serverName - $username - $password - $dbName - $tableName";
-        die("\nConnection failed: " . mysqli_connect_error());
-    }
-
-    $sql = "SELECT * FROM $tableName";
-    $result = mysqli_query($conn, $sql);
-    $resultDataSet = array();
-    while ($row = mysqli_fetch_array($result)) {
-        for ($i = 0; $i < 1; $i++) {
-            array_push($resultDataSet, $row);
-        }
-    }
-    $elm = new HTMLElement(
-        "table", array(
-        new HTMLElement("tr", array(
-            new HTMLElement("th", "Name"),
-            new HTMLElement("th", "Age"),
-            new HTMLElement("th", "City")
-        ))),
-        array(
-            new HTMLAttribute("id", "personTable"),
-            new HTMLAttribute("class", "table-class")));
-
-    $newArr = $elm->toArray();
-    $count1 = 1;
-    foreach ($resultDataSet as $value):
-
-        $e = new HTMLElement("tr", array(
-                new HTMLElement("td", $value["Name"]),
-                new HTMLElement("td", $value["Age"]),
-                new HTMLElement("td", $value["City"])
-            )
-        );
-        $newArr["table"]["val"][$count1] = $e->toArray();
-        $count1++;
-    endforeach;
-    $encoder = new HTMLEncoder();
-    $code = $encoder->convertToHTMLEncoder($newArr);
-
     $sampleCode = '[
   <table:
     <val:[
@@ -150,31 +114,35 @@ if ($id == "expectedResult") {
     ],
     attr:[
       <id:personTable>,
-      <class:table-class>
+      <class:table table-hover table-dark table-bordered>
       ]
     >
   >
 ]';
     $sampleCode = str_replace('<', '&lt;', $sampleCode);
     $sampleCode = str_replace('>', '&gt;', $sampleCode);
-    $h1Elem = new HTMLElement("h1", "HTMLEncoder Code");
+
+    $h1Elem = new HTMLElement("h3", "HTMLEncoder Code", new HTMLAttribute("class", "card-header text-center"));
     $code1 = new HTMLElement(
         "pre",
-        array(//problem here
-            new HTMLElement(
-                "code", $sampleCode
-            )));
-    $newArr = HTMLTree::AttachElementAsPeer($h1Elem->toArray(), $code1);
+        new HTMLElement(
+            "code",
+            $sampleCode,
+            array(
+                new HTMLAttribute("id", "code"),
+                new HTMLAttribute("class", "json card-body"))));
+    $newArr = $h1Elem->AttachElementAsPeer($code1);
     $encoder = new HTMLEncoder();
     echo $encoder->convertToHTMLEncoder($newArr);
+
 } elseif ($id == "frontEndCode") {
-    $h1Elem = new HTMLElement("h1", "Client Side Code");
+    $h1Elem = new HTMLElement("h3", "JavaScript Code", new HTMLAttribute("class", "card-header text-center"));
 
     $code1 = new HTMLElement(
         "pre",
-        array(//problem here
-            new HTMLElement("code", 'HTMLEncoder.GetAndAppend("HTMLEncoder",result)')));
-    $newArr = HTMLTree::AttachElementAsPeer($h1Elem->toArray(), $code1);
+        new HTMLElement("code", 'HTMLEncoder.GetAndAppend("HTMLEncoder",result);',
+            new HTMLAttribute("class", "card-body javascript")));
+    $newArr = $h1Elem->AttachElementAsPeer($code1);
 
     $encoder = new HTMLEncoder();
     echo $encoder->convertToHTMLEncoder($newArr);
