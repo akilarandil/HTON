@@ -14,13 +14,6 @@ require_once("$libPath/HTMLAttribute.php");
 
 $id = $_GET["id"];
 
-$ini_array = parse_ini_file("../../config.ini");
-$serverName = $ini_array["serverName"];
-$username = $ini_array["userName"];
-$password = $ini_array["password"];
-$dbName = $ini_array["dbName"];
-$tableName = $ini_array["tableName"];
-
 if ($id == "expectedResult") {
     $h1Elem = new HTMLElement(
         "h3", "Expected Result", new HTMLAttribute("class", "card-header text-center"));
@@ -146,5 +139,4 @@ if ($id == "expectedResult") {
 
     $encoder = new HTMLEncoder();
     echo $encoder->convertToHTMLEncoder($newArr);
-
 }
