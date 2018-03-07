@@ -1,84 +1,146 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-    <title>Prototype</title>
-
-    <!--CDN JavaScript-->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/clipboard@1/dist/clipboard.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
-            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
-            crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
-            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
-            crossorigin="anonymous"></script>
-
-    <!--Local JavaScript-->
-    <script src="JavaScript/Prototype.js"></script>
-    <script src="../HTMLEncoderLibrary/src/JavaScriptLibrary/HTMLEncoder.js"></script>
-
-    <!--CDN CSS-->
+    <title>Global</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="HTML5 website template">
+    <meta name="keywords" content="global, template, html, sass, jquery">
+    <meta name="author" content="Bucky Maler">
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/gruvbox-dark.min.css">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
 
-
-    <!--Local CSS-->
+    <link rel="stylesheet" href="Template/assets/css/main.css">
     <link rel="stylesheet" href="CSS/Prototype.css">
 </head>
 <body>
-<div class="container rounded" id="container">
-    <div class="bodyContainer">
-        &nbsp;
-        <h1 align="center">&lt;HTON : Hyper Text Object Notation&gt;</h1>
-        <!--ExpectedResult-->
-        <div class="card text-white bg-info mb-3" id="expectedResult"></div>
-        <span class="to-next"></span>
 
-        <!--Server side Code-->
-        <div class="card text-white bg-info mb-3" id="serverSideCode"></div>
-        <span class="to-next"></span>
-
-        <!--Front End Code-->
-        <div class="card text-white bg-info mb-3" id="frontEndCode"></div>
-        <span class="to-next"></span>
-
-        <!--HTMLEncoder Code-->
-        <div class="card text-white bg-info mb-3">
-            <div id="HTMLEncoderString"></div>
-            <div align="right">
-                <button type="button" class="btn btn-secondary" data-clipboard-target="#code">Copy</button>
-            </div>
-        </div>
-        <span class="to-next"></span>
-
-        <!--Paste HTMLEncoder Code-->
-        <div class="card text-white bg-info mb-3">
-            <h3 class="card-header text-center">Paste HTMLEncoder Code and Click Generate</h3>
-            <div class="input-group">
-                <div class="input-group-prepend">
-                    <span class="input-group-text">Paste Code Here</span>
-                </div>
-                <textarea id="inputHTMLEncoderString" class="form-control text-area"
-                          aria-label="With textarea"></textarea>
-            </div>
-            <div align="right" style="margin-top: 35px">
-                <button type="button" class="btn btn-secondary" onclick="generateHTML()">Generate</button>
-            </div>
-        </div>
-        <span class="to-next"></span>
-
-        <!--Generated Code-->
-        <div class="card text-white bg-info mb-3">
-            <h3 class="card-header text-center">Generated Output</h3>
-            <div id="actualOutput" class="card-img-bottom"></div>
-        </div>
-        &nbsp;
-    </div>
+<!-- notification for small viewports and landscape oriented smartphones -->
+<div class="device-notification">
+    <a class="device-notification--logo" href="#0">
+        <img src="assets/img/logo.png" alt="Global">
+        <p>Global</p>
+    </a>
+    <p class="device-notification--message">Global has so much to offer that we must request you orient your device to
+        portrait or find a larger screen. You won't be disappointed.</p>
 </div>
+
+<div class="perspective effect-rotate-left">
+    <div class="containerr">
+        <div class="outer-nav--return"></div>
+        <div id="viewport" class="l-viewport">
+            <div class="l-wrapper">
+                <header class="header">
+                    <a class="header--logo" href="#0">
+                        <p style="color: purple">&lt;HTON&gt; </p>
+                    </a>
+                    <!--<button class="header&#45;&#45;cta cta">sss Us</button>-->
+                    <div class="header--nav-toggle">
+                        <span></span>
+                    </div>
+                </header>
+                <nav class="l-side-nav">
+                    <ul class="side-nav">
+                        <li class="is-active"><span>Home</span></li>
+                        <li><span>Expected Result</span></li>
+                        <li><span>PHP Code</span></li>
+                        <li><span>Javascript Code</span></li>
+                        <li><span>HTON Code</span></li>
+                        <li><span>Try</span></li>
+                    </ul>
+                </nav>
+                <ul class="l-main-content main-content">
+                    <li class="l-section section section--is-active">
+                        <div class="intro">
+                            <div class="intro--banner">
+                                <h1><span style="color: purple">&lt;HTON&gt;</span><br> <span style="font-size: 62px">Hyper Text Object Notation</span>
+                                </h1>
+                                <!--<img src="assets/img/introduction-visual.png" alt="Welcome">-->
+                                <!--<div align="center">-->
+                                <!--<img id="homeImg" src="Resources/angle-brackets.png" alt="Welcome">-->
+                                <!--</div>-->
+                            </div>
+                        </div>
+                    </li>
+                    <li class="l-section section">
+                        <div class="work">
+                            <div class="work--lockup">
+                                <div id="expectedResult"></div>
+                            </div>
+                        </div>
+
+
+                    </li>
+                    <li class="l-section section">
+                        <div class="work">
+                            <div class="work--lockup">
+                                <div id="serverSideCode"></div>
+
+                            </div>
+                        </div>
+                    </li>
+                    <li class="l-section section">
+                        <div class="work">
+                            <div class="work--lockup">
+                                <div id="frontEndCode"></div>
+
+                            </div>
+                        </div>
+                    </li>
+                    <li class="l-section section">
+                        <div class="work">
+                            <div class="work--lockup">
+                                <div id="HTMLEncoderString"></div>
+                                <div align="right">
+                                    <button type="button" class="btn btn-primary" data-clipboard-target="#htnCode">Copy
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="l-section section">
+                        <div class="work">
+                            <div class="work--lockup">
+                                <div>
+                                    <h2 class="text-center">Paste HTON Code and Click Generate</h2>
+                                    <textarea class="form-control text-area" aria-label="With textarea"
+                                              id="inputHTMLEncoderString"></textarea>
+                                    <div align="right" style="margin-top: 35px">
+                                        <button type="button" class="btn btn-primary" onclick="generateHTML()">
+                                            Generate
+                                        </button>
+                                    </div>
+                                    <h3 class="text-center">Generated Output</h3>
+                                    <div id="actualOutput"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <ul class="outer-nav">
+        <li class="is-active">Home</li>
+        <li>Expected Result</li>
+        <li>PHP Code</li>
+        <li>JavaScript Code</li>
+        <li>HTON Code</li>
+        <li>Try</li>
+    </ul>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/clipboard@1/dist/clipboard.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script src="JavaScript/Prototype.js"></script>
+<script src="../HTMLEncoderLibrary/src/JavaScriptLibrary/HTMLEncoder.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+
+<script>window.jQuery || document.write('<script src="Template/assets/js/vendor/jquery-2.2.4.min.js"><\/script>')</script>
+<script src="Template/assets/js/functions-min.js"></script>
 </body>
 </html>
