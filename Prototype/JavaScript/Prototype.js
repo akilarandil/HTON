@@ -6,7 +6,7 @@ function generateHTML() {
 }
 
 $(function () {
-    new Clipboard('.btn')
+    new Clipboard('.btn');
 });
 
 $(document).ready(function () {

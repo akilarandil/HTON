@@ -16,7 +16,7 @@ $id = $_GET["id"];
 
 if ($id == "expectedResult") {
     $h1Elem = new HTMLElement(
-        "h3", "Expected Result", new HTMLAttribute("class", "card-header text-center"));
+        "h1", "Expected Result", new HTMLAttribute("class", "text-center"));
     $imgSrc = new HTMLElement(
         "img",
         "",
@@ -37,7 +37,7 @@ if ($id == "expectedResult") {
     $encoder = new HTMLEncoder();
     echo $encoder->convertToHTMLEncoder($element);
 } elseif ($id == "serverSideCode") {
-    $h1Elem = new HTMLElement("h3", "PHP Code", new HTMLAttribute("class", "card-header text-center"));
+    $h1Elem = new HTMLElement("h1", "PHP Code", new HTMLAttribute("class", "sm-php-h1 text-center"));
 
     $code1 = new HTMLElement(
         "pre",
@@ -70,7 +70,7 @@ if ($id == "expectedResult") {
             new HTMLAttribute("class", "table-class")));
     $encoder = new HTMLEncoder();
     $code = $encoder->convertToHTMLEncoder($element);'
-            , new HTMLAttribute("class", "php card-body")));
+            , new HTMLAttribute("class", "php-code")));
     $newArr = $h1Elem->AttachElementAsPeer($code1);
 
     $encoder = new HTMLEncoder();
@@ -115,26 +115,26 @@ if ($id == "expectedResult") {
     $sampleCode = str_replace('<', '&lt;', $sampleCode);
     $sampleCode = str_replace('>', '&gt;', $sampleCode);
 
-    $h1Elem = new HTMLElement("h3", "HTMLEncoder Code", new HTMLAttribute("class", "card-header text-center"));
+    $h1Elem = new HTMLElement("h1", "HTON Code", new HTMLAttribute("class", "text-center sm-hton-h1"));
     $code1 = new HTMLElement(
         "pre",
         new HTMLElement(
             "code",
             $sampleCode,
             array(
-                new HTMLAttribute("id", "code"),
-                new HTMLAttribute("class", "json card-body"))));
+                new HTMLAttribute("id", "htnCode"),
+                new HTMLAttribute("class", "hton-code json"))));
     $newArr = $h1Elem->AttachElementAsPeer($code1);
     $encoder = new HTMLEncoder();
     echo $encoder->convertToHTMLEncoder($newArr);
 
 } elseif ($id == "frontEndCode") {
-    $h1Elem = new HTMLElement("h3", "JavaScript Code", new HTMLAttribute("class", "card-header text-center"));
+    $h1Elem = new HTMLElement("h1", "JavaScript Code", new HTMLAttribute("class", "text-center"));
 
     $code1 = new HTMLElement(
         "pre",
         new HTMLElement("code", 'HTMLEncoder.GetAndAppend("HTMLEncoder",result);',
-            new HTMLAttribute("class", "card-body javascript")));
+            new HTMLAttribute("class", "javascript js-code")));
     $newArr = $h1Elem->AttachElementAsPeer($code1);
 
     $encoder = new HTMLEncoder();
