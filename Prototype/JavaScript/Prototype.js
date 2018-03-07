@@ -1,6 +1,8 @@
 function generateHTML() {
     let fromInput = document.getElementById("inputHTMLEncoderString").value;
     HTMLEncoder.GetAndAppend("actualOutput", fromInput);
+
+    // $("#inputHTMLEncoderString").height( $("#inputHTMLEncoderString")[0].scrollHeight );
 }
 
 $(function () {
