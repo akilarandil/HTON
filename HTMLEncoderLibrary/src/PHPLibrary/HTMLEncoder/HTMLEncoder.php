@@ -12,6 +12,7 @@
 class HTMLEncoder
 {
     private $str = "";
+    private $attrStr="";
     private $escapes = array(
         '[',
         '<',
@@ -122,7 +123,7 @@ class HTMLEncoder
             $this->str .= ']';
         } else {
             foreach ($data as $key => $value) {
-                $this->str .= "<$key:";
+                $this->str .= "<".$key .$this->keyAttributation($value). ':';
                 $this->ValueAttributation($value);
                 $this->str .= ">";
                 if (next($data) != null) { // if another element is available, add a comma
@@ -131,58 +132,6 @@ class HTMLEncoder
             }
         }
 
-    }
-
-    /**
-     * Converts the values in the keywords val and attr to an HTMLEncoder data structure string
-     * @param $data array
-     */
-    private function ValueAttributation($data)
-    {
-        foreach ($data as $key => $value) {
-            if ($key == "val") {
-                $this->str .= "<$key:";
-                $this->convertArrayToHTMLEncoderString($value);
-            }
-            if ($key == "attr") {
-                $this->str .= ",";
-                $this->str .= "$key:";
-                if (is_object($value)) {
-                    $this->recursiveAttribute($value);
-                } else {
-                    $this->str .= "[";
-                    $this->recursiveAttribute($value);
-                    $this->str .= "]";
-                }
-            }
-        }
-        $this->str .= ">";
-    }
-
-    /**
-     * Converts the values in the attr key to an HTMLEncoder data structure string
-     * @param $data array/object
-     */
-    private function recursiveAttribute($data)
-    {
-        if (is_array($data)) {
-            foreach ($data as $key => $value) {
-                if (is_numeric($key)) {
-                    $this->recursiveAttribute($value);
-                } else {
-                    $this->str .= '<';
-                    $this->str .= $key . ':' . $value;
-                    $this->str .= '>';
-                }
-                if (next($data) != null) {
-                    $this->str .= ",";
-                }
-            }
-        } else if (is_object($data)) {
-            $this->str .= '<';
-            $this->str .= $data->getName() . ':' . $data->getValue();
-            $this->str .= '>';
-        }
     }
 
     /**
@@ -196,7 +145,7 @@ class HTMLEncoder
                 $this->convertArrayToHTMLEncoderString((object)$value);
             } else { //contains the val and attr keys
                 $this->str .= '<';
-                $this->str .= $key . ':';
+                $this->str .= $key .$this->keyAttributation($value). ':';
                 $this->ValueAttributation($value);
                 $this->str .= '>';
             }
@@ -205,5 +154,58 @@ class HTMLEncoder
                 $this->str .= ",";
             }
         }
+    }
+
+
+    /**
+     * Converts the values in the keywords val and attr to an HTMLEncoder data structure string
+     * @param $data array
+     */
+    private function ValueAttributation($data)
+    {
+        foreach ($data as $key => $value) {
+            if ($key == "val") {
+                $this->convertArrayToHTMLEncoderString($value);
+            }
+        }
+    }
+
+    /**
+     * Extracts the data from the attr key of the HTMLElement Object and gets the full key value string
+     * @param $data mixed value of the element
+     * @return string full key value string
+     */
+    private function keyAttributation($data){
+        $str="";
+        foreach ($data as $key => $value){
+            if ($key=="attr"){
+                $str= $this->attributes($value);
+                $this->attrStr = "";
+                return $str;
+            }
+        }
+        return $str;
+    }
+
+    /**
+     * Returns the full key value string of the attributes
+     * @param $data array attribute array
+     * @return string full key value string of the attributes
+     */
+    private function attributes($data){
+        if (is_array($data)) {
+            foreach ($data as $key => $value) {
+                if (is_numeric($key)) {
+                    $this->attributes($value);
+                } else {
+                    $this->attrStr .= ' ';
+                    $this->attrStr .= $key . '=' . $value;
+                }
+            }
+        } else if (is_object($data)) {
+            $this->attrStr .= ' ';
+            $this->attrStr .= $data->getName() . '=' . $data->getValue();
+        }
+        return $this->attrStr;
     }
 }
