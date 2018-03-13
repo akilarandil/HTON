@@ -203,15 +203,10 @@ HTMLEncoder.Decode = function (data) {
                     hasWhiteSpace=true;
                     next();
                 }
-                if(ch==="\\" ){
-                    openTag+=" ";
-                    next();
-                }
                 if (ch === "=") {
-                    openTag += "=\"";
+                    openTag += "=";
                     next();
                 }
-                if(hasWhiteSpace && element.charAt(at+1)===" "){ openTag += ch+ "\""; next();}
                 openTag += ch;
                 next();
                 if (length === at) {
@@ -225,7 +220,6 @@ HTMLEncoder.Decode = function (data) {
         };
 
         iterate(element);
-        if (hasWhiteSpace){openTag+="\"";}
         return {"key": elemKey, "openTag": "<"+openTag+">"};
 
     };

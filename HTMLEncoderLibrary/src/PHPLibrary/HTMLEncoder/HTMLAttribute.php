@@ -49,8 +49,10 @@ class HTMLAttribute
      */
     public function getValue()
     {
-
-        return str_replace(" ","\\",$this->value);
+        if (strpos($this->value," ")){
+            return "\"".$this->value."\"";
+        }
+        return $this->value;
     }
 
     /**
