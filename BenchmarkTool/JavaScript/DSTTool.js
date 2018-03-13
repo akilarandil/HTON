@@ -143,7 +143,7 @@ function addTimeAndSizeDetails(type, contentSize, count, timeOfRequest, totalTim
 
 //Process Data from the response
 function processData(type, result) {
-    console.log(result);
+    // console.log(result);
     if (type === "HTML") {
 
         $("#HTML").html(result);
