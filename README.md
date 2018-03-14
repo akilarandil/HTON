@@ -1,5 +1,5 @@
 # &lt;HTON&gt; - Hyper Text Object Notation
-##Important!
+## Important!
 Update the config.ini file. Make sure the proper data is added to the necessary property. 
 Eg: userName = "Your user name"
 
