@@ -23,7 +23,7 @@ function Test_HTMLElementAsObject()
             new HTMLElement("th", "City")
         ))));
     $htmlEncoder = new HTMLEncoder();
-    $expected = '<table:<val:[<tr:<val:[<th:<val:Name>>,<th:<val:Age>>,<th:<val:City>>]>>]>>';
+    $expected = '<table:[<tr:[<th:Name>,<th:Age>,<th:City>]>]>';
 
     $actual = $htmlEncoder->convertToHTMLEncoder($htmlElement);
     if ($expected == $actual) {
@@ -43,7 +43,7 @@ function Test_HTMLElementAsArray()
             new HTMLElement("th", "City")
         ))));
     $htmlEncoder = new HTMLEncoder();
-    $expected = '[<table:<val:[<tr:<val:[<th:<val:Name>>,<th:<val:Age>>,<th:<val:City>>]>>]>>]';
+    $expected = '[<table:[<tr:[<th:Name>,<th:Age>,<th:City>]>]>]';
     $actual = $htmlEncoder->convertToHTMLEncoder($htmlElement->toArray());
     if ($expected == $actual) {
         echo "Test_HTMLElementAsArray - Pass";
@@ -72,7 +72,8 @@ function Test_HTMLElementAsNativeArray()
         )
     );
     $htmlEncoder = new HTMLEncoder();
-    $expected = '[<table:<val:[<tr:<val:[<th:<val:Name>>,<th:<val:Age>>,<th:<val:City>>]>>]>>]';
+
+    $expected = '[<table:[<tr:[<th:Name>,<th:Age>,<th:City>]>]>]';
     $actual = $htmlEncoder->convertToHTMLEncoder($htmlElement);
 
     if ($expected == $actual) {
@@ -96,7 +97,7 @@ function Test_HTMLElementAsObjectWithAttributes()
             new HTMLAttribute("class", "table-class")));
 
     $htmlEncoder = new HTMLEncoder();
-    $expected = '<table:<val:[<tr:<val:[<th:<val:Name>>,<th:<val:Age>>,<th:<val:City>>]>>],attr:[<id:personTable>,<class:table-class>]>>';
+    $expected = '<table id=personTable class=table-class:[<tr:[<th:Name>,<th:Age>,<th:City>]>]>';
     $actual = $htmlEncoder->convertToHTMLEncoder($htmlElement);
     if ($expected == $actual) {
         echo "Test_HTMLElementAsObjectWithAttributes - Pass";
@@ -119,7 +120,7 @@ function Test_HTMLElementAsArrayWithAttributes()
             new HTMLAttribute("class", "table-class")));
 
     $htmlEncoder = new HTMLEncoder();
-    $expected = '[<table:<val:[<tr:<val:[<th:<val:Name>>,<th:<val:Age>>,<th:<val:City>>]>>],attr:[<id:personTable>,<class:table-class>]>>]';
+    $expected = '[<table id=personTable class=table-class:[<tr:[<th:Name>,<th:Age>,<th:City>]>]>]';
     $actual = $htmlEncoder->convertToHTMLEncoder($htmlElement->toArray());
     if ($expected == $actual) {
         echo "Test_HTMLElementAsArrayWithAttributes - Pass";
@@ -144,7 +145,8 @@ function Test_HTMLElementAsNativeArrayWithAttributes()
                         )
                     )
                 )
-            ),
+            )
+        ,
             "attr" => array(
                 array_merge(array("id" => "personTable")),
                 array_merge(array("class" => "table-class"))
@@ -152,7 +154,7 @@ function Test_HTMLElementAsNativeArrayWithAttributes()
         )
     );
     $htmlEncoder = new HTMLEncoder();
-    $expected = '[<table:<val:[<tr:<val:[<th:<val:Name>>,<th:<val:Age>>,<th:<val:City>>]>>],attr:[<id:personTable>,<class:table-class>]>>]';
+    $expected = '[<table id=personTable class=table-class:[<tr:[<th:Name>,<th:Age>,<th:City>]>]>]';
     $actual = $htmlEncoder->convertToHTMLEncoder($htmlElement);
 
     if ($expected == $actual) {
@@ -168,7 +170,7 @@ function Test_HTMLElementWithoutValue()
     $htmlElement = new HTMLElement(
         "br", "");
     $htmlEncoder = new HTMLEncoder();
-    $expected = '<br:<val:>>';
+    $expected = '<br:>';
 
     $actual = $htmlEncoder->convertToHTMLEncoder($htmlElement);
     if ($expected == $actual) {
@@ -183,7 +185,7 @@ function Test_HTMLElementAsObjectInsideObject()
     $htmlElement = new HTMLElement(
         "table", new HTMLElement("tr", "Akila"));
     $htmlEncoder = new HTMLEncoder();
-    $expected = '<table:<val:<tr:<val:Akila>>>>';
+    $expected = '<table:<tr:Akila>>';
 
     $actual = $htmlEncoder->convertToHTMLEncoder($htmlElement);
     if ($expected == $actual) {
@@ -200,7 +202,7 @@ function Test_HTMLElementAsObjectInsideObjectInsideArray()
         new HTMLElement("th", "Akila")
     )));
     $htmlEncoder = new HTMLEncoder();
-    $expected = '<table:<val:<tr:<val:[<th:<val:Akila>>]>>>>';
+    $expected = '<table:<tr:[<th:Akila>]>>';
 
     $actual = $htmlEncoder->convertToHTMLEncoder($htmlElement);
     if ($expected == $actual) {
@@ -216,7 +218,7 @@ function Test_HTMLElementWithAttributeAsObject()
     $htmlElement = new HTMLElement(
         "h1", "Akila", new HTMLAttribute("class", "h1 class"));
     $htmlEncoder = new HTMLEncoder();
-    $expected = '<h1:<val:Akila,attr:<class:h1 class>>>';
+    $expected = '<h1 class="h1 class":Akila>';
     $actual = $htmlEncoder->convertToHTMLEncoder($htmlElement);
     if ($expected == $actual) {
         echo "Test_HTMLElementWithAttributeAsObject - Pass";
@@ -236,9 +238,8 @@ function Test_HTMLElementWithAttributeAsObjectArray()
     $newArr = $h1Elem->AttachElementAsPeer($code1);
 
     $htmlEncoder = new HTMLEncoder();
-    $expected = '[<h1:<val:Server Side Code>>,<pre:<val:<code:<val:var=akila;,attr:<class:javascript>>>>>]';
+    $expected = '[<h1:Server Side Code>,<pre:<code class=javascript:var=akila;>>]';
     $actual = $htmlEncoder->convertToHTMLEncoder($newArr);
-    echo "<script>console.log(\"" . $actual . "\")</script>";
     if ($expected == $actual) {
         echo "Test_HTMLElementWithAttributeAsObjectArray - Pass";
     } else {
