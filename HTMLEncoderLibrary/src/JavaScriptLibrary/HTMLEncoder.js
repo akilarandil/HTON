@@ -179,13 +179,12 @@ HTMLEncoder.Decode = function (data) {
         let length = element.length;
         let elemKey = '';
         let openTag = '';
-        let firstWhiteSpace = true;
+        let firstWhiteSpace = false;
         let hasWhiteSpace=false;
         let iterate = function (element) {
             let ch, at;
             //Goes to the next character of the data stream
             let next = function () {
-                
                 at += 1;
                 if (length === at) {
                     return;
@@ -195,11 +194,10 @@ HTMLEncoder.Decode = function (data) {
             };
 
             let keyAttributation = function () {
-                
-                if (firstWhiteSpace && element.charAt(at+1)===" "){
+                if (!firstWhiteSpace && element.charAt(at + 1) === " ") {
                     openTag+=ch;
                     elemKey = openTag;
-                    firstWhiteSpace=false;
+                    firstWhiteSpace = true;
                     hasWhiteSpace=true;
                     next();
                 }
@@ -210,6 +208,9 @@ HTMLEncoder.Decode = function (data) {
                 openTag += ch;
                 next();
                 if (length === at) {
+                    if (!firstWhiteSpace && !hasWhiteSpace) {
+                        elemKey = openTag;
+                    }
                     return;
                 }
                 keyAttributation();
