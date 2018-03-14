@@ -67,7 +67,7 @@ if ($id == "expectedResult") {
         ),
         array(
             new HTMLAttribute("id", "personTable"),
-            new HTMLAttribute("class", "table-class")));
+            new HTMLAttribute("class", "table table-hover table-dark table-bordered")));
     $encoder = new HTMLEncoder();
     $code = $encoder->convertToHTMLEncoder($element);'
             , new HTMLAttribute("class", "php-code")));
@@ -77,41 +77,28 @@ if ($id == "expectedResult") {
     echo $encoder->convertToHTMLEncoder($newArr);
 
 } elseif ($id == "HTMLEncoderString") {
-    $sampleCode = '[
-  <table:
-    <val:[
-      <tr:
-        <val:[
-            <th:<val:Name>>,
-            <th:<val:Age>>,
-            <th:<val:City>>
-          ]
-        >
-      >,
-      <tr:
-        <val:[
-            <td:<val:Akila>>,
-            <td:<val:22>>,
-            <td:<val:Mount Lavinia>>
-          ]
-        >
-      >,
-      <tr:
-        <val:[
-            <td:<val:Randil>>,
-            <td:<val:23>>,
-            <td:<val:Colombo>>
-            ]
-        >
-      >
-    ],
-    attr:[
-      <id:personTable>,
-      <class:table table-hover table-dark table-bordered>
-      ]
-    >
-  >
-]';
+    $sampleCode = '
+	<table id=personTable class="table table-hover table-dark table-bordered":[
+			<tr:[
+					<th:Name>,
+					<th:Age>,
+					<th:City>
+				]
+			>,
+			<tr:[
+					<td:Akila>,
+					<td:22>,
+					<td:Mount Lavinia>
+				]
+			>,
+			<tr:[
+					<td:Randil>,
+					<td:23>,
+					<td:Colombo>
+				]
+			>
+		]
+	>';
     $sampleCode = str_replace('<', '&lt;', $sampleCode);
     $sampleCode = str_replace('>', '&gt;', $sampleCode);
 

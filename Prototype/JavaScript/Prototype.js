@@ -22,9 +22,9 @@ $(document).ready(function () {
         $.ajax({
             url: "PHP/Prototype.php?id=" + id,
             success: function (result) {
-                if (id === "expectedResult") {
-                    console.log(result)
-                }
+                // if (id === "expectedResult") {
+                //     console.log(result)
+                // }
                 HTMLEncoder.GetAndAppend(id, result);
             },
             complete: function (x, y) {

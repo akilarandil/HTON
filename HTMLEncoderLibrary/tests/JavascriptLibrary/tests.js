@@ -1,77 +1,62 @@
 const {test} = QUnit;
 QUnit.module("De-Serializing Algorithm", () => {
     test("De-Serialize with attributes", t => {
-        let htmlEncoderStr = '[<table:<val:[<tr:<val:[<th:<val:Name>>,<th:<val:Age>>,<th:<val:City>>]>>],attr:[<id:personTable>,<class:table-class>]>>]';
+        let htmlEncoderStr = '[<table id=personTable class="table table-hover table-dark table-bordered":[<tr:[<th:Name>,<th:Age>,<th:City>]>]>]';
         let expectedResult = [
             {
-                "table": {
-                    "val": [
-                        {
-                            "tr": {
-                                "val": [
-                                    {"th": {"val": "Name"}},
-                                    {"th": {"val": "Age"}},
-                                    {"th": {"val": "City"}}
-                                ]
-                            }
-                        }
-                    ],
-                    "attr": [
-                        {"id": "personTable"},
-                        {"class": "table-class"}
-                    ]
-                }
+                "table id=personTable class=\"table table-hover table-dark table-bordered\"": [
+                    {
+                        "tr": [
+                            {"th": "Name"},
+                            {"th": "Age"},
+                            {"th": "City"}
+                        ]
+                    }
+                ]
             }
         ];
         let actualResult = HTMLEncoder.DeSerialize(htmlEncoderStr);
+        console.log(actualResult);
         t.equal(QUnit.dump.parse(actualResult), QUnit.dump.parse(expectedResult), "Passed");
     });
     test("De-serialize without attributes", t => {
-        let htmlEncoderStr = '[<table:<val:[<tr:<val:[<th:<val:Name>>,<th:<val:Age>>,<th:<val:City>>]>>]>>]';
+        let htmlEncoderStr = '[<table:[<tr:[<th:Name>,<th:Age>,<th:City>]>]>]';
         let expectedResult = [
             {
-                "table": {
-                    "val": [
-                        {
-                            "tr": {
-                                "val": [
-                                    {"th": {"val": "Name"}},
-                                    {"th": {"val": "Age"}},
-                                    {"th": {"val": "City"}}
-                                ]
-                            }
-                        }
-                    ]
-                }
+                "table": [
+                    {
+                        "tr": [
+                            {"th": "Name"},
+                            {"th": "Age"},
+                            {"th": "City"}
+                        ]
+                    }
+                ]
             }
         ];
         let actualResult = HTMLEncoder.DeSerialize(htmlEncoderStr);
         t.equal(QUnit.dump.parse(actualResult), QUnit.dump.parse(expectedResult), "Passed");
     });
     test("De-serialize with values in double quotations", t => {
-        let htmlEncoderStr = '[<table:<val:[<tr:<val:[<th:<val:"[Name">>,<th:<val:Age>>,<th:<val:City>>]>>]>>]';
+        let htmlEncoderStr = '[<table:[<tr:[<th:"[Name">,<th:Age>,<th:City>]>]>]';
         let expectedResult = [
             {
-                "table": {
-                    "val": [
-                        {
-                            "tr": {
-                                "val": [
-                                    {"th": {"val": "[Name"}},
-                                    {"th": {"val": "Age"}},
-                                    {"th": {"val": "City"}}
-                                ]
-                            }
-                        }
-                    ]
-                }
+                "table": [
+                    {
+                        "tr": [
+                            {"th": "[Name"},
+                            {"th": "Age"},
+                            {"th": "City"}
+                        ]
+                    }
+                ]
             }
         ];
         let actualResult = HTMLEncoder.DeSerialize(htmlEncoderStr);
         t.equal(QUnit.dump.parse(actualResult), QUnit.dump.parse(expectedResult), "Passed");
     });
     test("De-serialize with errors in the structure ", t => {
-        let htmlEncoderStr = '[table:<val:[<tr:<val:[<th:<val:Name>>,<th:<val:Age>>,<th:<val:City>>>>]>>]';
+        let htmlEncoderStr = '[<table:[<tr:[<th:"[Name">,<th:Age>,<th:City>]>]';
         t.throws(
             function () {
                 HTMLEncoder.DeSerialize(htmlEncoderStr);
@@ -86,23 +71,15 @@ QUnit.module("Decoding Algorithm", () => {
     test("Decode with attributes", t => {
         let deserializeDataWithAttr = [
             {
-                "table": {
-                    "val": [
-                        {
-                            "tr": {
-                                "val": [
-                                    {"th": {"val": "Name"}},
-                                    {"th": {"val": "Age"}},
-                                    {"th": {"val": "City"}}
-                                ]
-                            }
-                        }
-                    ],
-                    "attr": [
-                        {"id": "personTable"},
-                        {"class": "table-class"}
-                    ]
-                }
+                "table id=personTable class=table-class": [
+                    {
+                        "tr": [
+                            {"th": "Name"},
+                            {"th": "Age"},
+                            {"th": "City"}
+                        ]
+                    }
+                ]
             }
         ];
         let expectedResultWithAttr = '<table id=personTable class=table-class>' +
@@ -118,26 +95,18 @@ QUnit.module("Decoding Algorithm", () => {
     test("Decode with attributes with whitespace", t => {
         let deserializeDataWithAttr = [
             {
-                "table": {
-                    "val": [
-                        {
-                            "tr": {
-                                "val": [
-                                    {"th": {"val": "Name"}},
-                                    {"th": {"val": "Age"}},
-                                    {"th": {"val": "City"}}
-                                ]
-                            }
-                        }
-                    ],
-                    "attr": [
-                        {"id": "personTable"},
-                        {"class": "table class"}
-                    ]
-                }
+                "table id=personTable class=\"table table-hover table-dark table-bordered\"": [
+                    {
+                        "tr": [
+                            {"th": "Name"},
+                            {"th": "Age"},
+                            {"th": "City"}
+                        ]
+                    }
+                ]
             }
         ];
-        let expectedResultWithAttr = '<table id=personTable class="table class">' +
+        let expectedResultWithAttr = '<table id=personTable class="table table-hover table-dark table-bordered">' +
             '<tr>' +
             '<th>Name</th>' +
             '<th>Age</th>' +
@@ -151,19 +120,15 @@ QUnit.module("Decoding Algorithm", () => {
     test("Decode without attributes", t => {
         let deserializeData = [
             {
-                "table": {
-                    "val": [
-                        {
-                            "tr": {
-                                "val": [
-                                    {"th": {"val": "Name"}},
-                                    {"th": {"val": "Age"}},
-                                    {"th": {"val": "City"}}
-                                ]
-                            }
-                        }
-                    ]
-                }
+                "table": [
+                    {
+                        "tr": [
+                            {"th": "Name"},
+                            {"th": "Age"},
+                            {"th": "City"}
+                        ]
+                    }
+                ]
             }
         ];
         let expectedResult = '<table>' +
@@ -177,28 +142,5 @@ QUnit.module("Decoding Algorithm", () => {
         t.equal(actualResult, expectedResult, "Passed");
     });
 
-    test("Decode with errors (without the val keyword)", t => {
-        let deserializeData = [
-            {
-                "table":
-                    {
-                        "tr": {
-                            "val": [
-                                {"th": {"val": "Name"}},
-                                {"th": {"val": "Age"}},
-                                {"th": {"val": "City"}}
-                            ]
-                        }
-
-
-                    }
-            }
-        ];
-        t.throws(function () {
-            HTMLEncoder.Decode(deserializeData);
-        }, function (err) {
-            return err === "Cannot find val";
-        }, "Passed");
-    });
 });
 

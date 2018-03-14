@@ -99,13 +99,10 @@ HTMLEncoder.Decode = function (data) {
         let arrLength = data.length;
         if (arrLength === undefined) { // a JavaScriptLibrary Object
             let key = Object.keys(data)[0];
-            let valueOfKey = data[key]; // contains val and attr
-            let value = valueOfKey["val"];
-            if (value === undefined) { //val keyword must exist. If not, an exception will be thrown
-                throw "Cannot find val"
-            }
-            htmlSnippetStr += ReturnHTMLOpenString(key, valueOfKey);
-            elementStack.push('</' + key + '>');
+            let value = data[key]; // contains value
+            let htmlOpenTagObj = ReturnHTMLOpenString(key);
+            htmlSnippetStr += htmlOpenTagObj["openTag"];
+            elementStack.push('</' + htmlOpenTagObj["key"] + '>');
             if (typeof value !== "object") { //if the value is only a string
                 htmlSnippetStr += value;
                 htmlSnippetStr += elementStack.pop();
@@ -151,13 +148,10 @@ HTMLEncoder.Decode = function (data) {
             }
             let key = Object.keys(arr)[0];
 
-            let valueOfKey = data[at - 1][key];
-            let value = valueOfKey["val"];
-            if (value === undefined) { //val keyword must exist. If not, an exception will be thrown
-                throw "Cannot find val";
-            }
-            htmlSnippetStr += ReturnHTMLOpenString(key, valueOfKey);
-            elementStack.push('</' + key + '>');
+            let value = data[at - 1][key];
+            let htmlOpenTagObj = ReturnHTMLOpenString(key);
+            htmlSnippetStr += htmlOpenTagObj["openTag"];
+            elementStack.push('</' + htmlOpenTagObj["key"] + '>');
             if (typeof value !== "object") { //if the value is only a string
                 htmlSnippetStr += value;
                 htmlSnippetStr += elementStack.pop();
@@ -178,48 +172,57 @@ HTMLEncoder.Decode = function (data) {
      * specified attributes
      *
      * @param element HTML element
-     * @param value the value that is specified to be within the scope of the HTML element
-     * @returns {string} opening HTML element
+     * @returns {{key: string, openTag: string}} key represents the element name whereas openTag represents the opening tag with attributes
      * @constructor
      */
-    let ReturnHTMLOpenString = function (element, value) {
-        let attr = value["attr"];
-        let openTag = "<" + element;
-        if (attr === undefined) { // //if attr doesn't exist, return the naked HTML opening tag
-            return openTag + ">";
-        }
-        let valueQuotationCheck = function (key, val) {
-            if (val.includes(" ")) {
-                openTag += " " + key + "=" + "\"" + val + "\"";
-            } else {
-                openTag += " " + key + "=" + val;
-            }
-        };
-
-        let length = attr.length;
-        if (length === undefined) {
-            let key = Object.keys(attr)[0];
-            let val = attr[key];
-            valueQuotationCheck(key, val);
-
-        }
-        else {
-            let at = 0;
-            let iterateAttributes = function () {
-                if (at === length) { // array reached end
+    let ReturnHTMLOpenString = function (element) {
+        let length = element.length;
+        let elemKey = '';
+        let openTag = '';
+        let firstWhiteSpace = false;
+        let hasWhiteSpace=false;
+        let iterate = function (element) {
+            let ch, at;
+            //Goes to the next character of the data stream
+            let next = function () {
+                at += 1;
+                if (length === at) {
                     return;
                 }
-                let key = Object.keys(attr[at])[0];
-                let val = attr[at][key];
-                valueQuotationCheck(key, val);
-                at++;
-                iterateAttributes();
+                ch = element.charAt(at);
+                return ch;
             };
 
-            iterateAttributes();
-        }
+            let keyAttributation = function () {
+                if (!firstWhiteSpace && element.charAt(at + 1) === " ") {
+                    openTag+=ch;
+                    elemKey = openTag;
+                    firstWhiteSpace = true;
+                    hasWhiteSpace=true;
+                    next();
+                }
+                if (ch === "=") {
+                    openTag += "=";
+                    next();
+                }
+                openTag += ch;
+                next();
+                if (length === at) {
+                    if (!firstWhiteSpace && !hasWhiteSpace) {
+                        elemKey = openTag;
+                    }
+                    return;
+                }
+                keyAttributation();
+            };
+            at = 0;
+            ch = element.charAt(at);
+            return keyAttributation();
+        };
 
-        return openTag + ">";
+        iterate(element);
+        return {"key": elemKey, "openTag": "<"+openTag+">"};
+
     };
     convertDataToHTMLString(data);
     return htmlSnippetStr;
@@ -256,7 +259,7 @@ HTMLEncoder.DeSerialize = function (data) {
     };
 
     // Skip whitespace.
-    var white = function () {
+    let white = function () {
         while (ch && ch <= " ") {
             next();
         }
@@ -264,6 +267,7 @@ HTMLEncoder.DeSerialize = function (data) {
 
     //Returns the function relevant to the type of the character
     let value = function () {
+        white();
         switch (ch) {
             case '<':
                 return object();

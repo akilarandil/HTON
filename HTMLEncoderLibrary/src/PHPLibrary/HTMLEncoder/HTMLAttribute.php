@@ -49,6 +49,9 @@ class HTMLAttribute
      */
     public function getValue()
     {
+        if (strpos($this->value," ")){
+            return "\"".$this->value."\"";
+        }
         return $this->value;
     }
 

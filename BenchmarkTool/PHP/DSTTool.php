@@ -88,7 +88,7 @@ if (mysqli_num_rows($result) > 0) {
             ))),
             array(
                 new HTMLAttribute("id", "personTable"),
-                new HTMLAttribute("class", "table-class")));
+                new HTMLAttribute("class", "table-class srs")));
 
         $newArr = $elm->toArray() ;
         $count1 = 1;
