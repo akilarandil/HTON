@@ -88,7 +88,7 @@ There are few simple rules that is crucial for the construction of an HTON data 
  4. The value of an attribute MUST be enclosed with double quotations only if the value contains whitespaces
 
 # JavaScript Library
-
+#### Notice - Supports ECMAScript 6 & above
  The user may use the following methods to get the HTML string from an HTON data format value
  
       HTON.convertToHTML(data)
@@ -112,7 +112,7 @@ There are few simple rules that is crucial for the construction of an HTON data 
       HTON.convertToJSONString(HTMLEncoderData)
  
  # PHP Library
- 
+ #### Notice - Supports PHP 7 & above
  The use may use HTMLElement Object to create an element. It accepts two mandatory parameters and an optional parameter.
  
  1. The name of the element (Must be a string)
