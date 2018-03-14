@@ -267,6 +267,7 @@ HTMLEncoder.DeSerialize = function (data) {
 
     //Returns the function relevant to the type of the character
     let value = function () {
+        white();
         switch (ch) {
             case '<':
                 return object();
