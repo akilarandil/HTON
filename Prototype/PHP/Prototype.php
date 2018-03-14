@@ -77,7 +77,7 @@ if ($id == "expectedResult") {
     echo $encoder->convertToHTMLEncoder($newArr);
 
 } elseif ($id == "HTMLEncoderString") {
-    $sampleCode = '[
+    $sampleCode = '
 	<table id=personTable class="table table-hover table-dark table-bordered":[
 			<tr:[
 					<th:Name>,
@@ -98,9 +98,7 @@ if ($id == "expectedResult") {
 				]
 			>
 		]
-	>
-]
-';
+	>';
     $sampleCode = str_replace('<', '&lt;', $sampleCode);
     $sampleCode = str_replace('>', '&gt;', $sampleCode);
 
