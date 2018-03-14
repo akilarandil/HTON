@@ -9,10 +9,10 @@
  * @version 1.0
  * @since 1.0
  */
-class HTMLEncoder
+class HTON
 {
     private $str = "";
-    private $attrStr="";
+    private $attrStr = "";
     private $escapes = array(
         '[',
         '<',
@@ -41,7 +41,7 @@ class HTMLEncoder
     }
 
     /**
-     * Converts an @see HTMLElement object to a HTMLEncoder data structure string
+     * Converts an @see HTMLElement object to a HTON data structure string
      * @param $data HTMLElement object
      */
     private function convertObjectToHTMLEncoderString($data)
@@ -50,7 +50,7 @@ class HTMLEncoder
     }
 
     /**
-     * Convert an array of values or an array of @see HTMLElement objects to an HTMLEncoder data structure string
+     * Convert an array of values or an array of @see HTMLElement objects to an HTON data structure string
      * @param $data mixed array of values or an array of @see HTMLElement objects
      */
     private function convertArrayToHTMLEncoderString($data)
@@ -88,7 +88,7 @@ class HTMLEncoder
     }
 
     /**
-     * Check of a string contains a character that is specified in the array
+     * Check if a string contains a character that is specified in the array
      * @param $chArray array of characters
      * @param $string string that needs to be checked
      * @return bool
@@ -123,8 +123,8 @@ class HTMLEncoder
             $this->str .= ']';
         } else {
             foreach ($data as $key => $value) {
-                $this->str .= "<".$key .$this->keyAttributation($value). ':';
-                $this->ValueAttributation($value);
+                $this->str .= "<" . $key . $this->keyAttributation($value) . ':';
+                $this->convertArrayToHTMLEncoderString($value["val"]);
                 $this->str .= ">";
                 if (next($data) != null) { // if another element is available, add a comma
                     $this->str .= ",";
@@ -135,54 +135,16 @@ class HTMLEncoder
     }
 
     /**
-     * Executes the code for type object for the method @see convertArrayToHTMLEncoderString
-     * @param $data mixed traversable @see HTMLElement object
-     */
-    private function objectExecution($data)
-    {
-        foreach ($data as $key => $value) {
-            if (is_numeric($key)) { //if the key contains the index number
-                $this->convertArrayToHTMLEncoderString((object)$value);
-            } else { //contains the val and attr keys
-                $this->str .= '<';
-                $this->str .= $key .$this->keyAttributation($value). ':';
-                $this->ValueAttributation($value);
-                $this->str .= '>';
-            }
-            if (next($data) != null) {
-                // if another element is available, add a comma
-                $this->str .= ",";
-            }
-        }
-    }
-
-
-    /**
-     * Converts the values in the keywords val and attr to an HTMLEncoder data structure string
-     * @param $data array
-     */
-    private function ValueAttributation($data)
-    {
-        foreach ($data as $key => $value) {
-            if ($key == "val") {
-                $this->convertArrayToHTMLEncoderString($value);
-            }
-        }
-    }
-
-    /**
      * Extracts the data from the attr key of the HTMLElement Object and gets the full key value string
      * @param $data mixed value of the element
      * @return string full key value string
      */
-    private function keyAttributation($data){
-        $str="";
-        foreach ($data as $key => $value){
-            if ($key=="attr"){
-                $str= $this->attributes($value);
-                $this->attrStr = "";
-                return $str;
-            }
+    private function keyAttributation($data)
+    {
+        $str = "";
+        if (isset($data["attr"])) {
+            $str = $this->attributes($data["attr"]);
+            $this->attrStr = "";
         }
         return $str;
     }
@@ -192,7 +154,8 @@ class HTMLEncoder
      * @param $data array attribute array
      * @return string full key value string of the attributes
      */
-    private function attributes($data){
+    private function attributes($data)
+    {
         if (is_array($data)) {
             foreach ($data as $key => $value) {
                 if (is_numeric($key)) {
@@ -207,5 +170,27 @@ class HTMLEncoder
             $this->attrStr .= $data->getName() . '=' . $data->getValue();
         }
         return $this->attrStr;
+    }
+
+    /**
+     * Executes the code for type object for the method @see convertArrayToHTMLEncoderString
+     * @param $data mixed traversable @see HTMLElement object
+     */
+    private function objectExecution($data)
+    {
+        foreach ($data as $key => $value) {
+            if (is_numeric($key)) { //if the key contains the index number
+                $this->convertArrayToHTMLEncoderString((object)$value);
+            } else { //contains the val and attr keys
+                $this->str .= '<';
+                $this->str .= $key . $this->keyAttributation($value) . ':';
+                $this->convertArrayToHTMLEncoderString($value["val"]);
+                $this->str .= '>';
+            }
+            if (next($data) != null) {
+                // if another element is available, add a comma
+                $this->str .= ",";
+            }
+        }
     }
 }

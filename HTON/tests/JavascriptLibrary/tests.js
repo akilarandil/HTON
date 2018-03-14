@@ -15,7 +15,7 @@ QUnit.module("De-Serializing Algorithm", () => {
                 ]
             }
         ];
-        let actualResult = HTMLEncoder.DeSerialize(htmlEncoderStr);
+        let actualResult = HTON.deSerialize(htmlEncoderStr);
         console.log(actualResult);
         t.equal(QUnit.dump.parse(actualResult), QUnit.dump.parse(expectedResult), "Passed");
     });
@@ -34,7 +34,7 @@ QUnit.module("De-Serializing Algorithm", () => {
                 ]
             }
         ];
-        let actualResult = HTMLEncoder.DeSerialize(htmlEncoderStr);
+        let actualResult = HTON.deSerialize(htmlEncoderStr);
         t.equal(QUnit.dump.parse(actualResult), QUnit.dump.parse(expectedResult), "Passed");
     });
     test("De-serialize with values in double quotations", t => {
@@ -52,14 +52,14 @@ QUnit.module("De-Serializing Algorithm", () => {
                 ]
             }
         ];
-        let actualResult = HTMLEncoder.DeSerialize(htmlEncoderStr);
+        let actualResult = HTON.deSerialize(htmlEncoderStr);
         t.equal(QUnit.dump.parse(actualResult), QUnit.dump.parse(expectedResult), "Passed");
     });
     test("De-serialize with errors in the structure ", t => {
         let htmlEncoderStr = '[<table:[<tr:[<th:"[Name">,<th:Age>,<th:City>]>]';
         t.throws(
             function () {
-                HTMLEncoder.DeSerialize(htmlEncoderStr);
+                HTON.deSerialize(htmlEncoderStr);
             }, function (err) {
                 return err === "Incorrect Data Structure";
             },
@@ -68,7 +68,7 @@ QUnit.module("De-Serializing Algorithm", () => {
 });
 
 QUnit.module("Decoding Algorithm", () => {
-    test("Decode with attributes", t => {
+    test("decode with attributes", t => {
         let deserializeDataWithAttr = [
             {
                 "table id=personTable class=table-class": [
@@ -89,10 +89,10 @@ QUnit.module("Decoding Algorithm", () => {
             '<th>City</th>' +
             '</tr>' +
             '</table>';
-        let actualResult = HTMLEncoder.Decode(deserializeDataWithAttr);
+        let actualResult = HTON.decode(deserializeDataWithAttr);
         t.equal(actualResult, expectedResultWithAttr, "Passed");
     });
-    test("Decode with attributes with whitespace", t => {
+    test("decode with attributes with whitespace", t => {
         let deserializeDataWithAttr = [
             {
                 "table id=personTable class=\"table table-hover table-dark table-bordered\"": [
@@ -113,11 +113,11 @@ QUnit.module("Decoding Algorithm", () => {
             '<th>City</th>' +
             '</tr>' +
             '</table>';
-        let actualResult = HTMLEncoder.Decode(deserializeDataWithAttr);
+        let actualResult = HTON.decode(deserializeDataWithAttr);
         t.equal(actualResult, expectedResultWithAttr, "Passed");
     });
 
-    test("Decode without attributes", t => {
+    test("decode without attributes", t => {
         let deserializeData = [
             {
                 "table": [
@@ -138,7 +138,7 @@ QUnit.module("Decoding Algorithm", () => {
             '<th>City</th>' +
             '</tr>' +
             '</table>';
-        let actualResult = HTMLEncoder.Decode(deserializeData);
+        let actualResult = HTON.decode(deserializeData);
         t.equal(actualResult, expectedResult, "Passed");
     });
 

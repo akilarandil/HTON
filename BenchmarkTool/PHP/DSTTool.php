@@ -6,8 +6,8 @@
  * Time: 11:52 AM
  */
 
-$libPath = "../../HTMLEncoderLibrary/src/PHPLibrary/HTMLEncoder";
-require_once("$libPath/HTMLEncoder.php");
+$libPath = "../../HTON/src/PHPLibrary/HTON";
+require_once("$libPath/HTON.php");
 require_once("$libPath/HTMLTree.php");
 require_once("$libPath/HTMLElement.php");
 require_once("$libPath/HTMLAttribute.php");
@@ -42,18 +42,18 @@ if (mysqli_num_rows($result) > 0) {
 
     }
     if ($type == "HTML") {
-        $htmlSerialize = '<table id=personTable class=table-class>'.
-                            '<tr>'.
-                                '<th>Name</th>'.
-                                '<th>Age</th>'.
-                                '<th>City</th>'.
-                            '</tr>';
-        $count=1;
+        $htmlSerialize = '<table id=personTable class=table-class>' .
+            '<tr>' .
+            '<th>Name</th>' .
+            '<th>Age</th>' .
+            '<th>City</th>' .
+            '</tr>';
+        $count = 1;
         foreach ($resultDataSet as $value):
 
             $htmlSerialize .= '<tr><td>' .
                 $value['Name'] . '</td><td>' .
-                $value['Age'] . '</td><td>'.
+                $value['Age'] . '</td><td>' .
                 $value['City'] . '</td></tr>';
             $count++;
         endforeach;
@@ -64,12 +64,12 @@ if (mysqli_num_rows($result) > 0) {
 
     } elseif ($type == "JSON") {
         $dataSet = array();
-        $count=1;
+        $count = 1;
         foreach ($resultDataSet as $value) {
             $jsonData = array(
-                "name"=>  $value['Name'] ,
-                "age"=> $value['Age'],
-                "city"=> $value['City']
+                "name" => $value['Name'],
+                "age" => $value['Age'],
+                "city" => $value['City']
             );
 
             array_push($dataSet, $jsonData);
@@ -77,33 +77,33 @@ if (mysqli_num_rows($result) > 0) {
         }
         $jsonDataSet = json_encode($dataSet);
         echo $jsonDataSet;
-    } elseif ($type == "HTMLEncoder") {
+    } elseif ($type == "HTON") {
 
         $elm = new HTMLElement(
             "table", array(
             new HTMLElement("tr", array(
                 new HTMLElement("th", "Name"),
-                new HTMLElement("th" ,"Age"),
-                new HTMLElement("th" , "City")
+                new HTMLElement("th", "Age"),
+                new HTMLElement("th", "City")
             ))),
             array(
                 new HTMLAttribute("id", "personTable"),
-                new HTMLAttribute("class", "table-class srs")));
+                new HTMLAttribute("class", "table-class")));
 
-        $newArr = $elm->toArray() ;
+        $newArr = $elm->toArray();
         $count1 = 1;
         foreach ($resultDataSet as $value):
 
             $e = new HTMLElement("tr", array(
-                    new HTMLElement("td" , $value["Name"]),
-                    new HTMLElement("td" , $value["Age"]),
-                    new HTMLElement("td" , $value["City"])
+                    new HTMLElement("td", $value["Name"]),
+                    new HTMLElement("td", $value["Age"]),
+                    new HTMLElement("td", $value["City"])
                 )
             );
-            $newArr["table"]["val"][$count1] =$e->toArray();
+            $newArr["table"]["val"][$count1] = $e->toArray();
             $count1++;
         endforeach;
-        $encoder = new HTMLEncoder();
+        $encoder = new HTON();
         echo $encoder->convertToHTMLEncoder($newArr);
     }
 } else {

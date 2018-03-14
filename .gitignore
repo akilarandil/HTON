@@ -1,6 +1,6 @@
 test2.html
 test.html
-PHP/HTMLEncoder/test.php
+PHP/HTON/test.php
 PHP/.DS_Store
 JavaScript/unminified
 JavaScript/minified.js
@@ -11,6 +11,6 @@ JavaScript/Old.js
 .idea/modules.xml
 .idea/dataSources.xml
 .idea/dataSources.local.xml
-.idea/HTMLEncoder.iml
+.idea/HTON.iml
 .DS_Store
 .idea/

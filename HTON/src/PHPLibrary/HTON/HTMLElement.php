@@ -86,7 +86,7 @@ class HTMLElement
      * @param HTMLElement $element peer-to-be value
      * @return array manipulated array
      */
-    public function AttachElementAsPeer(HTMLElement $element)
+    public function attachElementAsPeer(HTMLElement $element)
     {
         return array_merge(array($this->toArray(), $element->toArray()));
 

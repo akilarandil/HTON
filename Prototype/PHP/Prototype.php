@@ -6,8 +6,8 @@
  * Time: 10:00 PM
  */
 
-$libPath = "../../HTMLEncoderLibrary/src/PHPLibrary/HTMLEncoder";
-require_once("$libPath/HTMLEncoder.php");
+$libPath = "../../HTON/src/PHPLibrary/HTON";
+require_once("$libPath/HTON.php");
 require_once("$libPath/HTMLTree.php");
 require_once("$libPath/HTMLElement.php");
 require_once("$libPath/HTMLAttribute.php");
@@ -32,9 +32,9 @@ if ($id == "expectedResult") {
         )
     );
 
-    $element = $h1Elem->AttachElementAsPeer($imgSrc);
+    $element = $h1Elem->attachElementAsPeer($imgSrc);
 
-    $encoder = new HTMLEncoder();
+    $encoder = new HTON();
     echo $encoder->convertToHTMLEncoder($element);
 } elseif ($id == "serverSideCode") {
     $h1Elem = new HTMLElement("h1", "PHP Code", new HTMLAttribute("class", "sm-php-h1 text-center"));
@@ -68,34 +68,34 @@ if ($id == "expectedResult") {
         array(
             new HTMLAttribute("id", "personTable"),
             new HTMLAttribute("class", "table table-hover table-dark table-bordered")));
-    $encoder = new HTMLEncoder();
+    $encoder = new HTON();
     $code = $encoder->convertToHTMLEncoder($element);'
             , new HTMLAttribute("class", "php-code")));
-    $newArr = $h1Elem->AttachElementAsPeer($code1);
+    $newArr = $h1Elem->attachElementAsPeer($code1);
 
-    $encoder = new HTMLEncoder();
+    $encoder = new HTON();
     echo $encoder->convertToHTMLEncoder($newArr);
 
 } elseif ($id == "HTMLEncoderString") {
     $sampleCode = '
 	<table id=personTable class="table table-hover table-dark table-bordered":[
 			<tr:[
-					<th:Name>,
-					<th:Age>,
-					<th:City>
-				]
+				<th:Name>,
+				<th:Age>,
+				<th:City>
+			    ]
 			>,
 			<tr:[
-					<td:Akila>,
-					<td:22>,
-					<td:Mount Lavinia>
-				]
+				<td:Akila>,
+				<td:22>,
+				<td:Mount Lavinia>
+			    ]
 			>,
 			<tr:[
-					<td:Randil>,
-					<td:23>,
-					<td:Colombo>
-				]
+				<td:Randil>,
+				<td:23>,
+				<td:Colombo>
+			    ]
 			>
 		]
 	>';
@@ -111,8 +111,8 @@ if ($id == "expectedResult") {
             array(
                 new HTMLAttribute("id", "htnCode"),
                 new HTMLAttribute("class", "hton-code json"))));
-    $newArr = $h1Elem->AttachElementAsPeer($code1);
-    $encoder = new HTMLEncoder();
+    $newArr = $h1Elem->attachElementAsPeer($code1);
+    $encoder = new HTON();
     echo $encoder->convertToHTMLEncoder($newArr);
 
 } elseif ($id == "frontEndCode") {
@@ -120,10 +120,10 @@ if ($id == "expectedResult") {
 
     $code1 = new HTMLElement(
         "pre",
-        new HTMLElement("code", 'HTMLEncoder.GetAndAppend("HTMLEncoder",result);',
+        new HTMLElement("code", '\tHTON.convertAndAppendToDOM("HTON",result);',
             new HTMLAttribute("class", "javascript js-code")));
-    $newArr = $h1Elem->AttachElementAsPeer($code1);
+    $newArr = $h1Elem->attachElementAsPeer($code1);
 
-    $encoder = new HTMLEncoder();
+    $encoder = new HTON();
     echo $encoder->convertToHTMLEncoder($newArr);
 }

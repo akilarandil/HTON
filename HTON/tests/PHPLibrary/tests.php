@@ -6,8 +6,8 @@
  * Time: 3:51 PM
  */
 
-$libPath = "../../src/PHPLibrary/HTMLEncoder";
-require_once("$libPath/HTMLEncoder.php");
+$libPath = "../../src/PHPLibrary/HTON";
+require_once("$libPath/HTON.php");
 require_once("$libPath/HTMLTree.php");
 require_once("$libPath/HTMLElement.php");
 require_once("$libPath/HTMLAttribute.php");
@@ -22,7 +22,7 @@ function Test_HTMLElementAsObject()
             new HTMLElement("th", "Age"),
             new HTMLElement("th", "City")
         ))));
-    $htmlEncoder = new HTMLEncoder();
+    $htmlEncoder = new HTON();
     $expected = '<table:[<tr:[<th:Name>,<th:Age>,<th:City>]>]>';
 
     $actual = $htmlEncoder->convertToHTMLEncoder($htmlElement);
@@ -42,7 +42,7 @@ function Test_HTMLElementAsArray()
             new HTMLElement("th", "Age"),
             new HTMLElement("th", "City")
         ))));
-    $htmlEncoder = new HTMLEncoder();
+    $htmlEncoder = new HTON();
     $expected = '[<table:[<tr:[<th:Name>,<th:Age>,<th:City>]>]>]';
     $actual = $htmlEncoder->convertToHTMLEncoder($htmlElement->toArray());
     if ($expected == $actual) {
@@ -71,7 +71,7 @@ function Test_HTMLElementAsNativeArray()
             )
         )
     );
-    $htmlEncoder = new HTMLEncoder();
+    $htmlEncoder = new HTON();
 
     $expected = '[<table:[<tr:[<th:Name>,<th:Age>,<th:City>]>]>]';
     $actual = $htmlEncoder->convertToHTMLEncoder($htmlElement);
@@ -96,7 +96,7 @@ function Test_HTMLElementAsObjectWithAttributes()
             new HTMLAttribute("id", "personTable"),
             new HTMLAttribute("class", "table-class")));
 
-    $htmlEncoder = new HTMLEncoder();
+    $htmlEncoder = new HTON();
     $expected = '<table id=personTable class=table-class:[<tr:[<th:Name>,<th:Age>,<th:City>]>]>';
     $actual = $htmlEncoder->convertToHTMLEncoder($htmlElement);
     if ($expected == $actual) {
@@ -119,7 +119,7 @@ function Test_HTMLElementAsArrayWithAttributes()
             new HTMLAttribute("id", "personTable"),
             new HTMLAttribute("class", "table-class")));
 
-    $htmlEncoder = new HTMLEncoder();
+    $htmlEncoder = new HTON();
     $expected = '[<table id=personTable class=table-class:[<tr:[<th:Name>,<th:Age>,<th:City>]>]>]';
     $actual = $htmlEncoder->convertToHTMLEncoder($htmlElement->toArray());
     if ($expected == $actual) {
@@ -153,7 +153,7 @@ function Test_HTMLElementAsNativeArrayWithAttributes()
             )
         )
     );
-    $htmlEncoder = new HTMLEncoder();
+    $htmlEncoder = new HTON();
     $expected = '[<table id=personTable class=table-class:[<tr:[<th:Name>,<th:Age>,<th:City>]>]>]';
     $actual = $htmlEncoder->convertToHTMLEncoder($htmlElement);
 
@@ -169,7 +169,7 @@ function Test_HTMLElementWithoutValue()
 
     $htmlElement = new HTMLElement(
         "br", "");
-    $htmlEncoder = new HTMLEncoder();
+    $htmlEncoder = new HTON();
     $expected = '<br:>';
 
     $actual = $htmlEncoder->convertToHTMLEncoder($htmlElement);
@@ -184,7 +184,7 @@ function Test_HTMLElementAsObjectInsideObject()
 {
     $htmlElement = new HTMLElement(
         "table", new HTMLElement("tr", "Akila"));
-    $htmlEncoder = new HTMLEncoder();
+    $htmlEncoder = new HTON();
     $expected = '<table:<tr:Akila>>';
 
     $actual = $htmlEncoder->convertToHTMLEncoder($htmlElement);
@@ -201,7 +201,7 @@ function Test_HTMLElementAsObjectInsideObjectInsideArray()
         "table", new HTMLElement("tr", array(
         new HTMLElement("th", "Akila")
     )));
-    $htmlEncoder = new HTMLEncoder();
+    $htmlEncoder = new HTON();
     $expected = '<table:<tr:[<th:Akila>]>>';
 
     $actual = $htmlEncoder->convertToHTMLEncoder($htmlElement);
@@ -217,7 +217,7 @@ function Test_HTMLElementWithAttributeAsObject()
 
     $htmlElement = new HTMLElement(
         "h1", "Akila", new HTMLAttribute("class", "h1 class"));
-    $htmlEncoder = new HTMLEncoder();
+    $htmlEncoder = new HTON();
     $expected = '<h1 class="h1 class":Akila>';
     $actual = $htmlEncoder->convertToHTMLEncoder($htmlElement);
     if ($expected == $actual) {
@@ -235,9 +235,9 @@ function Test_HTMLElementWithAttributeAsObjectArray()
         "pre",
         new HTMLElement(
             "code", 'var=akila;', new HTMLAttribute("class", "javascript")));
-    $newArr = $h1Elem->AttachElementAsPeer($code1);
+    $newArr = $h1Elem->attachElementAsPeer($code1);
 
-    $htmlEncoder = new HTMLEncoder();
+    $htmlEncoder = new HTON();
     $expected = '[<h1:Server Side Code>,<pre:<code class=javascript:var=akila;>>]';
     $actual = $htmlEncoder->convertToHTMLEncoder($newArr);
     if ($expected == $actual) {

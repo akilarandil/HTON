@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>HTML Encoder</title>
-    <script src="../HTMLEncoderLibrary/src/JavaScriptLibrary/HTMLEncoder.js"></script>
+    <title>Benchmark Tool</title>
+    <script src="../HTON/src/JavaScriptLibrary/HTON.js"></script>
     <script src="JavaScript/DSTTool.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="JavaScript/moment.js"></script>
@@ -14,7 +14,7 @@
 <label>Number of Data Sets </label><input type="number" id="DataSets">
 <button onclick="getHTML()">HTML</button>
 <button onclick="getJSON()">JSON</button>
-<button onclick="getHTMLEncoder()">HTML Encoder</button>
+<button onclick="getHTMLEncoder()">HTON</button>
 <button onclick="runAll()">Run All</button>
 <button onclick="clearData()">Clear</button>
 </body>
@@ -29,7 +29,7 @@
             <label>JSON</label>
         </td>
         <td>
-            <label>HTMLEncoder</label>
+            <label>HTON</label>
         </td>
     </tr>
     <tr>
@@ -45,7 +45,7 @@
         </td>
         <td>
             <br>
-            <div id="HTMLEncTime"></div>
+            <div id="HTONTime"></div>
             <br>
         </td>
 
@@ -63,7 +63,7 @@
         </td>
         <td>
             <br>
-            <div id="HTMLEncoder"></div>
+            <div id="HTON"></div>
             <br>
         </td>
     </tr>

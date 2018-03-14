@@ -1,6 +1,5 @@
-# HTML Encoder
+# &lt;HTON&gt; - Hyper Text Object Notation
 ##Important!
-
 Update the config.ini file. Make sure the proper data is added to the necessary property. 
 Eg: userName = "Your user name"
 

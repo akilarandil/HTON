@@ -1,6 +1,6 @@
 function generateHTML() {
     let fromInput = document.getElementById("inputHTMLEncoderString").value;
-    HTMLEncoder.GetAndAppend("actualOutput", fromInput);
+    HTON.convertAndAppendToDOM("actualOutput", fromInput);
 
     // $("#inputHTMLEncoderString").height( $("#inputHTMLEncoderString")[0].scrollHeight );
 }
@@ -22,10 +22,7 @@ $(document).ready(function () {
         $.ajax({
             url: "PHP/Prototype.php?id=" + id,
             success: function (result) {
-                // if (id === "expectedResult") {
-                //     console.log(result)
-                // }
-                HTMLEncoder.GetAndAppend(id, result);
+                HTON.convertAndAppendToDOM(id, result);
             },
             complete: function (x, y) {
                 $(document).ready(function () {

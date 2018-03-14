@@ -1,57 +1,59 @@
 /**
- * HTMLEncoder.js
- * @summary A library to convert a HTMLEncoder data structure value to an HTML string. This reduces the workload in
+ * HTON.js
+ *
+ * @summary A library to convert a HTON data structure value to an HTML string. This reduces the workload in
  * client-end since it eliminates the extraction and data manipulation that is to be done in order to create an
- * HTML string
+ * HTML string.
+ *
  * @version 1.0
  * @author Akila R. Hettiarachchi
  * @since 1.0
- * @link https://github.com/akilarandil/HTMLEncoder
+ * @link https://github.com/akilarandil/HTON
  *
  * Public Domain
  * This document can be minified before use.
  *
- * The user may use the following methods to get the HTML string from an HTMLEncoder data format value
+ * The user may use the following methods to get the HTML string from an HTON data format value
  *
- *     @code HTMLEncoder.GetHTMLSnippet(data)
+ *     @code HTON.convertToHTML(data)
  *
- *     @code HTMLEncoder.Decode(data) -- Use this only if the data is already processed to an object/array with proper values and structuring
+ *     @code HTON.decode(data) -- Use this only if the data is already processed to an object/array with proper values and structuring
  *
  * If the use desires to append the data to the DOM, use
  *
- *     @code HTMLEncoder.AppendToDOM(elementId, HTMLString)
+ *     @code HTON.appendToDOM(elementId, HTMLString)
  *
- * If the user desires to decode the HTMLEncoder data and append the resulted HTML string directly, use
+ * If the user desires to decode the HTON data and append the resulted HTML string directly, use
  *
- *     @code HTMLEncoder.GetAndAppend(elementID,data)
+ *     @code HTON.convertAndAppendToDOM(elementID,data)
  *
  * If the user desires to have only the JavaScript Object/Array, use,
  *
- *     @code HTMLEncoder.DeSerialize(data)
+ *     @code HTON.deSerialize(data)
  *
- * If the user desires to have a JSON structure converted from the HTMLEncoder data type, use
+ * If the user desires to have a JSON structure converted from the HTON data type, use
  *
- *     @code HTMLEncoder.ConvertToJSONString(HTMLEncoderData)
+ *     @code HTON.convertToJSONString(HTMLEncoderData)
  *
  */
 
 /**
- * An intrinsic object that provides functions to De-serialize, Decode and
- * Append to DOM an HTMLEncoder data format value.
+ * An intrinsic object that provides functions to De-serialize, decode and
+ * Append to DOM an HTON data format value.
  * @since 1.0
  */
-let HTMLEncoder = {};
+let HTON = {};
 
 /**
  * Returns the decoded data as an HTML string based on the parsed data
- * @param data HTMLEncoder data
+ * @param data HTON data
  * @returns {string} HTML String
  * @constructor
  * @since 1.0
  */
-HTMLEncoder.GetHTMLSnippet = function (data) {
-    let deserializeData = HTMLEncoder.DeSerialize(data);
-    return HTMLEncoder.Decode(deserializeData);
+HTON.convertToHTML = function (data) {
+    let deserializeData = HTON.deSerialize(data);
+    return HTON.decode(deserializeData);
 };
 
 /**
@@ -62,32 +64,32 @@ HTMLEncoder.GetHTMLSnippet = function (data) {
  * @constructor
  * @since 1.0
  */
-HTMLEncoder.AppendToDOM = function (elementId, HTMLString) {
+HTON.appendToDOM = function (elementId, HTMLString) {
     document.getElementById(elementId).innerHTML = HTMLString;
 };
 
 /**
- * Decodes the HTMLEncoder data and directly appends it to the DOM
+ * Decodes the HTON data and directly appends it to the DOM
  * @param elementID element ID
- * @param data HTMLEncoder data
+ * @param data HTON data
  * @constructor
  * @since 1.0
  */
-HTMLEncoder.GetAndAppend = function (elementID, data) {
-    HTMLEncoder.AppendToDOM(
+HTON.convertAndAppendToDOM = function (elementID, data) {
+    HTON.appendToDOM(
         elementID,
-        HTMLEncoder.GetHTMLSnippet(data))
+        HTON.convertToHTML(data))
 };
 
 /**
- * The decoding algorithm which converts the de-serialized HTMLEncoder
+ * The decoding algorithm which converts the de-serialized HTON
  * data (javascript Object/Array) to an HTML string
- * @param data de-serialized HTMLEncoder data (javascript Object/Array)
+ * @param data de-serialized HTON data (javascript Object/Array)
  * @constructor
  * @return {string} the HTML string
  * @since 1.0
  */
-HTMLEncoder.Decode = function (data) {
+HTON.decode = function (data) {
     let elementStack = [];
     let htmlSnippetStr = "";
 
@@ -100,9 +102,9 @@ HTMLEncoder.Decode = function (data) {
         if (arrLength === undefined) { // a JavaScriptLibrary Object
             let key = Object.keys(data)[0];
             let value = data[key]; // contains value
-            let htmlOpenTagObj = ReturnHTMLOpenString(key);
+            let htmlOpenTagObj = returnHTMLOpenString(key);
             htmlSnippetStr += htmlOpenTagObj["openTag"];
-            elementStack.push('</' + htmlOpenTagObj["key"] + '>');
+            elementStack.push('</' + htmlOpenTagObj["element"] + '>');
             if (typeof value !== "object") { //if the value is only a string
                 htmlSnippetStr += value;
                 htmlSnippetStr += elementStack.pop();
@@ -149,9 +151,9 @@ HTMLEncoder.Decode = function (data) {
             let key = Object.keys(arr)[0];
 
             let value = data[at - 1][key];
-            let htmlOpenTagObj = ReturnHTMLOpenString(key);
+            let htmlOpenTagObj = returnHTMLOpenString(key);
             htmlSnippetStr += htmlOpenTagObj["openTag"];
-            elementStack.push('</' + htmlOpenTagObj["key"] + '>');
+            elementStack.push('</' + htmlOpenTagObj["element"] + '>');
             if (typeof value !== "object") { //if the value is only a string
                 htmlSnippetStr += value;
                 htmlSnippetStr += elementStack.pop();
@@ -172,15 +174,15 @@ HTMLEncoder.Decode = function (data) {
      * specified attributes
      *
      * @param element HTML element
-     * @returns {{key: string, openTag: string}} key represents the element name whereas openTag represents the opening tag with attributes
+     * @returns {{element: string, openTag: string}} key represents the element name whereas openTag represents the opening tag with attributes
      * @constructor
      */
-    let ReturnHTMLOpenString = function (element) {
+    let returnHTMLOpenString = function (element) {
         let length = element.length;
         let elemKey = '';
         let openTag = '';
         let firstWhiteSpace = false;
-        let hasWhiteSpace=false;
+        let hasWhiteSpace = false;
         let iterate = function (element) {
             let ch, at;
             //Goes to the next character of the data stream
@@ -195,10 +197,10 @@ HTMLEncoder.Decode = function (data) {
 
             let keyAttributation = function () {
                 if (!firstWhiteSpace && element.charAt(at + 1) === " ") {
-                    openTag+=ch;
+                    openTag += ch;
                     elemKey = openTag;
                     firstWhiteSpace = true;
-                    hasWhiteSpace=true;
+                    hasWhiteSpace = true;
                     next();
                 }
                 if (ch === "=") {
@@ -219,9 +221,8 @@ HTMLEncoder.Decode = function (data) {
             ch = element.charAt(at);
             return keyAttributation();
         };
-
         iterate(element);
-        return {"key": elemKey, "openTag": "<"+openTag+">"};
+        return {"element": elemKey, "openTag": "<" + openTag + ">"};
 
     };
     convertDataToHTMLString(data);
@@ -229,18 +230,18 @@ HTMLEncoder.Decode = function (data) {
 };
 
 /**
- * The de-serializing algorithm which converts the raw HTMLEncoder data
+ * The de-serializing algorithm which converts the raw HTON data
  * to a javascript Object/Array. This algorithm is based on the
  * JSON.Parse algorithm by the creator of JSON, Douglas Crockford. The original
- * algorithm has been modified to support the use of the HTMLEncoder data structure.
+ * algorithm has been modified to support the use of the HTON data structure.
  *
  * @link https://github.com/douglascrockford/JSON-js The original JSON.Parse algorithm
- * @param data raw HTMLEncoder data
+ * @param data raw HTON data
  * @returns {*} javascript Object/Array
  * @constructor
  * @since 1.0
  */
-HTMLEncoder.DeSerialize = function (data) {
+HTON.deSerialize = function (data) {
     let length = data.length;
 
     //Goes to the next character of the data stream
@@ -399,12 +400,12 @@ HTMLEncoder.DeSerialize = function (data) {
 };
 
 /**
- * Converts the HTMLEncoder data to a JavaScriptLibrary Object Notation (JSON) string.
- * @param HTMLEncoderData HTMLEncoder data
+ * Converts the HTON data to a JavaScriptLibrary Object Notation (JSON) string.
+ * @param HTMLEncoderData HTON data
  * @constructor
  * @return {string} a JavaScriptLibrary Object Notation (JSON) string
  * @since 1.0
  */
-HTMLEncoder.ConvertToJSONString = function (HTMLEncoderData) {
-    return JSON.stringify(HTMLEncoder.DeSerialize(HTMLEncoderData));
+HTON.convertToJSONString = function (HTMLEncoderData) {
+    return JSON.stringify(HTON.deSerialize(HTMLEncoderData));
 };

@@ -1,6 +1,6 @@
 .php-code {
     margin-top: 10px;
-    font-size: 12px;
+    font-size: 15px;
 }
 
 .js-code {
@@ -23,8 +23,9 @@ h1 {
 
 .hton-code {
     margin-top: 5px;
-    font-size: 9px;
+    font-size: 15px;
 }
+
 .text-area {
     color: white;
     height: 300px;
@@ -49,7 +50,6 @@ textarea::-webkit-scrollbar-thumb {
     background-color: #000000;
     outline: 1px solid slategray;
 }
-
 
 .text-area:focus {
     color: white;

@@ -2,26 +2,26 @@
 function getHTML() {
     $("#HTML").empty();
     $("#HTMLTime").empty();
-    positiveIntegerCheck(false,"HTML");
+    positiveIntegerCheck(false, "HTML");
 }
 
 //get JSON Data
 function getJSON() {
     $("#JSON").empty();
     $("#JSONTime").empty();
-    positiveIntegerCheck(false,"JSON");
+    positiveIntegerCheck(false, "JSON");
 }
 
 // get HTML Encoded data
 function getHTMLEncoder() {
-    $("#HTMLEncoder").empty();
-    $("#HTMLEncTime").empty();
-    positiveIntegerCheck(false,"HTMLEncoder");
+    $("#HTON").empty();
+    $("#HTONTime").empty();
+    positiveIntegerCheck(false, "HTON");
 }
 
 function runAll() {
     clearData();
-    positiveIntegerCheck(true,"")
+    positiveIntegerCheck(true, "")
 }
 
 //Clear data on the browser
@@ -30,12 +30,12 @@ function clearData() {
     $("#HTMLTime").empty();
     $("#JSON").empty();
     $("#JSONTime").empty();
-    $("#HTMLEncoder").empty();
-    $("#HTMLEncTime").empty();
+    $("#HTON").empty();
+    $("#HTONTime").empty();
 }
 
 //validate for positive integer
-function positiveIntegerCheck(iterateAll,type) {
+function positiveIntegerCheck(iterateAll, type) {
     let iterationStr = document.getElementById("Iterations").value;
     let iterations = parseInt(iterationStr);
     let dataSetStr = document.getElementById("DataSets").value;
@@ -44,7 +44,7 @@ function positiveIntegerCheck(iterateAll,type) {
         alert("Please Enter a Positive Integer");
     }
     else {
-            performIterations(iterateAll,type, dataSets)
+        performIterations(iterateAll, type, dataSets)
 
     }
 }
@@ -53,24 +53,23 @@ let requestCompleted = true;
 let executedIterations;
 
 //perform iteration requests as specified by the user's given number
-function performIterations(iterateAll,type, dataSets) {
+function performIterations(iterateAll, type, dataSets) {
     let iterations = parseInt(document.getElementById("Iterations").value);
 
     let totalTimeOfAllIterations = 0;
     executedIterations = 0;
     let x = -1;
-    let types = ["HTMLEncoder", "JSON", "HTML"];
-    if(iterateAll){
+    let types = ["HTON", "JSON", "HTML"];
+    if (iterateAll) {
         type = types.pop();
     }
-    getResponse(type, dataSets, totalTimeOfAllIterations, iterations, x,types,iterateAll);
-
+    getResponse(type, dataSets, totalTimeOfAllIterations, iterations, x, types, iterateAll);
 
 
 }
 
 // send the request and get the response
-function getResponse(type, dataSets, totalTimeOfAllIterations, iterations, count,types,iterateAll) {
+function getResponse(type, dataSets, totalTimeOfAllIterations, iterations, count, types, iterateAll) {
     if (count !== iterations) {
         requestCompleted = false;
         let startTime;
@@ -88,27 +87,27 @@ function getResponse(type, dataSets, totalTimeOfAllIterations, iterations, count
             complete: function (x, y) {
 
 
-                let timeOfRequest =  new moment().diff(startTime, 'milliseconds');
-                if(count!==-1) {
+                let timeOfRequest = new moment().diff(startTime, 'milliseconds');
+                if (count !== -1) {
                     totalTimeOfAllIterations += timeOfRequest;
                 }
-                    addTimeAndSizeDetails(type, contentSize, ++count, timeOfRequest, totalTimeOfAllIterations);
+                addTimeAndSizeDetails(type, contentSize, ++count, timeOfRequest, totalTimeOfAllIterations);
 
-                if(iterateAll){
-                    if(count=== iterations){
-                        if(types.length === 0) return;
+                if (iterateAll) {
+                    if (count === iterations) {
+                        if (types.length === 0) return;
                         count = 0;
                         totalTimeOfAllIterations = 0;
 
-                        getResponse(types.pop(), dataSets, totalTimeOfAllIterations, iterations, count,types,iterateAll);
-                    }else {
-                        getResponse(type, dataSets, totalTimeOfAllIterations, iterations, count,types,iterateAll);
+                        getResponse(types.pop(), dataSets, totalTimeOfAllIterations, iterations, count, types, iterateAll);
+                    } else {
+                        getResponse(type, dataSets, totalTimeOfAllIterations, iterations, count, types, iterateAll);
                     }
-                }else {
-                    getResponse(type, dataSets, totalTimeOfAllIterations, iterations, count,types,iterateAll);
+                } else {
+                    getResponse(type, dataSets, totalTimeOfAllIterations, iterations, count, types, iterateAll);
                 }
             },
-            error:function (jqXHR,textStatus,errorThrown){
+            error: function (jqXHR, textStatus, errorThrown) {
                 console.log(jqXHR);
                 console.log(textStatus);
                 console.log(errorThrown);
@@ -132,8 +131,8 @@ function addTimeAndSizeDetails(type, contentSize, count, timeOfRequest, totalTim
             "Request #" + count + "  - Time of Request = " + timeOfRequest + " Milli seconds <br>" +
             "Average Time per request= " + (totalTimeOfAllIterations / count) + " Milli seconds");
 
-    } else if (type === "HTMLEncoder") {
-        $("#HTMLEncTime").html(
+    } else if (type === "HTON") {
+        $("#HTONTime").html(
             "Content Size = " + contentSize + "<br>" +
             "Request #" + count + "  - Time of Request = " + timeOfRequest + " Milli seconds <br>" +
             "Average Time per request= " + (totalTimeOfAllIterations / count) + " Milli seconds");
@@ -168,7 +167,7 @@ function processData(type, result) {
         }
         htmlData += "</table>";
         $("#JSON").html(htmlData);
-    } else if (type === "HTMLEncoder") {
-        HTMLEncoder.GetAndAppend("HTMLEncoder",result);
+    } else if (type === "HTON") {
+        HTON.convertAndAppendToDOM("HTON", result);
     }
 }
