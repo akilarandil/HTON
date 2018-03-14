@@ -151,7 +151,10 @@ There are few simple rules that is crucial for the construction of an HTON data 
  ```
       $array["table"]["val"]= $newElement->toArray();
  ```
- 
+ * Use the **attr** keyword to access the value of the element.
+ ```
+      $array["table"]["attr"]= new HTMLAttribute("attributeName","value");
+ ```
  
 ## Important!
 
