@@ -35,7 +35,7 @@ if ($id == "expectedResult") {
     $element = $h1Elem->attachElementAsPeer($imgSrc);
 
     $encoder = new HTON();
-    echo $encoder->convertToHTMLEncoder($element);
+    echo $encoder->convertToHTON($element);
 } elseif ($id == "serverSideCode") {
     $h1Elem = new HTMLElement("h1", "PHP Code", new HTMLAttribute("class", "sm-php-h1 text-center"));
 
@@ -69,14 +69,14 @@ if ($id == "expectedResult") {
             new HTMLAttribute("id", "personTable"),
             new HTMLAttribute("class", "table table-hover table-dark table-bordered")));
     $encoder = new HTON();
-    $code = $encoder->convertToHTMLEncoder($element);'
+    $code = $encoder->convertToHTON($element);'
             , new HTMLAttribute("class", "php-code")));
     $newArr = $h1Elem->attachElementAsPeer($code1);
 
     $encoder = new HTON();
-    echo $encoder->convertToHTMLEncoder($newArr);
+    echo $encoder->convertToHTON($newArr);
 
-} elseif ($id == "HTMLEncoderString") {
+} elseif ($id == "HTONString") {
     $sampleCode = '
 	<table id=personTable class="table table-hover table-dark table-bordered":[
 			<tr:[
@@ -113,7 +113,7 @@ if ($id == "expectedResult") {
                 new HTMLAttribute("class", "hton-code json"))));
     $newArr = $h1Elem->attachElementAsPeer($code1);
     $encoder = new HTON();
-    echo $encoder->convertToHTMLEncoder($newArr);
+    echo $encoder->convertToHTON($newArr);
 
 } elseif ($id == "frontEndCode") {
     $h1Elem = new HTMLElement("h1", "JavaScript Code", new HTMLAttribute("class", "text-center"));
@@ -125,5 +125,5 @@ if ($id == "expectedResult") {
     $newArr = $h1Elem->attachElementAsPeer($code1);
 
     $encoder = new HTON();
-    echo $encoder->convertToHTMLEncoder($newArr);
+    echo $encoder->convertToHTON($newArr);
 }

@@ -1,8 +1,8 @@
 function generateHTML() {
-    let fromInput = document.getElementById("inputHTMLEncoderString").value;
+    let fromInput = document.getElementById("inputHTONString").value;
     HTON.convertAndAppendToDOM("actualOutput", fromInput);
 
-    // $("#inputHTMLEncoderString").height( $("#inputHTMLEncoderString")[0].scrollHeight );
+    // $("#inputHTONString").height( $("#inputHTONString")[0].scrollHeight );
 }
 
 $(function () {
@@ -13,7 +13,7 @@ $(document).ready(function () {
     let idArray = [
         "expectedResult",
         "serverSideCode",
-        "HTMLEncoderString",
+        "HTONString",
         "frontEndCode"
     ];
 

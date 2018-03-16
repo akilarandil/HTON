@@ -33,7 +33,7 @@
  *
  * If the user desires to have a JSON structure converted from the HTON data type, use
  *
- *     @code HTON.convertToJSONString(HTMLEncoderData)
+ *     @code HTON.convertToJSONString(HTONData)
  *
  */
 
@@ -280,7 +280,7 @@ HTON.deSerialize = function (data) {
                 return stringWithoutQuotes();
         }
     };
-    //Function for creating a JavaScriptLibrary Object
+    //Function for creating a JavaScript Object
     let object = function () {
         let obj = {};
         if (ch !== '<') error('Object should start with <');
@@ -309,7 +309,7 @@ HTON.deSerialize = function (data) {
         };
         return iterate();
     };
-    //Function for creating a JavaScriptLibrary Array
+    //Function for creating a JavaScript Array
     let array = function () {
         let arr = [];
         if (ch !== '[') error('array should start with [');
@@ -401,11 +401,11 @@ HTON.deSerialize = function (data) {
 
 /**
  * Converts the HTON data to a JavaScriptLibrary Object Notation (JSON) string.
- * @param HTMLEncoderData HTON data
+ * @param HTONData HTON data
  * @constructor
  * @return {string} a JavaScriptLibrary Object Notation (JSON) string
  * @since 1.0
  */
-HTON.convertToJSONString = function (HTMLEncoderData) {
-    return JSON.stringify(HTON.deSerialize(HTMLEncoderData));
+HTON.convertToJSONString = function (HTONData) {
+    return JSON.stringify(HTON.deSerialize(HTONData));
 };

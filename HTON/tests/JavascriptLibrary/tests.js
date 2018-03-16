@@ -1,7 +1,7 @@
 const {test} = QUnit;
 QUnit.module("De-Serializing Algorithm", () => {
     test("De-Serialize with attributes", t => {
-        let htmlEncoderStr = '[<table id=personTable class="table table-hover table-dark table-bordered":[<tr:[<th:Name>,<th:Age>,<th:City>]>]>]';
+        let HTONStr = '[<table id=personTable class="table table-hover table-dark table-bordered":[<tr:[<th:Name>,<th:Age>,<th:City>]>]>]';
         let expectedResult = [
             {
                 "table id=personTable class=\"table table-hover table-dark table-bordered\"": [
@@ -15,12 +15,12 @@ QUnit.module("De-Serializing Algorithm", () => {
                 ]
             }
         ];
-        let actualResult = HTON.deSerialize(htmlEncoderStr);
+        let actualResult = HTON.deSerialize(HTONStr);
         console.log(actualResult);
         t.equal(QUnit.dump.parse(actualResult), QUnit.dump.parse(expectedResult), "Passed");
     });
     test("De-serialize without attributes", t => {
-        let htmlEncoderStr = '[<table:[<tr:[<th:Name>,<th:Age>,<th:City>]>]>]';
+        let HTONStr = '[<table:[<tr:[<th:Name>,<th:Age>,<th:City>]>]>]';
         let expectedResult = [
             {
                 "table": [
@@ -34,11 +34,11 @@ QUnit.module("De-Serializing Algorithm", () => {
                 ]
             }
         ];
-        let actualResult = HTON.deSerialize(htmlEncoderStr);
+        let actualResult = HTON.deSerialize(HTONStr);
         t.equal(QUnit.dump.parse(actualResult), QUnit.dump.parse(expectedResult), "Passed");
     });
     test("De-serialize with values in double quotations", t => {
-        let htmlEncoderStr = '[<table:[<tr:[<th:"[Name">,<th:Age>,<th:City>]>]>]';
+        let HTONStr = '[<table:[<tr:[<th:"[Name">,<th:Age>,<th:City>]>]>]';
         let expectedResult = [
             {
                 "table": [
@@ -52,14 +52,14 @@ QUnit.module("De-Serializing Algorithm", () => {
                 ]
             }
         ];
-        let actualResult = HTON.deSerialize(htmlEncoderStr);
+        let actualResult = HTON.deSerialize(HTONStr);
         t.equal(QUnit.dump.parse(actualResult), QUnit.dump.parse(expectedResult), "Passed");
     });
     test("De-serialize with errors in the structure ", t => {
-        let htmlEncoderStr = '[<table:[<tr:[<th:"[Name">,<th:Age>,<th:City>]>]';
+        let HTONStr = '[<table:[<tr:[<th:"[Name">,<th:Age>,<th:City>]>]';
         t.throws(
             function () {
-                HTON.deSerialize(htmlEncoderStr);
+                HTON.deSerialize(HTONStr);
             }, function (err) {
                 return err === "Incorrect Data Structure";
             },

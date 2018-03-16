@@ -22,10 +22,10 @@ function Test_HTMLElementAsObject()
             new HTMLElement("th", "Age"),
             new HTMLElement("th", "City")
         ))));
-    $htmlEncoder = new HTON();
+    $HTON = new HTON();
     $expected = '<table:[<tr:[<th:Name>,<th:Age>,<th:City>]>]>';
 
-    $actual = $htmlEncoder->convertToHTMLEncoder($htmlElement);
+    $actual = $HTON->convertToHTON($htmlElement);
     if ($expected == $actual) {
         echo "Test_HTMLElementAsObject - Pass";
     } else {
@@ -42,9 +42,9 @@ function Test_HTMLElementAsArray()
             new HTMLElement("th", "Age"),
             new HTMLElement("th", "City")
         ))));
-    $htmlEncoder = new HTON();
+    $HTON = new HTON();
     $expected = '[<table:[<tr:[<th:Name>,<th:Age>,<th:City>]>]>]';
-    $actual = $htmlEncoder->convertToHTMLEncoder($htmlElement->toArray());
+    $actual = $HTON->convertToHTON($htmlElement->toArray());
     if ($expected == $actual) {
         echo "Test_HTMLElementAsArray - Pass";
     } else {
@@ -71,10 +71,10 @@ function Test_HTMLElementAsNativeArray()
             )
         )
     );
-    $htmlEncoder = new HTON();
+    $HTON = new HTON();
 
     $expected = '[<table:[<tr:[<th:Name>,<th:Age>,<th:City>]>]>]';
-    $actual = $htmlEncoder->convertToHTMLEncoder($htmlElement);
+    $actual = $HTON->convertToHTON($htmlElement);
 
     if ($expected == $actual) {
         echo "Test_HTMLElementAsNativeArray - Pass";
@@ -96,9 +96,9 @@ function Test_HTMLElementAsObjectWithAttributes()
             new HTMLAttribute("id", "personTable"),
             new HTMLAttribute("class", "table-class")));
 
-    $htmlEncoder = new HTON();
+    $HTON = new HTON();
     $expected = '<table id=personTable class=table-class:[<tr:[<th:Name>,<th:Age>,<th:City>]>]>';
-    $actual = $htmlEncoder->convertToHTMLEncoder($htmlElement);
+    $actual = $HTON->convertToHTON($htmlElement);
     if ($expected == $actual) {
         echo "Test_HTMLElementAsObjectWithAttributes - Pass";
     } else {
@@ -119,9 +119,9 @@ function Test_HTMLElementAsArrayWithAttributes()
             new HTMLAttribute("id", "personTable"),
             new HTMLAttribute("class", "table-class")));
 
-    $htmlEncoder = new HTON();
+    $HTON = new HTON();
     $expected = '[<table id=personTable class=table-class:[<tr:[<th:Name>,<th:Age>,<th:City>]>]>]';
-    $actual = $htmlEncoder->convertToHTMLEncoder($htmlElement->toArray());
+    $actual = $HTON->convertToHTON($htmlElement->toArray());
     if ($expected == $actual) {
         echo "Test_HTMLElementAsArrayWithAttributes - Pass";
     } else {
@@ -153,9 +153,9 @@ function Test_HTMLElementAsNativeArrayWithAttributes()
             )
         )
     );
-    $htmlEncoder = new HTON();
+    $HTON = new HTON();
     $expected = '[<table id=personTable class=table-class:[<tr:[<th:Name>,<th:Age>,<th:City>]>]>]';
-    $actual = $htmlEncoder->convertToHTMLEncoder($htmlElement);
+    $actual = $HTON->convertToHTON($htmlElement);
 
     if ($expected == $actual) {
         echo "Test_HTMLElementAsNativeArrayWithAttributes - Pass";
@@ -169,10 +169,10 @@ function Test_HTMLElementWithoutValue()
 
     $htmlElement = new HTMLElement(
         "br", "");
-    $htmlEncoder = new HTON();
+    $HTON = new HTON();
     $expected = '<br:>';
 
-    $actual = $htmlEncoder->convertToHTMLEncoder($htmlElement);
+    $actual = $HTON->convertToHTON($htmlElement);
     if ($expected == $actual) {
         echo "Test_HTMLElementWithoutValue - Pass";
     } else {
@@ -184,10 +184,10 @@ function Test_HTMLElementAsObjectInsideObject()
 {
     $htmlElement = new HTMLElement(
         "table", new HTMLElement("tr", "Akila"));
-    $htmlEncoder = new HTON();
+    $HTON = new HTON();
     $expected = '<table:<tr:Akila>>';
 
-    $actual = $htmlEncoder->convertToHTMLEncoder($htmlElement);
+    $actual = $HTON->convertToHTON($htmlElement);
     if ($expected == $actual) {
         echo "Test_HTMLElementAsObjectInsideObject - Pass";
     } else {
@@ -201,10 +201,10 @@ function Test_HTMLElementAsObjectInsideObjectInsideArray()
         "table", new HTMLElement("tr", array(
         new HTMLElement("th", "Akila")
     )));
-    $htmlEncoder = new HTON();
+    $HTON = new HTON();
     $expected = '<table:<tr:[<th:Akila>]>>';
 
-    $actual = $htmlEncoder->convertToHTMLEncoder($htmlElement);
+    $actual = $HTON->convertToHTON($htmlElement);
     if ($expected == $actual) {
         echo "Test_HTMLElementAsObjectInsideObjectInsideArray - Pass";
     } else {
@@ -217,9 +217,9 @@ function Test_HTMLElementWithAttributeAsObject()
 
     $htmlElement = new HTMLElement(
         "h1", "Akila", new HTMLAttribute("class", "h1 class"));
-    $htmlEncoder = new HTON();
+    $HTON = new HTON();
     $expected = '<h1 class="h1 class":Akila>';
-    $actual = $htmlEncoder->convertToHTMLEncoder($htmlElement);
+    $actual = $HTON->convertToHTON($htmlElement);
     if ($expected == $actual) {
         echo "Test_HTMLElementWithAttributeAsObject - Pass";
     } else {
@@ -237,9 +237,9 @@ function Test_HTMLElementWithAttributeAsObjectArray()
             "code", 'var=akila;', new HTMLAttribute("class", "javascript")));
     $newArr = $h1Elem->attachElementAsPeer($code1);
 
-    $htmlEncoder = new HTON();
+    $HTON = new HTON();
     $expected = '[<h1:Server Side Code>,<pre:<code class=javascript:var=akila;>>]';
-    $actual = $htmlEncoder->convertToHTMLEncoder($newArr);
+    $actual = $HTON->convertToHTON($newArr);
     if ($expected == $actual) {
         echo "Test_HTMLElementWithAttributeAsObjectArray - Pass";
     } else {

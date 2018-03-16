@@ -13,7 +13,7 @@ function getJSON() {
 }
 
 // get HTML Encoded data
-function getHTMLEncoder() {
+function getHTON() {
     $("#HTON").empty();
     $("#HTONTime").empty();
     positiveIntegerCheck(false, "HTON");

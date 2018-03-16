@@ -28,13 +28,13 @@ class HTON
      * @param $data mixed HTMLElement/array of values or arrays of HTMLElement objects
      * @return string HTMLElement data string
      */
-    public function convertToHTMLEncoder($data)
+    public function convertToHTON($data)
     {
         if (is_object($data)) {
-            $this->convertObjectToHTMLEncoderString($data);
+            $this->convertObjectToHTONString($data);
         } else {
             $this->str .= '[';
-            $this->convertArrayToHTMLEncoderString((object)$data);
+            $this->convertArrayToHTONString((object)$data);
             $this->str .= ']';
         }
         return $this->str;
@@ -44,16 +44,16 @@ class HTON
      * Converts an @see HTMLElement object to a HTON data structure string
      * @param $data HTMLElement object
      */
-    private function convertObjectToHTMLEncoderString($data)
+    private function convertObjectToHTONString($data)
     {
-        $this->convertArrayToHTMLEncoderString((object)$data->toArray());
+        $this->convertArrayToHTONString((object)$data->toArray());
     }
 
     /**
      * Convert an array of values or an array of @see HTMLElement objects to an HTON data structure string
      * @param $data mixed array of values or an array of @see HTMLElement objects
      */
-    private function convertArrayToHTMLEncoderString($data)
+    private function convertArrayToHTONString($data)
     {
         if (is_string($data)) { //checks if string
             $this->stringExecution($data);
@@ -72,7 +72,7 @@ class HTON
     }
 
     /**
-     * Executes the code for type string for the method @see convertArrayToHTMLEncoderString
+     * Executes the code for type string for the method @see convertArrayToHTONString
      * @param $data string value
      */
     private function stringExecution($data)
@@ -104,7 +104,7 @@ class HTON
     }
 
     /**
-     * Executes the code for type array for the method @see convertArrayToHTMLEncoderString
+     * Executes the code for type array for the method @see convertArrayToHTONString
      * @param $data array
      * @param $objectChildren bool value to determine whether any child value is an object and not an array
      */
@@ -114,7 +114,7 @@ class HTON
             $this->str .= '[';
             foreach ($data as $key => $value) {
                 if (is_numeric($key)) { // if the key contains the index number
-                    $this->convertArrayToHTMLEncoderString((object)$value);
+                    $this->convertArrayToHTONString((object)$value);
                 }
                 if (next($data) != null) { // if another element is available, add a comma
                     $this->str .= ",";
@@ -124,7 +124,7 @@ class HTON
         } else {
             foreach ($data as $key => $value) {
                 $this->str .= "<" . $key . $this->keyAttributation($value) . ':';
-                $this->convertArrayToHTMLEncoderString($value["val"]);
+                $this->convertArrayToHTONString($value["val"]);
                 $this->str .= ">";
                 if (next($data) != null) { // if another element is available, add a comma
                     $this->str .= ",";
@@ -173,18 +173,18 @@ class HTON
     }
 
     /**
-     * Executes the code for type object for the method @see convertArrayToHTMLEncoderString
+     * Executes the code for type object for the method @see convertArrayToHTONString
      * @param $data mixed traversable @see HTMLElement object
      */
     private function objectExecution($data)
     {
         foreach ($data as $key => $value) {
             if (is_numeric($key)) { //if the key contains the index number
-                $this->convertArrayToHTMLEncoderString((object)$value);
+                $this->convertArrayToHTONString((object)$value);
             } else { //contains the val and attr keys
                 $this->str .= '<';
                 $this->str .= $key . $this->keyAttributation($value) . ':';
-                $this->convertArrayToHTMLEncoderString($value["val"]);
+                $this->convertArrayToHTONString($value["val"]);
                 $this->str .= '>';
             }
             if (next($data) != null) {

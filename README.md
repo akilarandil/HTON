@@ -36,7 +36,7 @@ Because the library automatically constructs the HTML string using HTON, there i
               new HTMLAttribute("id", "personTable"),
               new HTMLAttribute("class", "table table-hover table-dark table-bordered")));
       $encoder = new HTON();
-      $code = $encoder->convertToHTMLEncoder($element);
+      $code = $encoder->convertToHTON($element);
 ```
 
 3. The client side code will only be limited to one single line.
@@ -109,7 +109,7 @@ There are few simple rules that is crucial for the construction of an HTON data 
  
   If the user desires to have a JSON structure converted from the HTON data type, use
  
-      HTON.convertToJSONString(HTMLEncoderData)
+      HTON.convertToJSONString(HTONData)
  
  # PHP Library
  #### Notice - Supports PHP 7 & above
@@ -135,14 +135,14 @@ There are few simple rules that is crucial for the construction of an HTON data 
  
  ```
       $encoder = new HTON();
-      $hton = $encoder->convertToHTMLEncoder($element);
+      $hton = $encoder->convertToHTON($element);
  ```
  If you want to convert this to an array and get the encoded HTON structure, do th following
  
  ```
       $array = $element->toArray();
       $encoder = new HTON();
-      $code = $encoder->convertToHTMLEncoder($array);
+      $code = $encoder->convertToHTON($array);
  ```
  If you want to access and modify values before encoding, do the following
  
