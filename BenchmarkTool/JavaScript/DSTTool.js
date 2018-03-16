@@ -57,23 +57,25 @@ function performIterations(iterateAll, type, dataSets) {
     let iterations = parseInt(document.getElementById("Iterations").value);
 
     let totalTimeOfAllIterations = 0;
+    let totalResponseTimeOfAllIterations=0;
     executedIterations = 0;
     let x = -1;
     let types = ["HTON", "JSON", "HTML"];
     if (iterateAll) {
         type = types.pop();
     }
-    getResponse(type, dataSets, totalTimeOfAllIterations, iterations, x, types, iterateAll);
+    getResponse(type, dataSets, totalTimeOfAllIterations,totalResponseTimeOfAllIterations, iterations, x, types, iterateAll);
 
 
 }
 
 // send the request and get the response
-function getResponse(type, dataSets, totalTimeOfAllIterations, iterations, count, types, iterateAll) {
+function getResponse(type, dataSets, totalTimeOfAllIterations,totalResponseTimeOfAllIterations, iterations, count, types, iterateAll) {
     if (count !== iterations) {
         requestCompleted = false;
         let startTime;
         let contentSize;
+        let responseTime;
         $.ajax({
 
             url: "PHP/DSTTool.php?type=" + type + "&dataSets=" + dataSets,
@@ -81,6 +83,7 @@ function getResponse(type, dataSets, totalTimeOfAllIterations, iterations, count
                 startTime = new moment();
             },
             success: function (result, status, request) {
+                responseTime = new moment().diff(startTime, 'milliseconds');
                 processData(type, result);
                 contentSize = result.length;
             },
@@ -89,22 +92,24 @@ function getResponse(type, dataSets, totalTimeOfAllIterations, iterations, count
 
                 let timeOfRequest = new moment().diff(startTime, 'milliseconds');
                 if (count !== -1) {
+                    totalResponseTimeOfAllIterations += responseTime;
                     totalTimeOfAllIterations += timeOfRequest;
                 }
-                addTimeAndSizeDetails(type, contentSize, ++count, timeOfRequest, totalTimeOfAllIterations);
+                addTimeAndSizeDetails(type, contentSize, ++count, timeOfRequest,responseTime, totalTimeOfAllIterations,totalResponseTimeOfAllIterations);
 
                 if (iterateAll) {
                     if (count === iterations) {
                         if (types.length === 0) return;
                         count = 0;
+                        totalResponseTimeOfAllIterations=0;
                         totalTimeOfAllIterations = 0;
 
-                        getResponse(types.pop(), dataSets, totalTimeOfAllIterations, iterations, count, types, iterateAll);
+                        getResponse(types.pop(), dataSets, totalTimeOfAllIterations,totalResponseTimeOfAllIterations, iterations, count, types, iterateAll);
                     } else {
-                        getResponse(type, dataSets, totalTimeOfAllIterations, iterations, count, types, iterateAll);
+                        getResponse(type, dataSets, totalTimeOfAllIterations,totalResponseTimeOfAllIterations, iterations, count, types, iterateAll);
                     }
                 } else {
-                    getResponse(type, dataSets, totalTimeOfAllIterations, iterations, count, types, iterateAll);
+                    getResponse(type, dataSets, totalTimeOfAllIterations,totalResponseTimeOfAllIterations, iterations, count, types, iterateAll);
                 }
             },
             error: function (jqXHR, textStatus, errorThrown) {
@@ -117,25 +122,31 @@ function getResponse(type, dataSets, totalTimeOfAllIterations, iterations, count
 }
 
 
-function addTimeAndSizeDetails(type, contentSize, count, timeOfRequest, totalTimeOfAllIterations) {
+function addTimeAndSizeDetails(type, contentSize, count, timeOfRequest,responseTime, totalTimeOfAllIterations,totalResponseTimeOfAllIterations) {
 
     if (type === "HTML") {
         $("#HTMLTime").html(
             "Content Size = " + contentSize + "<br>" +
-            "Request #" + count + "  - Time of Request = " + timeOfRequest + " Milli seconds <br>" +
-            "Average Time per request= " + (totalTimeOfAllIterations / count) + " Milli seconds");
+            "Request #" + count + "  - Time of Request/Response = " + responseTime + " Milli seconds <br>" +
+            "Average per Request/Response= " + (totalResponseTimeOfAllIterations / count) + " Milli seconds" +"<br><br>"+
+            "Request #" + count + "  - Total Time = " + timeOfRequest + " Milli seconds <br>" +
+            "Average per Total Time= " + (totalTimeOfAllIterations / count) + " Milli seconds");
     }
     else if (type === "JSON") {
         $("#JSONTime").html(
             "Content Size = " + contentSize + "<br>" +
-            "Request #" + count + "  - Time of Request = " + timeOfRequest + " Milli seconds <br>" +
-            "Average Time per request= " + (totalTimeOfAllIterations / count) + " Milli seconds");
+            "Request #" + count + "  - Time of Request/Response = " + responseTime + " Milli seconds <br>" +
+            "Average per Request/Response= " + (totalResponseTimeOfAllIterations / count) + " Milli seconds" +"<br><br>"+
+            "Request #" + count + "  - Total Time = " + timeOfRequest + " Milli seconds <br>" +
+            "Average per Total Time= " + (totalTimeOfAllIterations / count) + " Milli seconds");
 
     } else if (type === "HTON") {
         $("#HTONTime").html(
             "Content Size = " + contentSize + "<br>" +
-            "Request #" + count + "  - Time of Request = " + timeOfRequest + " Milli seconds <br>" +
-            "Average Time per request= " + (totalTimeOfAllIterations / count) + " Milli seconds");
+            "Request #" + count + "  - Time of Request/Response = " + responseTime + " Milli seconds <br>" +
+            "Average per Request/Response= " + (totalResponseTimeOfAllIterations / count) + " Milli seconds" +"<br><br>"+
+            "Request #" + count + "  - Total Time = " + timeOfRequest + " Milli seconds <br>" +
+            "Average per Total Time= " + (totalTimeOfAllIterations / count) + " Milli seconds");
     }
 
 }
