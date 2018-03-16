@@ -1,6 +1,6 @@
 # &lt;HTON&gt; - Hyper Text Object Notation
 
-HTON is a data structure specifically designed to reconstruct an HTML string. A Javascript and a PHP library is provided to make use the data structure which will cause to increase development productivity and better communication efficiency.
+HTON is a data structure specifically designed to reconstruct an HTML string. A Javascript and a PHP library is provided to use the data structure which will cause to increase development productivity and better communication efficiency.
 
 Because the library automatically constructs the HTML string using HTON, there is very little workload in the client-end since it eliminates the extraction and data manipulation that is to be done in order to create an HTML string.
 
@@ -10,42 +10,62 @@ Because the library automatically constructs the HTML string using HTON, there i
 
 2. The server side code would be the following (PHP).
 ```
-      $element = new HTMLElement(
-          "table",
-          array(
-              new HTMLElement("tr",
-                  array(
-                      new HTMLElement("th", "Name"),
-                      new HTMLElement("th", "Age"),
-                      new HTMLElement("th", "City")
-                  )),
-              new HTMLElement("tr",
-                  array(
-                      new HTMLElement("td", "Akila"),
-                      new HTMLElement("td", "22"),
-                      new HTMLElement("td", "Mount Lavinia")
-                  )),
-              new HTMLElement("tr",
-                  array(
-                      new HTMLElement("td", "Randil"),
-                      new HTMLElement("td", "23"),
-                      new HTMLElement("td", "Colombo")
-                  ))
-          ),
-          array(
-              new HTMLAttribute("id", "personTable"),
-              new HTMLAttribute("class", "table table-hover table-dark table-bordered")));
-      $encoder = new HTON();
-      $code = $encoder->convertToHTON($element);
+    $element = new HTMLElement(
+      "table",
+      array(
+          new HTMLElement("tr",
+              array(
+                  new HTMLElement("th", "Name"),
+                  new HTMLElement("th", "Age"),
+                  new HTMLElement("th", "City")
+              )),
+          new HTMLElement("tr",
+              array(
+                  new HTMLElement("td", "Akila"),
+                  new HTMLElement("td", "22"),
+                  new HTMLElement("td", "Mount Lavinia")
+              )),
+          new HTMLElement("tr",
+              array(
+                  new HTMLElement("td", "Randil"),
+                  new HTMLElement("td", "23"),
+                  new HTMLElement("td", "Colombo")
+              ))
+      ),
+      array(
+          new HTMLAttribute("id", "personTable"),
+          new HTMLAttribute("class", "table table-hover table-dark table-bordered")));
+    $encoder = new HTON();
+    $code = $encoder->convertToHTON($element);
 ```
 
 3. The client side code will only be limited to one single line.
 
 ```
-	    HTON.convertToHTML(result);
+    HTON.convertToHTML(result);
 ```
 
 4. And you will have the full HTML string.
+
+```
+    <table id=personTable class=table-class>
+       <tr>
+          <th>Name</th>
+          <th>Age</th>
+          <th>City</th>
+       </tr>
+       <tr>
+          <td>Akila</td>
+          <td>22</td>
+          <td>Mount Lavinia</td>
+       </tr>
+       <tr>
+          <td>Randil</td>
+          <td>23</td>
+          <td>Colombo</td>
+       </tr>
+    </table>
+```
 
 5. The HTON data structure for the above result is as the following
 
@@ -91,36 +111,36 @@ There are few simple rules that is crucial for the construction of an HTON data 
 #### Notice - Supports ECMAScript 6 & above
  The user may use the following methods to get the HTML string from an HTON data format value
  
-      HTON.convertToHTML(data)
+    HTON.convertToHTML(data)
+    
+    HTON.decode(data) -- Use this only if the data is already processed to an object/array with proper values and structuring
  
-      HTON.decode(data) -- Use this only if the data is already processed to an object/array with proper values and structuring
+  If the user desires to append the data to the DOM, use
  
-  If the use desires to append the data to the DOM, use
- 
-      HTON.appendToDOM(elementId, HTMLString)
+    HTON.appendToDOM(elementId, HTMLString)
  
   If the user desires to decode the HTON data and append the resulted HTML string directly, use
  
-      HTON.convertAndAppendToDOM(elementID,data)
+    HTON.convertAndAppendToDOM(elementID,data)
  
   If the user desires to have only the JavaScript Object/Array, use,
  
-      HTON.deSerialize(data)
+    HTON.deSerialize(data)
  
   If the user desires to have a JSON structure converted from the HTON data type, use
  
-      HTON.convertToJSONString(HTONData)
+    HTON.convertToJSONString(HTONData)
  
  # PHP Library
  #### Notice - Supports PHP 7 & above
- The use may use HTMLElement Object to create an element. It accepts two mandatory parameters and an optional parameter.
+ The user may use HTMLElement Object to create an element. It accepts two mandatory parameters and an optional parameter.
  
  1. The name of the element (Must be a string)
  2. The value of the element (Can be another HTMLElement or an array of HTMLElement objects or a string)
  3. Attributes of the element (Can be an HTMLAttribute object or an array of HTMLAttribute objects)
  
  ```
-      $element = new HTMLElement("element","value",new HTMLAttribute("attributeName","value"));
+    $element = new HTMLElement("element","value",new HTMLAttribute("attributeName","value"));
  ```
  The user may use HTMLAttribute object to create an attribute for an element. It accepts two mandatory parameters.
  1. The name of the attribute (Must be a string)
@@ -128,32 +148,40 @@ There are few simple rules that is crucial for the construction of an HTON data 
  
 
  ```
-      $attribute = new HTMLAttribute("attributeName","value");
+    $attribute = new HTMLAttribute("attributeName","value");
  ```
  
  To encode data to HTON, use HTON object as following.
  
  ```
-      $encoder = new HTON();
-      $hton = $encoder->convertToHTON($element);
+    $encoder = new HTON();
+    $hton = $encoder->convertToHTON($element);
  ```
- If you want to convert this to an array and get the encoded HTON structure, do th following
+ If the user wants to convert this to an array and get the encoded HTON structure, do th following
  
  ```
-      $array = $element->toArray();
-      $encoder = new HTON();
-      $code = $encoder->convertToHTON($array);
+    $array = $element->toArray();
+    $encoder = new HTON();
+    $code = $encoder->convertToHTON($array);
  ```
- If you want to access and modify values before encoding, do the following
+ If the user want to access and modify values before encoding, do the following
  
  * Use the **val** keyword to access the value of the element.
  
  ```
-      $array["table"]["val"]= $newElement->toArray();
+    $array["table"]["val"]= $newElement->toArray();
  ```
  * Use the **attr** keyword to access the value of the element.
  ```
-      $array["table"]["attr"]= new HTMLAttribute("attributeName","value");
+    $array["table"]["attr"]= new HTMLAttribute("attributeName","value");
+ ```
+ 
+ If the user wants to add another HTMLElement to an existing HTMLElement as a peer, use the following method
+ 
+ ```
+    $newElementArray = $element1->attachElementAsPeer($element2);
+    $encoder = new HTON();
+    $code = $encoder->convertToHTON($newElementArray);
  ```
  
 ## Important!
