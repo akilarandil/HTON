@@ -11,8 +11,6 @@
  */
 class HTON
 {
-    private $str = "";
-    private $attrStr = "";
     private $escapes = array(
         '[',
         '<',
@@ -31,60 +29,64 @@ class HTON
     public function convertToHTON($data)
     {
         if (is_object($data)) {
-            $this->convertObjectToHTONString($data);
+            return $this->convertObjectToHTONString($data);
         } else {
-            $this->str .= '[';
-            $this->convertArrayToHTONString((object)$data);
-            $this->str .= ']';
+            $str = '[';
+            $str .= $this->convertArrayToHTONString((object)$data);
+            $str .= ']';
+            return $str;
         }
-        return $this->str;
     }
 
     /**
      * Converts an @see HTMLElement object to a HTON data structure string
      * @param $data HTMLElement object
+     * @return string
      */
     private function convertObjectToHTONString($data)
     {
-        $this->convertArrayToHTONString((object)$data->toArray());
+        return $this->convertArrayToHTONString((object)$data->toArray());
     }
 
     /**
      * Convert an array of values or an array of @see HTMLElement objects to an HTON data structure string
      * @param $data mixed array of values or an array of @see HTMLElement objects
+     * @return string
      */
     private function convertArrayToHTONString($data)
     {
+        $str = '';
         if (is_string($data)) { //checks if string
-            $this->stringExecution($data);
+            $str .= $this->stringExecution($data);
         } else if (is_array($data)) { // checks if array
             $objectChildren = false;
-            foreach ($data as $key => $value) {
-                if (!is_numeric($key)) { // checks if any child value is an object type and not an array
-                    $objectChildren = true;
-                    break;
-                }
+            if (!array_key_exists(0, $data)) { // checks if any child value is an object type and not an array
+                $objectChildren = true;
             }
-            $this->arrayExecution($data, $objectChildren);
+            $str .= $this->arrayExecution($data, $objectChildren);
         } else if (is_object($data)) { // checks if object
-            $this->objectExecution($data);
+            $str .= $this->objectExecution($data);
         }
+        return $str;
     }
 
     /**
      * Executes the code for type string for the method @see convertArrayToHTONString
      * @param $data string value
+     * @return string
      */
     private function stringExecution($data)
     {
+        $str = '';
         if ($this->match($this->escapes, $data)) { // checks if string contains special characters
             if (preg_match("/\"/", $data)) {
                 $data = str_replace('"', "\\\"", $data);
             }
-            $this->str .= "\"$data\"";
+            $str .= "\"$data\"";
         } else {
-            $this->str .= $data;
+            $str .= $data;
         }
+        return $str;
     }
 
     /**
@@ -95,43 +97,102 @@ class HTON
      */
     private function match($chArray, $string)
     {
-        foreach ($chArray as $ch) {
-            if (strpos($string, $ch) !== false) {
-                return true;
-            }
+        if ($this->strpos_array($string, $chArray)) {
+            return true;
         }
         return false;
+    }
+
+    /**
+     * A method to check if a character from an array of strings exists in another string
+     * @param $haystack string string that needs to be searched
+     * @param $needles mixed the Array/string that is being searched
+     * @return bool|int
+     * @link Code Source Link - https://gist.github.com/msng/5039773
+     */
+    private function strpos_array($haystack, $needles)
+    {
+        if (is_array($needles)) {
+            foreach ($needles as $str) {
+                if (is_array($str)) {
+                    $pos = $this->strpos_array($haystack, $str);
+                } else {
+                    $pos = strpos($haystack, $str);
+                }
+                if ($pos !== FALSE) {
+                    return $pos;
+                }
+            }
+        } else {
+            return strpos($haystack, $needles);
+        }
     }
 
     /**
      * Executes the code for type array for the method @see convertArrayToHTONString
      * @param $data array
      * @param $objectChildren bool value to determine whether any child value is an object and not an array
+     * @return string
      */
     private function arrayExecution($data, $objectChildren)
     {
+        $str = '';
         if (!$objectChildren) {
-            $this->str .= '[';
+            $firstElement = true;
+            $str .= '[';
             foreach ($data as $key => $value) {
+                if ($firstElement) {
+                    $firstElement = false;
+                } else {//if it is not the first element, a comma will be added to the beginning of the string
+                    $str .= ",";
+                }
                 if (is_numeric($key)) { // if the key contains the index number
-                    $this->convertArrayToHTONString((object)$value);
+                    $str .= $this->convertArrayToHTONString((object)$value);
                 }
-                if (next($data) != null) { // if another element is available, add a comma
-                    $this->str .= ",";
-                }
+
             }
-            $this->str .= ']';
+            $str .= ']';
         } else {
+            $firstElement = true;
             foreach ($data as $key => $value) {
-                $this->str .= "<" . $key . $this->keyAttributation($value) . ':';
-                $this->convertArrayToHTONString($value["val"]);
-                $this->str .= ">";
-                if (next($data) != null) { // if another element is available, add a comma
-                    $this->str .= ",";
+                if ($firstElement) {
+                    $firstElement = false;
+                } else {//if it is not the first element, a comma will be added to the beginning of the string
+                    $str .= ",";
                 }
+                $str .= "<" . $key . $this->keyAttributation($value) . ':';
+                $str .= $this->convertArrayToHTONString($value["val"]);
+                $str .= ">";
             }
         }
+        return $str;
+    }
 
+    /**
+     * Executes the code for type object for the method @see convertArrayToHTONString
+     * @param $data mixed traversable @see HTMLElement object
+     * @return string
+     */
+    private function objectExecution($data)
+    {
+        $str = '';
+        $firstElement = true;
+        foreach ($data as $key => $value) {
+            if ($firstElement) {
+                $firstElement = false;
+            } else {//if it is not the first element, a comma will be added to the beginning of the string
+                $str .= ",";
+            }
+            if (is_numeric($key)) { //if the key contains the index number
+                $str .= $this->convertArrayToHTONString((object)$value);
+            } else { //contains the val and attr keys
+                $str .= '<';
+                $str .= $key . $this->keyAttributation($value) . ':';
+                $str .= $this->convertArrayToHTONString($value["val"]);
+                $str .= '>';
+            }
+        }
+        return $str;
     }
 
     /**
@@ -144,7 +205,6 @@ class HTON
         $str = "";
         if (isset($data["attr"])) {
             $str = $this->attributes($data["attr"]);
-            $this->attrStr = "";
         }
         return $str;
     }
@@ -156,41 +216,22 @@ class HTON
      */
     private function attributes($data)
     {
+        $attrStr = '';
         if (is_array($data)) {
             foreach ($data as $key => $value) {
                 if (is_numeric($key)) {
-                    $this->attributes($value);
+                    $attrStr .= $this->attributes($value);
                 } else {
-                    $this->attrStr .= ' ';
-                    $this->attrStr .= $key . '=' . $value;
+                    $attrStr .= ' ';
+                    $attrStr .= $key . '=' . $value;
                 }
             }
         } else if (is_object($data)) {
-            $this->attrStr .= ' ';
-            $this->attrStr .= $data->getName() . '=' . $data->getValue();
+            $attrStr .= ' ';
+            $attrStr .= $data->getName() . '=' . $data->getValue();
         }
-        return $this->attrStr;
+        return $attrStr;
     }
 
-    /**
-     * Executes the code for type object for the method @see convertArrayToHTONString
-     * @param $data mixed traversable @see HTMLElement object
-     */
-    private function objectExecution($data)
-    {
-        foreach ($data as $key => $value) {
-            if (is_numeric($key)) { //if the key contains the index number
-                $this->convertArrayToHTONString((object)$value);
-            } else { //contains the val and attr keys
-                $this->str .= '<';
-                $this->str .= $key . $this->keyAttributation($value) . ':';
-                $this->convertArrayToHTONString($value["val"]);
-                $this->str .= '>';
-            }
-            if (next($data) != null) {
-                // if another element is available, add a comma
-                $this->str .= ",";
-            }
-        }
-    }
+
 }
