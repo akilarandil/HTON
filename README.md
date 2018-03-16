@@ -105,6 +105,8 @@ There are few simple rules that is crucial for the construction of an HTON data 
     * **[**
     * **]**
     * **:**
+    * **(**
+    * **)**
  4. The value of an attribute MUST be enclosed with double quotations only if the value contains whitespaces
 
 # JavaScript Library
