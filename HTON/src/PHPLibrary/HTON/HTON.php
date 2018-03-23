@@ -28,13 +28,13 @@ class HTON
      */
     public function convertToHTON($data)
     {
-        if (is_object($data)) {
-            return $this->convertObjectToHTONString($data);
-        } else {
+        if (is_array($data)) {
             $str = '[';
             $str .= $this->convertArrayToHTONString((object)$data);
             $str .= ']';
             return $str;
+        } else {
+            return $this->convertObjectToHTONString($data);
         }
     }
 
@@ -45,7 +45,7 @@ class HTON
      */
     private function convertObjectToHTONString($data)
     {
-        return $this->convertArrayToHTONString((object)$data->toArray());
+        return $this->convertArrayToHTONString($data->toArray());
     }
 
     /**
@@ -60,11 +60,11 @@ class HTON
             $str .= $this->stringExecution($data);
         } else if (is_array($data)) { // checks if array
             $objectChildren = false;
-            if (!array_key_exists(0, $data)) { // checks if any child value is an object type and not an array
+            if (!isset($data[0])) { // checks if any child value is an object type and not an array
                 $objectChildren = true;
             }
             $str .= $this->arrayExecution($data, $objectChildren);
-        } else if (is_object($data)) { // checks if object
+        } else { // checks if object
             $str .= $this->objectExecution($data);
         }
         return $str;
@@ -90,45 +90,6 @@ class HTON
     }
 
     /**
-     * Check if a string contains a character that is specified in the array
-     * @param $chArray array of characters
-     * @param $string string that needs to be checked
-     * @return bool
-     */
-    private function match($chArray, $string)
-    {
-        if ($this->strpos_array($string, $chArray)) {
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * A method to check if a character from an array of strings exists in another string
-     * @param $haystack string string that needs to be searched
-     * @param $needles mixed the Array/string that is being searched
-     * @return bool|int
-     * @link Code Source Link - https://gist.github.com/msng/5039773
-     */
-    private function strpos_array($haystack, $needles)
-    {
-        if (is_array($needles)) {
-            foreach ($needles as $str) {
-                if (is_array($str)) {
-                    $pos = $this->strpos_array($haystack, $str);
-                } else {
-                    $pos = strpos($haystack, $str);
-                }
-                if ($pos !== FALSE) {
-                    return $pos;
-                }
-            }
-        } else {
-            return strpos($haystack, $needles);
-        }
-    }
-
-    /**
      * Executes the code for type array for the method @see convertArrayToHTONString
      * @param $data array
      * @param $objectChildren bool value to determine whether any child value is an object and not an array
@@ -137,8 +98,8 @@ class HTON
     private function arrayExecution($data, $objectChildren)
     {
         $str = '';
+        $firstElement = true;
         if (!$objectChildren) {
-            $firstElement = true;
             $str .= '[';
             foreach ($data as $key => $value) {
                 if ($firstElement) {
@@ -146,14 +107,13 @@ class HTON
                 } else {//if it is not the first element, a comma will be added to the beginning of the string
                     $str .= ",";
                 }
-                if (is_numeric($key)) { // if the key contains the index number
-                    $str .= $this->convertArrayToHTONString((object)$value);
+                if (is_integer($key)) { // if the key contains the index number
+                    $str .= $this->convertArrayToHTONString($value);
                 }
 
             }
             $str .= ']';
         } else {
-            $firstElement = true;
             foreach ($data as $key => $value) {
                 if ($firstElement) {
                     $firstElement = false;
@@ -183,8 +143,8 @@ class HTON
             } else {//if it is not the first element, a comma will be added to the beginning of the string
                 $str .= ",";
             }
-            if (is_numeric($key)) { //if the key contains the index number
-                $str .= $this->convertArrayToHTONString((object)$value);
+            if (is_integer($key)) { //if the key contains the index number
+                $str .= $this->convertArrayToHTONString($value);
             } else { //contains the val and attr keys
                 $str .= '<';
                 $str .= $key . $this->keyAttributation($value) . ':';
@@ -219,18 +179,34 @@ class HTON
         $attrStr = '';
         if (is_array($data)) {
             foreach ($data as $key => $value) {
-                if (is_numeric($key)) {
+                if (is_integer($key)) {
                     $attrStr .= $this->attributes($value);
                 } else {
                     $attrStr .= ' ';
                     $attrStr .= $key . '=' . $value;
                 }
             }
-        } else if (is_object($data)) {
+        } else {
             $attrStr .= ' ';
             $attrStr .= $data->getName() . '=' . $data->getValue();
         }
         return $attrStr;
+    }
+
+    /**
+     * Check if a string contains a character that is specified in the array
+     * @param $chArray array of characters
+     * @param $string string that needs to be checked
+     * @return bool
+     */
+    private function match($chArray, $string)
+    {
+        foreach ($chArray as $ch) {
+            if (strpos($string, $ch) !== false) {
+                return true;
+            }
+        }
+        return false;
     }
 
 
