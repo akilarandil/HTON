@@ -3,7 +3,7 @@
 /**
  *
  * The class that is responsible for converting an @see HTMLElement object, arrays of values,
- * or an array of @see HTMLElement objects to the HTMLElement data structure string
+ * or an array of @see HTMLElement objects to the HTON data structure string
  *
  * @author Akila R. Hettiarachchi
  * @version 1.0
@@ -22,17 +22,17 @@ class HTON
     );
 
     /**
-     * Converts the data to an HTMLElement data string
+     * Converts the data to an HTON data string
      * @param $data mixed HTMLElement/array of values or arrays of HTMLElement objects
-     * @return string HTMLElement data string
+     * @return string HTON data string
      */
     public function convertToHTON($data)
     {
         if (is_array($data)) {
-            $str = '[';
-            $str .= $this->convertArrayToHTONString((object)$data);
-            $str .= ']';
-            return $str;
+            return
+                '['.
+                $this->convertArrayToHTONString((object)$data).
+                ']';
         } else {
             return $this->convertObjectToHTONString($data);
         }
@@ -55,19 +55,17 @@ class HTON
      */
     private function convertArrayToHTONString($data)
     {
-        $str = '';
         if (is_string($data)) { //checks if string
-            $str .= $this->stringExecution($data);
+            return $this->stringExecution($data);
         } else if (is_array($data)) { // checks if array
             $objectChildren = false;
             if (!isset($data[0])) { // checks if any child value is an object type and not an array
                 $objectChildren = true;
             }
-            $str .= $this->arrayExecution($data, $objectChildren);
+            return $this->arrayExecution($data, $objectChildren);
         } else { // checks if object
-            $str .= $this->objectExecution($data);
+            return $this->objectExecution($data);
         }
-        return $str;
     }
 
     /**
@@ -77,16 +75,14 @@ class HTON
      */
     private function stringExecution($data)
     {
-        $str = '';
         if ($this->match($this->escapes, $data)) { // checks if string contains special characters
             if (preg_match("/\"/", $data)) {
                 $data = str_replace('"', "\\\"", $data);
             }
-            $str .= "\"$data\"";
+            return "\"$data\"";
         } else {
-            $str .= $data;
+            return $data;
         }
-        return $str;
     }
 
     /**
@@ -110,7 +106,6 @@ class HTON
                 if (is_integer($key)) { // if the key contains the index number
                     $str .= $this->convertArrayToHTONString($value);
                 }
-
             }
             $str .= ']';
         } else {
@@ -120,9 +115,10 @@ class HTON
                 } else {//if it is not the first element, a comma will be added to the beginning of the string
                     $str .= ",";
                 }
-                $str .= "<" . $key . $this->keyAttributation($value) . ':';
-                $str .= $this->convertArrayToHTONString($value["val"]);
-                $str .= ">";
+                $str .=
+                    "<" . $key . $this->keyAttributation($value) . ':'.
+                    $this->convertArrayToHTONString($value["val"]).
+                    ">";
             }
         }
         return $str;
@@ -146,10 +142,10 @@ class HTON
             if (is_integer($key)) { //if the key contains the index number
                 $str .= $this->convertArrayToHTONString($value);
             } else { //contains the val and attr keys
-                $str .= '<';
-                $str .= $key . $this->keyAttributation($value) . ':';
-                $str .= $this->convertArrayToHTONString($value["val"]);
-                $str .= '>';
+                $str .=
+                    '<'.$key . $this->keyAttributation($value) . ':'
+                    .$this->convertArrayToHTONString($value["val"]).
+                    '>';
             }
         }
         return $str;
@@ -162,11 +158,11 @@ class HTON
      */
     private function keyAttributation($data)
     {
-        $str = "";
+
         if (isset($data["attr"])) {
-            $str = $this->attributes($data["attr"]);
+            return $this->attributes($data["attr"]);
         }
-        return $str;
+        return "";
     }
 
     /**
@@ -176,21 +172,21 @@ class HTON
      */
     private function attributes($data)
     {
-        $attrStr = '';
         if (is_array($data)) {
+            $attrStr = '';
             foreach ($data as $key => $value) {
                 if (is_integer($key)) {
                     $attrStr .= $this->attributes($value);
                 } else {
-                    $attrStr .= ' ';
-                    $attrStr .= $key . '=' . $value;
+                    $attrStr .= ' '.$key . '=' . $value;
                 }
             }
-        } else {
-            $attrStr .= ' ';
-            $attrStr .= $data->getName() . '=' . $data->getValue();
+            return $attrStr;
         }
-        return $attrStr;
+        else {
+            return ' '. $data->getName() . '=' . $data->getValue();
+        }
+
     }
 
     /**
