@@ -14,6 +14,8 @@ require_once("$libPath/HTMLAttribute.php");
 
 $type = $_GET["type"];
 $dataSets = $_GET["dataSets"];
+$timeStamp = $_GET["timeStamp"];
+$typeCount = $_GET["count"];
 
 $ini_array = parse_ini_file("../../config.ini");
 $serverName = $ini_array["serverName"];
@@ -21,7 +23,6 @@ $username = $ini_array["userName"];
 $password = $ini_array["password"];
 $dbName = $ini_array["dbName"];
 $tableName = $ini_array["tableName"];
-$str = "";
 
 // Create connection
 $conn = mysqli_connect($serverName, $username, $password, $dbName);
@@ -41,6 +42,8 @@ if (mysqli_num_rows($result) > 0) {
         }
 
     }
+    $startTime = microtime(true);
+    $endTime=null;
     if ($type == "HTML") {
         $htmlSerialize = '<table id=personTable class=table-class>' .
             '<tr>' .
@@ -59,7 +62,7 @@ if (mysqli_num_rows($result) > 0) {
         endforeach;
 
         $htmlSerialize .= '</table>';
-
+        $endTime = microtime(true);
         echo $htmlSerialize;
 
     } elseif ($type == "JSON") {
@@ -76,6 +79,7 @@ if (mysqli_num_rows($result) > 0) {
             $count++;
         }
         $jsonDataSet = json_encode($dataSet);
+        $endTime = microtime(true);
         echo $jsonDataSet;
     } elseif ($type == "HTON") {
 
@@ -104,8 +108,29 @@ if (mysqli_num_rows($result) > 0) {
             $count1++;
         endforeach;
         $encoder = new HTON();
-        echo $encoder->convertToHTON($newArr);
+        $hton = $encoder->convertToHTON($newArr);
+        $endTime = microtime(true);
+        echo $hton;
     }
+    if($typeCount != -1) {
+        $data = array(
+            "Type" => $type,
+            "Serialization Time" => $endTime - $startTime,
+            "TimeStamp" => $timeStamp,
+            "Count" => ++$typeCount,
+            "DataSet"=>$dataSets);
+
+        $filePath = "Serialization Data/$timeStamp";
+        if (!file_exists($filePath)) {
+            mkdir($filePath, 0777, true);
+        }
+        $my_file = $filePath . "/" . $type . "_" . $typeCount ."_".$dataSets. ".json";
+        $handle = fopen($my_file, 'w') or die('Cannot open file:  ' . $my_file);
+        $json = json_encode($data);
+        fwrite($handle, $json);
+        fclose($handle);
+    }
+
 } else {
     echo "0 results";
 }

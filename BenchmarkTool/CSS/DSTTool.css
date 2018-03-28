@@ -1,0 +1,32 @@
+.canvas-class{
+    /*position: relative; height:20vh; width:19.5vw;*/
+    /*color:white;*/
+}
+h3,h1,h2{
+    text-align: center;
+    margin: 5px;
+}
+div{
+    font-family:"sans-serif";
+
+}
+
+td{
+    width: 50vw;
+}
+.summary{
+    margin: 10px;
+    text-align: center;
+}
+#myBar {
+    width: 0;
+    height: 30px;
+    background-color: #4CAF50;
+    text-align: center; /* To center it horizontally (if you want) */
+    line-height: 30px; /* To center it vertically */
+    color: white;
+}
+#myProgress {
+    width: 100%;
+    background-color: grey;
+}

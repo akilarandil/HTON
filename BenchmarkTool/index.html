@@ -6,50 +6,153 @@
     <script src="../HTON/src/JavaScriptLibrary/HTON.js"></script>
     <script src="JavaScript/DSTTool.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
     <script src="JavaScript/moment.js"></script>
+    <link rel="stylesheet" href="CSS/DSTTool.css">
 
 </head>
 <body>
 <label>Number of Iterations </label><input type="number" id="Iterations">
-<label>Number of Data Sets </label><input type="number" id="DataSets">
-<button onclick="getHTML()">HTML</button>
-<button onclick="getJSON()">JSON</button>
-<button onclick="getHTON()">HTON</button>
+<!--<label>Number of Data Sets </label><input type="number" id="DataSets">-->
+<!--<button onclick="getHTML()">HTML</button>-->
+<!--<button onclick="getJSON()">JSON</button>-->
+<!--<button onclick="getHTON()">HTON</button>-->
 <button onclick="runAll()">Run All</button>
 <button onclick="clearData()">Clear</button>
 </body>
 <br>
 <br>
+<h1>Progress</h1>
+<div id="myProgress">
+    <div id="myBar">0%</div>
+</div>
 <table>
     <tr>
         <td>
-            <label>HTML</label>
+            <h2>HTML</h2>
         </td>
         <td>
-            <label>JSON</label>
+            <h2>JSON</h2>
         </td>
         <td>
-            <label>HTON</label>
+            <h2>HTON</h2>
         </td>
     </tr>
     <tr>
         <td>
             <br>
-            <div id="HTMLTime"></div>
+            <div class="summary" id="HTMLTime"></div>
             <br>
         </td>
         <td>
             <br>
-            <div id="JSONTime"></div>
+            <div class="summary" id="JSONTime"></div>
             <br>
         </td>
         <td>
             <br>
-            <div id="HTONTime"></div>
+            <div class="summary" id="HTONTime"></div>
             <br>
         </td>
 
     </tr>
+
+</table>
+<div id="Notify"></div>
+<div id="Summary">
+    <div id="1Table">
+        <h1>1 DataSet</h1>
+            <table>
+                <tr>
+                    <th>Serialization Time</th>
+                    <th>De-Serialization Time</th>
+                    <th>Request-Response Time</th>
+                    <th>Total Communication Time</th>
+                </tr>
+                <tr>
+                    <td><div class="canvas-class"><canvas id="1Serialization"></canvas> </div></td>
+                    <td><div class="canvas-class"><canvas id="1De-Serialization"></canvas> </div></td>
+                    <td><div class="canvas-class"><canvas id="1RequestResponse"></canvas> </div></td>
+                    <td><div class="canvas-class"><canvas id="1TotalCom"></canvas> </div></td>
+
+
+                </tr>
+            </table>
+    </div>
+    <div id="10Table">
+        <h1>10 DataSet</h1>
+        <table>
+            <tr>
+                <th>Serialization Time</th>
+                <th>De-Serialization Time</th>
+                <th>Request-Response Time</th>
+                <th>Total Communication Time</th>
+            </tr>
+            <tr>
+                <td><div class="canvas-class"><canvas id="10Serialization"></canvas> </div></td>
+                <td><div class="canvas-class"><canvas id="10De-Serialization"></canvas> </div></td>
+                <td><div class="canvas-class"><canvas id="10RequestResponse"></canvas> </div></td>
+                <td><div class="canvas-class"><canvas id="10TotalCom"></canvas> </div></td>
+
+            </tr>
+        </table>
+    </div>
+    <div id="20Table">
+        <h1>20 DataSet</h1>
+        <table>
+            <tr>
+                <th>Serialization Time</th>
+                <th>De-Serialization Time</th>
+                <th>Request-Response Time</th>
+                <th>Total Communication Time</th>
+            </tr>
+            <tr>
+                <td><div class="canvas-class"><canvas id="20Serialization"></canvas> </div></td>
+                <td><div class="canvas-class"><canvas id="20De-Serialization"></canvas> </div></td>
+                <td><div class="canvas-class"><canvas id="20RequestResponse"></canvas> </div></td>
+                <td><div class="canvas-class"><canvas id="20TotalCom"></canvas> </div></td>
+
+            </tr>
+        </table>
+    </div>
+    <div id="50Table">
+        <h1>50 DataSet</h1>
+        <table>
+            <tr>
+                <th>Serialization Time</th>
+                <th>De-Serialization Time</th>
+                <th>Request-Response Time</th>
+                <th>Total Communication Time</th>
+            </tr>
+            <tr>
+                <td><div class="canvas-class"><canvas id="50Serialization"></canvas> </div></td>
+                <td><div class="canvas-class"><canvas id="50De-Serialization"></canvas> </div></td>
+                <td><div class="canvas-class"><canvas id="50RequestResponse"></canvas> </div></td>
+                <td><div class="canvas-class"><canvas id="50TotalCom"></canvas> </div></td>
+
+            </tr>
+        </table>
+    </div>
+    <div id="100Table">
+        <h1>100 DataSet</h1>
+        <table>
+            <tr>
+                <th>Serialization Time</th>
+                <th>De-Serialization Time</th>
+                <th>Request-Response Time</th>
+                <th>Total Communication Time</th>
+            </tr>
+            <tr>
+                <td><div class="canvas-class"><canvas id="100Serialization"></canvas> </div></td>
+                <td><div class="canvas-class"><canvas id="100De-Serialization"></canvas> </div></td>
+                <td><div class="canvas-class"><canvas id="100RequestResponse"></canvas> </div></td>
+                <td><div class="canvas-class"><canvas id="100TotalCom"></canvas> </div></td>
+
+            </tr>
+        </table>
+    </div>
+</div>
+<table>
     <tr>
         <td>
             <br>
