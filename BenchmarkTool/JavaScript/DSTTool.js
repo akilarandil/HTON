@@ -38,27 +38,33 @@ function clearData() {
     clearCanvas("1De-Serialization");
     clearCanvas("1RequestResponse");
     clearCanvas("1TotalCom");
+    clearCanvas("1DataSize");
     clearCanvas("10Serialization");
     clearCanvas("10De-Serialization");
     clearCanvas("10RequestResponse");
     clearCanvas("10TotalCom");
+    clearCanvas("10DataSize");
     clearCanvas("20Serialization");
     clearCanvas("20De-Serialization");
     clearCanvas("20RequestResponse");
     clearCanvas("20TotalCom");
+    clearCanvas("20DataSize");
     clearCanvas("50Serialization");
     clearCanvas("50De-Serialization");
     clearCanvas("50RequestResponse");
     clearCanvas("50TotalCom");
+    clearCanvas("50DataSize");
     clearCanvas("100Serialization");
     clearCanvas("100De-Serialization");
     clearCanvas("100RequestResponse");
     clearCanvas("100TotalCom");
+    clearCanvas("100DataSize");
 }
+
 function clearCanvas(elementId) {
-    let c=document.getElementById(elementId);
-    let ctx=c.getContext("2d");
-    ctx.clearRect(0,0,c.width,c.height);
+    let c = document.getElementById(elementId);
+    let ctx = c.getContext("2d");
+    ctx.clearRect(0, 0, c.width, c.height);
 
 
 }
@@ -67,7 +73,7 @@ function clearCanvas(elementId) {
 function positiveIntegerCheck(iterateAll, type) {
     let iterationStr = document.getElementById("Iterations").value;
     let iterations = parseInt(iterationStr);
-    if (iterations <= 0 || iterationStr === "" ) {
+    if (iterations <= 0 || iterationStr === "") {
         alert("Please Enter a Positive Integer");
     }
     else {
@@ -78,7 +84,14 @@ function positiveIntegerCheck(iterateAll, type) {
 
 let requestCompleted = true;
 let executedIterations;
-let currentProgressBarWidth=0;
+let currentProgressBarWidth = 0;
+
+let serializationObj = {};
+let deSerializationObj = {};
+let responseTimeObj = {};
+let timeOfIterationsObj = {};
+let dataSizeObj = {};
+
 //perform iteration requests as specified by the user's given number
 function performIterations(iterateAll, type) {
     let iterations = parseInt(document.getElementById("Iterations").value);
@@ -86,30 +99,32 @@ function performIterations(iterateAll, type) {
     let totalTimeOfAllIterations = 0;
     let totalResponseTimeOfAllIterations = 0;
     let totalDeSerialization = 0;
-    currentProgressBarWidth=0;
+    currentProgressBarWidth = 0;
     let count = -1;
-    let types = ["HTON", "JSON", "HTML"];
-    let dataSets = ["100","50","20","10","1"];
+    let types = ["HTON", "XML", "JSON", "HTML"];
+    let dataSets = ["100", "50", "20", "10", "1"];
     let dataSet;
     if (iterateAll) {
         type = types.pop();
         dataSet = dataSets.pop();
     }
-    let timeOfIterationsObj = {};
-    let responseTimeObj = {};
-    let deSerializationObj = {};
+    timeOfIterationsObj = {};
+    responseTimeObj = {};
+    deSerializationObj = {};
+    dataSizeObj = {};
     $("#Notify").html("<h2><span style='color: red'>Please Wait</span></h2>");
     getResponse(type, dataSet, totalTimeOfAllIterations, totalResponseTimeOfAllIterations,
-        totalDeSerialization, iterations, count, types,dataSets, iterateAll, timeStamp,timeOfIterationsObj,responseTimeObj,deSerializationObj);
+        totalDeSerialization, iterations, count, 0, types, dataSets, iterateAll, timeStamp,
+        timeOfIterationsObj, responseTimeObj, deSerializationObj, dataSizeObj);
 }
 
 // send the request and get the response
 function getResponse(type, dataSet, totalTimeOfAllIterations, totalResponseTimeOfAllIterations, totalDeSerialization,
-                     iterations, count, types,dataSets, iterateAll, timeStamp,timeOfIterationsObj,responseTimeObj,deSerializationObj) {
+                     iterations, count, contentSize, types, dataSets, iterateAll, timeStamp,
+                     timeOfIterationsObj, responseTimeObj, deSerializationObj, dataSizeObj) {
     if (count !== iterations) {
         requestCompleted = false;
         let startTime;
-        let contentSize;
         let responseTime;
         let deSerializationTime;
         $.ajax({
@@ -138,10 +153,10 @@ function getResponse(type, dataSet, totalTimeOfAllIterations, totalResponseTimeO
                     if (count === iterations) {
                         if (types.length === 0) {
                             if (dataSets.length !== 0) {
-                                DisplayDataSetDone(dataSet,type);
-                                CalculateAverage(type,dataSet, totalTimeOfAllIterations, totalResponseTimeOfAllIterations, totalDeSerialization,
-                                    count,timeOfIterationsObj,responseTimeObj,deSerializationObj);
-                                types = ["HTON", "JSON", "HTML"];
+                                DisplayDataSetDone(dataSet, type);
+                                CalculateAverage(type, dataSet, totalTimeOfAllIterations, totalResponseTimeOfAllIterations, totalDeSerialization,
+                                    count, contentSize, timeOfIterationsObj, responseTimeObj, deSerializationObj, dataSizeObj);
+                                types = ["HTON", "XML", "JSON", "HTML"];
                                 type = types.pop();
                                 dataSet = dataSets.pop();
                                 count = 0;
@@ -149,30 +164,30 @@ function getResponse(type, dataSet, totalTimeOfAllIterations, totalResponseTimeO
                                 totalTimeOfAllIterations = 0;
                                 totalDeSerialization = 0;
                                 getResponse(type, dataSet, totalTimeOfAllIterations, totalResponseTimeOfAllIterations, totalDeSerialization,
-                                    iterations, count, types,dataSets, iterateAll, timeStamp,timeOfIterationsObj,responseTimeObj,deSerializationObj);
+                                    iterations, count, contentSize, types, dataSets, iterateAll, timeStamp, timeOfIterationsObj, responseTimeObj, deSerializationObj, dataSizeObj);
 
-                            }else{
-                                DisplayDataSetDone(dataSet,type);
-                                CalculateAverage(type,dataSet, totalTimeOfAllIterations, totalResponseTimeOfAllIterations, totalDeSerialization,
-                                    count,timeOfIterationsObj,responseTimeObj,deSerializationObj);
-                                GetSerializationTime(timeStamp, iterations, responseTimeObj, timeOfIterationsObj, deSerializationObj);
+                            } else {
+                                DisplayDataSetDone(dataSet, type);
+                                CalculateAverage(type, dataSet, totalTimeOfAllIterations, totalResponseTimeOfAllIterations, totalDeSerialization,
+                                    count, contentSize, timeOfIterationsObj, responseTimeObj, deSerializationObj, dataSizeObj);
+                                GetSerializationTime(timeStamp, iterations, responseTimeObj, timeOfIterationsObj, deSerializationObj, dataSizeObj);
                                 return;
                             }
-                        }else{
-                            DisplayDataSetDone(dataSet,type);
-                            CalculateAverage(type,dataSet, totalTimeOfAllIterations, totalResponseTimeOfAllIterations, totalDeSerialization,
-                                count,timeOfIterationsObj,responseTimeObj,deSerializationObj);
+                        } else {
+                            DisplayDataSetDone(dataSet, type);
+                            CalculateAverage(type, dataSet, totalTimeOfAllIterations, totalResponseTimeOfAllIterations, totalDeSerialization,
+                                count, contentSize, timeOfIterationsObj, responseTimeObj, deSerializationObj, dataSizeObj);
                             count = 0;
                             totalResponseTimeOfAllIterations = 0;
                             totalTimeOfAllIterations = 0;
                             totalDeSerialization = 0;
                             getResponse(types.pop(), dataSet, totalTimeOfAllIterations, totalResponseTimeOfAllIterations, totalDeSerialization,
-                                iterations, count, types,dataSets, iterateAll, timeStamp,timeOfIterationsObj,responseTimeObj,deSerializationObj);
+                                iterations, count, contentSize, types, dataSets, iterateAll, timeStamp, timeOfIterationsObj, responseTimeObj, deSerializationObj, dataSizeObj);
                         }
 
                     } else {
                         getResponse(type, dataSet, totalTimeOfAllIterations, totalResponseTimeOfAllIterations, totalDeSerialization,
-                            iterations, count, types,dataSets, iterateAll, timeStamp,timeOfIterationsObj,responseTimeObj,deSerializationObj);
+                            iterations, count, contentSize, types, dataSets, iterateAll, timeStamp, timeOfIterationsObj, responseTimeObj, deSerializationObj, dataSizeObj);
                     }
                 }
             },
@@ -185,83 +200,89 @@ function getResponse(type, dataSet, totalTimeOfAllIterations, totalResponseTimeO
     }
 }
 
-function CalculateAverage(type,dataSet, totalTimeOfAllIterations, totalResponseTimeOfAllIterations, totalDeSerialization,
-                          count,timeOfIterationsObj,responseTimeObj,deSerializationObj){
+function CalculateAverage(type, dataSet, totalTimeOfAllIterations, totalResponseTimeOfAllIterations, totalDeSerialization,
+                          count, contentSize, timeOfIterationsObj, responseTimeObj, deSerializationObj, dataSizeObj) {
 
-    if (responseTimeObj.hasOwnProperty(dataSet)){
-            responseTimeObj[dataSet][type]= totalResponseTimeOfAllIterations/count;
-    }else{
+    if (responseTimeObj.hasOwnProperty(dataSet)) {
+        responseTimeObj[dataSet][type] = totalResponseTimeOfAllIterations / count;
+    } else {
         let a = {};
         a[type] = totalResponseTimeOfAllIterations / count;
         responseTimeObj[dataSet] = a;
     }
 
-    if (timeOfIterationsObj.hasOwnProperty(dataSet)){
-        timeOfIterationsObj[dataSet][type]= totalTimeOfAllIterations/count;
-    }else{
+    if (timeOfIterationsObj.hasOwnProperty(dataSet)) {
+        timeOfIterationsObj[dataSet][type] = totalTimeOfAllIterations / count;
+    } else {
         let a = {};
         a[type] = totalTimeOfAllIterations / count;
         timeOfIterationsObj[dataSet] = a;
     }
 
-    if (deSerializationObj.hasOwnProperty(dataSet)){
-        deSerializationObj[dataSet][type]= totalDeSerialization/count;
-    }else{
+    if (deSerializationObj.hasOwnProperty(dataSet)) {
+        deSerializationObj[dataSet][type] = totalDeSerialization / count;
+    } else {
         let a = {};
         a[type] = totalDeSerialization / count;
         deSerializationObj[dataSet] = a;
     }
+    if (dataSizeObj.hasOwnProperty(dataSet)) {
+        dataSizeObj[dataSet][type] = contentSize;
+    } else {
+        let a = {};
+        a[type] = contentSize;
+        dataSizeObj[dataSet] = a;
+    }
 
 }
 
-function DisplayDataSetDone(dataSet,type){
+function DisplayDataSetDone(dataSet, type) {
 
     let str;
-    if(dataSet==="1"){
+    if (dataSet === "1") {
         str =
-            "1 DataSet      - Done<br>"+
-            "10 DataSet     - <br>"+
-            "20 DataSet     - <br>"+
-            "50 DataSet     - <br>"+
+            "1 DataSet      - Done<br>" +
+            "10 DataSet     - <br>" +
+            "20 DataSet     - <br>" +
+            "50 DataSet     - <br>" +
             "100 DataSet    - <br>";
-    }else if (dataSet==="10"){
+    } else if (dataSet === "10") {
         str =
-            "1 DataSet      - Done<br>"+
-            "10 DataSet     - Done<br>"+
-            "20 DataSet     - <br>"+
-            "50 DataSet     - <br>"+
+            "1 DataSet      - Done<br>" +
+            "10 DataSet     - Done<br>" +
+            "20 DataSet     - <br>" +
+            "50 DataSet     - <br>" +
             "100 DataSet    - <br>";
-    }else if (dataSet==="20"){
+    } else if (dataSet === "20") {
         str =
-            "1 DataSet      - Done<br>"+
-            "10 DataSet     - Done<br>"+
-            "20 DataSet     - Done<br>"+
-            "50 DataSet     - <br>"+
+            "1 DataSet      - Done<br>" +
+            "10 DataSet     - Done<br>" +
+            "20 DataSet     - Done<br>" +
+            "50 DataSet     - <br>" +
             "100 DataSet    - <br>";
-    }else if (dataSet==="50"){
+    } else if (dataSet === "50") {
         str =
-            "1 DataSet      - Done<br>"+
-            "10 DataSet     - Done<br>"+
-            "20 DataSet     - Done<br>"+
-            "50 DataSet     - Done<br>"+
+            "1 DataSet      - Done<br>" +
+            "10 DataSet     - Done<br>" +
+            "20 DataSet     - Done<br>" +
+            "50 DataSet     - Done<br>" +
             "100 DataSet    - ";
-    }else if (dataSet==="100"){
+    } else if (dataSet === "100") {
         str =
-            "1 DataSet      - Done<br>"+
-            "10 DataSet     - Done<br>"+
-            "20 DataSet     - Done<br>"+
-            "50 DataSet     - Done<br>"+
+            "1 DataSet      - Done<br>" +
+            "10 DataSet     - Done<br>" +
+            "20 DataSet     - Done<br>" +
+            "50 DataSet     - Done<br>" +
             "100 DataSet    - Done<br>";
     }
-    document.getElementById(type+"Time").innerHTML = str;
+    document.getElementById(type + "Time").innerHTML = str;
 
     let elem = document.getElementById("myBar");
-    currentProgressBarWidth+=100/15;
+    currentProgressBarWidth += 100 / 20;
     elem.style.width = currentProgressBarWidth + '%';
-    elem.innerHTML = Math.round(parseInt(elem.style.width))+ '%';
+    elem.innerHTML = Math.round(parseInt(elem.style.width)) + '%';
 
 }
-
 
 function addTimeAndSizeDetails(type, contentSize, count, timeOfRequest, responseTime, deSerializationTime, totalTimeOfAllIterations, totalResponseTimeOfAllIterations, totalDeSerialization) {
 
@@ -333,97 +354,161 @@ function processData(type, result) {
         $("#JSON").html(htmlData);
     } else if (type === "HTON") {
         HTON.convertAndAppendToDOM("HTON", result);
+    } else if (type === "XML") {
+
+        let parser = new DOMParser();
+
+        let xmlDoc = parser.parseFromString(result, "text/xml");
+        let htmlData =
+            "<table id=personTable class=table-class>" +
+            "<tr>" +
+            "<th>Name</th>" +
+            "<th>Age</th>" +
+            "<th>City</th>" +
+            "</tr>";
+        let personArr = xmlDoc.getElementsByTagName("list");
+        for (let a = 0; a < personArr.length; a++) {
+            htmlData +=
+                "<tr>" +
+                "<td>" + personArr[a].getElementsByTagName("name")[0].childNodes[0].nodeValue + "</td>" +
+                "<td>" + personArr[a].getElementsByTagName("age")[0].childNodes[0].nodeValue + "</td>" +
+                "<td>" + personArr[a].getElementsByTagName("city")[0].childNodes[0].nodeValue + "</td>" +
+                "</tr>";
+        }
+        htmlData += "</table>";
+        $("#XML").html(htmlData);
     }
 }
 
 
-function GetSerializationTime(timeStamp, iterations,responseTimeObj, timeOfIterationsObj, deSerializationObj) {
-    let serializationObj={};
+function GetSerializationTime(timeStamp, iterations, responseTimeObj, timeOfIterationsObj, deSerializationObj, dataSizeObj) {
+    serializationObj = {};
     $.ajax({
 
         url: "PHP/Statistics.php?timeStamp=" + timeStamp + "&iterations=" + iterations,
         success: function (result, status, request) {
             let serializationTimeAll = JSON.parse(result);
-            for (let j=0; j<5;j++){
+            for (let j = 0; j < 5; j++) {
                 let dataSet = Object.keys(serializationTimeAll)[j];
 
-                for (let i=0; i<3;i++){
-                    let dataSetVal =serializationTimeAll[dataSet][i];
+                for (let i = 0; i < 4; i++) {
+                    let dataSetVal = serializationTimeAll[dataSet][i];
                     let type = Object.keys(dataSetVal)[0];
                     let values = dataSetVal[type];
-                    let total=0;
-                    for (let k=0; k<values.length;k++){
-                        total+=values[k];
+                    let total = 0;
+                    for (let k = 0; k < values.length; k++) {
+                        total += values[k];
                     }
-                    let average = total/values.length;
+                    let average = total / values.length;
 
-                    if (serializationObj.hasOwnProperty(dataSet)){
-                        serializationObj[dataSet][type]= average;
-                    }else{
+                    if (serializationObj.hasOwnProperty(dataSet)) {
+                        serializationObj[dataSet][type] = average;
+                    } else {
                         let a = {};
                         a[type] = average;
                         serializationObj[dataSet] = a;
                     }
                 }
             }
-            ShowSummary(responseTimeObj, timeOfIterationsObj, deSerializationObj,serializationObj);
-
+            ShowSummary(responseTimeObj, timeOfIterationsObj, deSerializationObj, serializationObj, dataSizeObj);
+            SendData();
         }
     });
 }
 
-function ShowSummary(responseTimeObj, timeOfIterationsObj, deSerializationObj,serializationObj){
+function ShowSummary(responseTimeObj, timeOfIterationsObj, deSerializationObj, serializationObj, dataSizeObj) {
+
     $("#Notify").html("<h2><span style='color: green'>Results</span></h2>");
-    for(let dataSet in serializationObj){
+    for (let dataSet in serializationObj) {
         let value = serializationObj[dataSet];
         let valueArray = [
-            value["HTML"]*1000000,
-            value["JSON"]*1000000,
-            value["HTON"]*1000000
+            value["HTML"] * 1000000,
+            value["JSON"] * 1000000,
+            value["XML"] * 1000000,
+            value["HTON"] * 1000000
         ];
-        let elementId = dataSet+"Serialization";
-        bar(elementId,valueArray,"Serialization Time in Pico Seconds")
+        let elementId = dataSet + "Serialization";
+        bar(elementId, valueArray, "Serialization Time in Pico Seconds")
     }
 
-    for(let dataSet in deSerializationObj){
+    for (let dataSet in deSerializationObj) {
         let value = deSerializationObj[dataSet];
         let valueArray = [
             value["HTML"],
             value["JSON"],
+            value["XML"],
             value["HTON"]
         ];
-        let elementId = dataSet+"De-Serialization";
-        bar(elementId,valueArray,"De-Serialization Time in Milli Seconds")
+        let elementId = dataSet + "De-Serialization";
+        bar(elementId, valueArray, "De-Serialization Time in Milli Seconds")
     }
-    for(let dataSet in responseTimeObj){
+    for (let dataSet in responseTimeObj) {
         let value = responseTimeObj[dataSet];
         let valueArray = [
             value["HTML"],
             value["JSON"],
+            value["XML"],
             value["HTON"]
         ];
-        let elementId = dataSet+"RequestResponse";
-        bar(elementId,valueArray,"Request Response Time in Milli Seconds")
+        let elementId = dataSet + "RequestResponse";
+        bar(elementId, valueArray, "Request Response Time in Milli Seconds")
     }
-    for(let dataSet in timeOfIterationsObj){
+    for (let dataSet in timeOfIterationsObj) {
         let value = timeOfIterationsObj[dataSet];
         let valueArray = [
             value["HTML"],
             value["JSON"],
+            value["XML"],
             value["HTON"]
         ];
-        let elementId = dataSet+"TotalCom";
-        bar(elementId,valueArray,"Total Time in Milli Seconds")
+        let elementId = dataSet + "TotalCom";
+        bar(elementId, valueArray, "Total Time in Milli Seconds")
+    }
+    for (let dataSet in dataSizeObj) {
+        let value = dataSizeObj[dataSet];
+        let valueArray = [
+            value["HTML"],
+            value["JSON"],
+            value["XML"],
+            value["HTON"]
+        ];
+        let elementId = dataSet + "DataSize";
+        bar(elementId, valueArray, "Size in Bytes")
     }
 }
 
-function bar(elementId,dataArray,label) {
+function SendData() {
+    let json = {
+        SerializationTimeMicroSeconds: serializationObj,
+        DeSerializationTimeMilliSeconds: deSerializationObj,
+        RequestResponseTimeMilliSeconds: responseTimeObj,
+        TotalCommunicationTimeMilliSeconds: timeOfIterationsObj,
+        MessageSizeBytes: dataSizeObj
+    };
+    let data = {
+        BenchmarkResults: JSON.stringify(json)
+    };
+    $.post(
+        "PHP/SaveData.php",
+        data,
+        "json")
+        .done(function (msg) {
+
+        })
+        .fail(function (xhr, status, error) {
+            console.log(xhr);
+            console.log(status);
+            console.log(error);
+
+        });
+}
+function bar(elementId, dataArray, label) {
     let ctx = document.getElementById(elementId).getContext('2d');
     // ctx.canvas.parentNode.style.height = '50vw';
     let myChart = new Chart(ctx, {
         type: 'bar',
         data: {
-            labels: ["HTML","JSON","HTON"],
+            labels: ["HTML", "JSON", "XML", "HTON"],
             datasets: [{
                 label: label,
                 data: dataArray,
@@ -444,7 +529,7 @@ function bar(elementId,dataArray,label) {
             scales: {
                 yAxes: [{
                     ticks: {
-                        beginAtZero:true
+                        beginAtZero: true
                     }
                 }]
             }

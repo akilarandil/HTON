@@ -4,9 +4,10 @@
     <meta charset="UTF-8">
     <title>Benchmark Tool</title>
     <script src="../HTON/src/JavaScriptLibrary/HTON.js"></script>
-    <script src="JavaScript/DSTTool.js"></script>
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
+    <script src="JavaScript/DSTTool.js"></script>
     <script src="JavaScript/moment.js"></script>
     <link rel="stylesheet" href="CSS/DSTTool.css">
 
@@ -19,6 +20,7 @@
 <!--<button onclick="getHTON()">HTON</button>-->
 <button onclick="runAll()">Run All</button>
 <button onclick="clearData()">Clear</button>
+<a href="PHP/Data.json" download="Data.json">Save Data</a>
 </body>
 <br>
 <br>
@@ -35,6 +37,9 @@
             <h2>JSON</h2>
         </td>
         <td>
+            <h2>XML</h2>
+        </td>
+        <td>
             <h2>HTON</h2>
         </td>
     </tr>
@@ -47,6 +52,11 @@
         <td>
             <br>
             <div class="summary" id="JSONTime"></div>
+            <br>
+        </td>
+        <td>
+            <br>
+            <div class="summary" id="XMLTime"></div>
             <br>
         </td>
         <td>
@@ -68,12 +78,14 @@
                     <th>De-Serialization Time</th>
                     <th>Request-Response Time</th>
                     <th>Total Communication Time</th>
+                    <th>Data Size in Bytes</th>
                 </tr>
                 <tr>
                     <td><div class="canvas-class"><canvas id="1Serialization"></canvas> </div></td>
                     <td><div class="canvas-class"><canvas id="1De-Serialization"></canvas> </div></td>
                     <td><div class="canvas-class"><canvas id="1RequestResponse"></canvas> </div></td>
                     <td><div class="canvas-class"><canvas id="1TotalCom"></canvas> </div></td>
+                    <td><div class="canvas-class"><canvas id="1DataSize"></canvas> </div></td>
 
 
                 </tr>
@@ -87,13 +99,14 @@
                 <th>De-Serialization Time</th>
                 <th>Request-Response Time</th>
                 <th>Total Communication Time</th>
+                <th>Data Size in Bytes</th>
             </tr>
             <tr>
                 <td><div class="canvas-class"><canvas id="10Serialization"></canvas> </div></td>
                 <td><div class="canvas-class"><canvas id="10De-Serialization"></canvas> </div></td>
                 <td><div class="canvas-class"><canvas id="10RequestResponse"></canvas> </div></td>
                 <td><div class="canvas-class"><canvas id="10TotalCom"></canvas> </div></td>
-
+                <td><div class="canvas-class"><canvas id="10DataSize"></canvas> </div></td>
             </tr>
         </table>
     </div>
@@ -105,13 +118,14 @@
                 <th>De-Serialization Time</th>
                 <th>Request-Response Time</th>
                 <th>Total Communication Time</th>
+                <th>Data Size in Bytes</th>
             </tr>
             <tr>
                 <td><div class="canvas-class"><canvas id="20Serialization"></canvas> </div></td>
                 <td><div class="canvas-class"><canvas id="20De-Serialization"></canvas> </div></td>
                 <td><div class="canvas-class"><canvas id="20RequestResponse"></canvas> </div></td>
                 <td><div class="canvas-class"><canvas id="20TotalCom"></canvas> </div></td>
-
+                <td><div class="canvas-class"><canvas id="20DataSize"></canvas> </div></td>
             </tr>
         </table>
     </div>
@@ -123,13 +137,14 @@
                 <th>De-Serialization Time</th>
                 <th>Request-Response Time</th>
                 <th>Total Communication Time</th>
+                <th>Data Size in Bytes</th>
             </tr>
             <tr>
                 <td><div class="canvas-class"><canvas id="50Serialization"></canvas> </div></td>
                 <td><div class="canvas-class"><canvas id="50De-Serialization"></canvas> </div></td>
                 <td><div class="canvas-class"><canvas id="50RequestResponse"></canvas> </div></td>
                 <td><div class="canvas-class"><canvas id="50TotalCom"></canvas> </div></td>
-
+                <td><div class="canvas-class"><canvas id="50DataSize"></canvas> </div></td>
             </tr>
         </table>
     </div>
@@ -141,13 +156,14 @@
                 <th>De-Serialization Time</th>
                 <th>Request-Response Time</th>
                 <th>Total Communication Time</th>
+                <th>Data Size in Bytes</th>
             </tr>
             <tr>
                 <td><div class="canvas-class"><canvas id="100Serialization"></canvas> </div></td>
                 <td><div class="canvas-class"><canvas id="100De-Serialization"></canvas> </div></td>
                 <td><div class="canvas-class"><canvas id="100RequestResponse"></canvas> </div></td>
                 <td><div class="canvas-class"><canvas id="100TotalCom"></canvas> </div></td>
-
+                <td><div class="canvas-class"><canvas id="100DataSize"></canvas> </div></td>
             </tr>
         </table>
     </div>
@@ -162,6 +178,11 @@
         <td>
             <br>
             <div id="JSON"></div>
+            <br>
+        </td>
+        <td>
+            <br>
+            <div id="XML"></div>
             <br>
         </td>
         <td>

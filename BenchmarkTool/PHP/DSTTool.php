@@ -11,6 +11,7 @@ require_once("$libPath/HTON.php");
 require_once("$libPath/HTMLTree.php");
 require_once("$libPath/HTMLElement.php");
 require_once("$libPath/HTMLAttribute.php");
+require_once("XMLParser.php");
 
 $type = $_GET["type"];
 $dataSets = $_GET["dataSets"];
@@ -43,7 +44,7 @@ if (mysqli_num_rows($result) > 0) {
 
     }
     $startTime = microtime(true);
-    $endTime=null;
+    $endTime = null;
     if ($type == "HTML") {
         $htmlSerialize = '<table id=personTable class=table-class>' .
             '<tr>' .
@@ -111,20 +112,38 @@ if (mysqli_num_rows($result) > 0) {
         $hton = $encoder->convertToHTON($newArr);
         $endTime = microtime(true);
         echo $hton;
+    } else if ($type == "XML") {
+        $dataSet = array();
+        $count = 1;
+        foreach ($resultDataSet as $value) {
+            $xmlData =
+                array(
+                    "name" => $value['Name'],
+                    "age" => $value['Age'],
+                    "city" => $value['City']
+            );
+
+            array_push($dataSet, $xmlData);
+            $count++;
+        }
+        $xml = \XMLParser\XMLParser::encode($dataSet, 'root');
+        $xmlString = $xml->asXML();
+        $endTime = microtime(true);
+        echo $xmlString;
     }
-    if($typeCount != -1) {
+    if ($typeCount != -1) {
         $data = array(
             "Type" => $type,
             "Serialization Time" => $endTime - $startTime,
             "TimeStamp" => $timeStamp,
             "Count" => ++$typeCount,
-            "DataSet"=>$dataSets);
+            "DataSet" => $dataSets);
 
         $filePath = "Serialization Data/$timeStamp";
         if (!file_exists($filePath)) {
             mkdir($filePath, 0777, true);
         }
-        $my_file = $filePath . "/" . $type . "_" . $typeCount ."_".$dataSets. ".json";
+        $my_file = $filePath . "/" . $type . "_" . $typeCount . "_" . $dataSets . ".json";
         $handle = fopen($my_file, 'w') or die('Cannot open file:  ' . $my_file);
         $json = json_encode($data);
         fwrite($handle, $json);

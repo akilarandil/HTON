@@ -15,6 +15,7 @@ $types = array("HTML","JSON","HTON");
 
 $html = array();
 $json = array();
+$xml = array();
 $hton = array();
 
 $oneArray=array();
@@ -92,6 +93,39 @@ foreach ($dataSets as $dataSet) {
         );
     }
 
+    $type = "XML";
+    for ($count = 1; $count <= $iterations; $count++) {
+
+        $my_file = $filePath . "/" . $type . "_" . $count ."_".$dataSet. ".json";
+        $handle = fopen($my_file, 'r');
+        $data = fread($handle, filesize($my_file));
+        $jsonData = json_decode($data, true);
+        $time = $jsonData["Serialization Time"];
+        array_push($xml, $time);
+        fclose($handle);
+    }
+    if ($dataSet == "1"){
+        array_push($oneArray,
+            array($type=>$xml)
+        );
+    } else if ($dataSet == "10"){
+        array_push($tenArray,
+            array($type=>$xml)
+        );
+    }else if ($dataSet == "20"){
+        array_push($twentyArray,
+            array($type=>$xml)
+        );
+    }else if ($dataSet == "50"){
+        array_push($fiftyArray,
+            array($type=>$xml)
+        );
+    }else if ($dataSet == "100"){
+        array_push($hundredArray,
+            array($type=>$xml)
+        );
+    }
+
     $type = "HTON";
     for ($count = 1; $count <= $iterations; $count++) {
 
@@ -124,6 +158,7 @@ foreach ($dataSets as $dataSet) {
             array($type=>$hton)
         );
     }
+
 }
 
 $finalArray = array(
@@ -136,34 +171,6 @@ $finalArray = array(
 echo json_encode($finalArray);
 delete_dir("Serialization Data");
 
-
-function addToDataSetArray($type,$dataSet,$dataArray,$oneArray,
-                           $tenArray,$twentyArray,$fiftyArray,
-                           $hundredArray){
-
-    if ($dataSet == "1"){
-        array_push($oneArray,
-            array($type=>$dataArray)
-        );
-    } else if ($dataSet == "10"){
-        array_push($tenArray,
-            array($type=>$dataArray)
-        );
-    }else if ($dataSet == "20"){
-        array_push($twentyArray,
-            array($type=>$dataArray)
-        );
-    }else if ($dataSet == "50"){
-        array_push($fiftyArray,
-            array($type=>$dataArray)
-        );
-    }else if ($dataSet == "100"){
-        array_push($hundredArray,
-            array($type=>$dataArray)
-        );
-    }
-
-}
 
 function delete_dir($src) {
     $dir = opendir($src);
