@@ -4,6 +4,8 @@ HTON is a data structure specifically designed to reconstruct an HTML string. A 
 
 Because the library automatically constructs the HTML string using HTON, there is very little workload in the client-end since it eliminates the extraction and data manipulation that is to be done in order to create an HTML string.
 
+### Notice - The JavaSciprt and PHP libraries are for demonstration purposes. The algorithms may be adapted to any preferred language. The core of this project is the HTON data structure where as HTON is langauge independent.
+
 1. Assume that the expected output is the following table.
 
   ![picture](Prototype/Resources/ExpectedResult.PNG)
