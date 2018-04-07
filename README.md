@@ -97,6 +97,12 @@ Because the library automatically constructs the HTML string using HTON, there i
 
 # HTON Data Structure 
 
+HTON is built in two types of structures.
+ 
+1. A collection of name-value pairs. In many languages, this is recognized as object, dictionary, hash-table or an associative array.
+2. An ordered list of values. Just like many languages, this is identified as an array or list.
+
+
 There are few simple rules that is crucial for the construction of an HTON data structure
 
 1. An object is an unordered key-value pair which starts with **<** (open angle bracket) and ends with **>** (close angle brackets) separated by : (colon).
