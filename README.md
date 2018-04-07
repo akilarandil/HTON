@@ -188,7 +188,14 @@ There are few simple rules that is crucial for the construction of an HTON data 
     $code = $encoder->convertToHTON($newElementArray);
  ```
  
-## Important!
+# FAQ
+
+Q - Is this Server Side Rendering?
+
+A - Server Rendering works by converting HTML files in the server into usable information for the browser. HTON is just a data structure that is created in the server side which is used to convert to an HTML code in the client side. Hence the rendering occurs at the client side.
+
+ 
+## Important! - This is only if you want to run the Benchmark tool or the Prototype
 
 * Update the config.ini file. Make sure the proper data is added to the necessary property. 
   Eg: userName = "Your user name"
