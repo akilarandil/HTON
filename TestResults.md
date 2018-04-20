@@ -1,6 +1,8 @@
 # Performance Testing
 
-HTON was benchmarked against HTML, XML and JSON. 
+HTON was benchmarked against HTML, XML and JSON. Following is result that should be displayed using all 4 data structures on the web page.
+
+![picture](HTON/src/TestResults/Expected%20Result.png)
 
 The testing were done under the following system variables
 
