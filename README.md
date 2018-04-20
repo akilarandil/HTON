@@ -202,7 +202,8 @@ There are few simple rules that is crucial for the construction of an HTON data 
     $encoder = new HTON();
     $code = $encoder->convertToHTON($newElementArray);
  ```
- 
+# Benchmark Results
+[Click here to see the detailed benchmak results](TestResults.md)
 # FAQ
 
 **Q1** - Is this Server Side Rendering?
